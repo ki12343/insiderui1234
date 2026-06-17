@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  .doc table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .doc th { text-align: left; font-weight: 600; color: #475467; background: #F7F9FC; padding: 9px 12px; border-bottom: 1px solid #E6EAF0; white-space: nowrap; }
+  .doc td { padding: 9px 12px; border-bottom: 1px solid #F1F4F9; color: #374151; vertical-align: top; }
+  .doc td.mono, .doc th.mono { font-family: 'SFMono-Regular', ui-monospace, Menlo, monospace; font-size: 12px; color: #1F2937; }
+  .doc tr:last-child td { border-bottom: none; }
+  .doc pre { font-family: 'SFMono-Regular', ui-monospace, Menlo, monospace; font-size: 11.5px; line-height: 1.62; color: #E6EDF7; background: #0F172A; border-radius: 12px; padding: 20px 22px; overflow-x: auto; white-space: pre; tab-size: 2; margin: 0; }
+  .doc code { font-family: 'SFMono-Regular', ui-monospace, Menlo, monospace; font-size: 12px; background: #EEF1F6; color: #1F2937; padding: 1px 6px; border-radius: 5px; }
+  .doc h2 { scroll-margin-top: 20px; }
+  .doc ul { margin: 0; padding-left: 18px; }
+  .copybtn:hover { background: #1D4ED8 !important; }
+  .togglebtn:hover { color: #2563EB !important; }
+  @media print { .pg { box-shadow: none !important; border: none !important; } body { background: #fff !important; } }
+</style>
+</helmet>
+<div class="doc" style="font-family:'Pretendard Variable','Pretendard',-apple-system,'Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif; background:#EEF1F6; color:#1F2937; min-height:100%; padding:0 0 90px;">
+
+  <!-- ============ GLOBAL TOP NAV ============ -->
+  <div style="position:sticky; top:0; z-index:70; background:rgba(238,241,246,.84); backdrop-filter:saturate(180%) blur(12px); -webkit-backdrop-filter:saturate(180%) blur(12px); border-bottom:1px solid #E0E5EC;">
+    <div style="max-width:920px; margin:0 auto; padding:0 20px; height:56px; display:flex; align-items:center; justify-content:space-between; gap:16px;">
+      <a href="내부자거래 공통 UI.dc.html" style="display:flex; align-items:center; gap:10px; text-decoration:none; min-width:0;">
+        <span style="display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:8px; background:#2563EB; color:#fff; font-size:12px; font-weight:800; letter-spacing:.02em; flex-shrink:0;">IX</span>
+        <span style="font-size:14px; font-weight:700; color:#111827; white-space:nowrap;">내부자거래 공통 UI</span>
+        <span style="font-size:11px; color:#9AA3B2; font-weight:600; white-space:nowrap;">insider-ownership-common-v1</span>
+      </a>
+      <div style="display:inline-flex; background:#fff; border:1px solid #E0E5EC; border-radius:10px; padding:3px; flex-shrink:0;">
+        <a href="내부자거래 공통 UI.dc.html" style="display:inline-flex; align-items:center; gap:6px; padding:7px 15px; border-radius:8px; font-size:13px; font-weight:600; text-decoration:none; white-space:nowrap; background:transparent; color:#6B7280;">공통 UI 화면</a>
+        <a href="Handoff-필드매핑.dc.html" style="display:inline-flex; align-items:center; gap:6px; padding:7px 15px; border-radius:8px; font-size:13px; font-weight:600; text-decoration:none; white-space:nowrap; background:#2563EB; color:#fff; box-shadow:0 1px 2px rgba(37,99,235,.25);">개발자 핸드오프</a>
+      </div>
+    </div>
+  </div>
+
+  <div style="padding:36px 20px 0;">
+  <div class="pg" style="max-width:920px; margin:0 auto; background:#fff; border:1px solid #E6EAF0; border-radius:18px; box-shadow:0 1px 3px rgba(16,24,40,.06); padding:54px 60px;">
+
+    <!-- title -->
+    <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:24px; flex-wrap:wrap; padding-bottom:22px; border-bottom:2px solid #111827;">
+      <div>
+        <div style="font-size:11px; font-weight:700; letter-spacing:.12em; color:#2563EB;">DEVELOPER HANDOFF</div>
+        <h1 style="margin:8px 0 6px; font-size:25px; font-weight:700; color:#111827; letter-spacing:-.01em;">내부자거래 공통 UI · 설계 핸드오프</h1>
+        <div style="font-size:13.5px; color:#6B7280;">DART D002 · SEC Form 3·4·5 — 공통 스키마 · UI 규칙 · 정규화 프롬프트</div>
+      </div>
+      <div style="text-align:right; font-size:12px; color:#9AA3B2; line-height:1.7;">v10.10 · 2026-06<br>schema: <b style="color:#2563EB;">insider-ownership-common-v1</b><br>관련 화면: <a href="내부자거래 공통 UI.dc.html" style="color:#2563EB; font-weight:600; text-decoration:none;">내부자거래 공통 UI →</a></div>
+    </div>
+
+    <!-- 핵심 원칙 -->
+    <div style="margin-top:26px; padding:18px 20px; background:#F7F9FC; border:1px solid #E6EAF0; border-radius:12px; font-size:13px; line-height:1.7; color:#475467;">
+      <div style="font-size:12px; font-weight:700; color:#111827; letter-spacing:.04em; margin-bottom:8px;">핵심 원칙 · CORE RULES</div>
+      <div style="margin:0 0 12px; padding:9px 12px; background:#EEF6FF; border:1px solid #CFE2FB; border-radius:8px; font-size:12.5px; color:#1D4ED8; font-weight:600;">이 규칙들은 특정 샘플 데이터가 아니라 모든 KR/US 내부자·주요주주 공시 데이터에 공통 적용된다. 새로운 issuer/ticker/reporting owner가 들어와도 동일한 렌더링 규칙을 따른다. <b>KR metadata가 비어 있거나 불완전한 경우 issuer 및 filing date는 본문 표지/발행회사 표/접수번호/제목에서 fallback 추출하고, 모든 fallback 값은 source_mapping에 출처를 기록한다.</b></div>
+      <ul style="line-height:1.75;">
+        <li>KR <b>D002</b> · KR <b>거래계획보고서</b> · US <b>SEC Form 3·4·5</b>(3/A·5/A 포함)를 하나의 공통 UI·스키마로 표현한다.</li>
+        <li><b>거래(transactions)와 보유(holdings)는 분리</b>한다. <b>transactionCode와 취득/처분(A/D)도 별도 필드</b>로 분리한다.</li>
+        <li><b>가격 0과 null은 다르게</b> 처리한다(0=정상값, null=미기재). <b>수량은 decimal 허용</b>, 반올림 금지.</li>
+        <li><b>footnote / 비고는 의미 해석의 핵심</b> 정보다. 값은 추정하지 말고 없으면 <code>null</code> + status로 표기한다.</li>
+        <li><b>범위(v6.3)</b>: 본 공통 UI는 <b>KR D002 + US Form 3/4/5(3·4·5/A 포함)</b>만 다룬다. <b>KR 거래계획보고서(00633)는 범위 제외(out-of-scope)</b> — 예정 거래 공시로서 D002의 보유·변동 및 Form 3/4/5의 발생 거래와 성격이 다르므로 planned transaction 관련 UI/schema(planned_transactions·current/expected_holdings·plan_scale_assessment·trading_plan·Planned/Trading plan badge)는 사용하지 않는다. 입력 시 <code>status=out_of_scope</code>로 처리하고 D002로 오인하지 않는다.</li>
+        <li><b>화면 변경 시</b> 스키마 · 매핑 · Empty State · 추출 프롬프트를 함께 갱신한다.</li>
+        <li>UI는 다크 프리미엄 금융 SaaS. 한국 관례 색 <b style="color:#D23B4E;">취득·증가=Red</b> / <b style="color:#2D6FE0;">처분·감소=Blue</b> / 중립·미기재=Gray.</li>
+      </ul>
+    </div>
+
+    <!-- Supported Inputs / Extraction Pipeline (B-1) -->
+    <div style="margin-top:18px; padding:18px 20px; background:#F7F9FC; border:1px solid #E6EAF0; border-radius:12px;">
+      <div style="font-size:12px; font-weight:700; color:#111827; letter-spacing:.04em; margin-bottom:8px;">Supported Inputs · Extraction Pipeline (B-1)</div>
+      <div style="margin:0 0 10px; padding:9px 12px; background:#FFFBF3; border:1px solid #F4D9A8; border-radius:8px; font-size:12.5px; color:#7A5212; font-weight:600;">PDF 또는 DART 원문은 LLM에 직접 넣지 않는다. 먼저 DART parser로 section tree · tables · text blocks · metadata를 추출하고, 그 결과를 common schema extraction prompt에 투입한다.</div>
+      <ul style="font-size:12.5px; color:#475467; line-height:1.8;">
+        <li><b>KR D002</b>: PDF/HTML → DART parser → <code>metadata.json · contents.json · tables.json · tables_mdkv.md</code>(+ qa <code>verdict.json · qa_report</code>) → 프롬프트 투입. PDF 바이너리 직접 입력 금지.</li>
+        <li><b>US Form 3/4/5</b>: SEC <code>.txt/.xml/.html</code> 원문에서 reportingOwner · issuer · nonDerivativeTable · derivativeTable · footnotes · ownerSignature 추출 → 프롬프트 투입.</li>
+        <li><b>Source Mapping</b>: 파서 산출물이 있으면 <code>source_mapping.raw_form · parser_notes[] · parser_qa{verdict, section_pass_count, section_total_count}</code>에 출처/신뢰도 기록. 추출 신뢰도와 UI 데이터는 분리.</li>
+      </ul>
+    </div>
+
+    <!-- QUICK COPY · 추출 프롬프트 -->
+    <div style="margin-top:18px; border:1px solid #CFE2FB; border-radius:14px; overflow:hidden;">
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; padding:15px 18px; background:#EEF6FF;">
+        <div>
+          <div style="font-size:13.5px; font-weight:700; color:#1D4ED8;">Quick Copy · 공통 스키마 추출 프롬프트</div>
+          <div style="font-size:12.5px; color:#3A5BB0; margin-top:3px;">원본 DART D002 / SEC Form 3·4·5를 common JSON schema로 변환하는 LLM 프롬프트.</div>
+        </div>
+        <button class="copybtn" onClick="{{ onCopy }}" style="flex-shrink:0; padding:9px 16px; border:none; border-radius:9px; background:#2563EB; color:#fff; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit;">{{ copyLabel }}</button>
+      </div>
+      <div style="padding:14px 18px 18px; background:#fff;">
+        <div style="{{ promptWrapStyle }}">
+          <pre id="extract-prompt">You are a financial-disclosure normalizer. Convert ONE insider-ownership
+filing — Korean DART "D002" / KR "거래계획보고서" OR US SEC "Form 3 / 4 / 5 /
+3-A / 5-A" — into the JSON schema "insider-ownership-common-v1" (Appendix A).
+The input may arrive as XML, HTML, rendered table text, or pipe-delimited text.
+
+OUTPUT
+- Return ONLY one valid JSON object matching the schema. No prose, no markdown.
+- Keep every schema key. Use null for any value not present in the source.
+- NEVER guess or infer unknown values. If unsure, use null and add a short
+  note to source_mapping.parser_notes[].
+
+DOCUMENT META
+- Detect country/source: DART→KR, SEC→US. Set form_type exactly
+  (D002 | 3 | 4 | 5 | 3/A | 5/A). is_amendment=true when form_type ends with /A.
+- report_type: KR→신규|변동|정정 ; US→initial(3)|change(4)|annual(5)|amendment(/A).
+- For amendments, extract date_of_original_submission. filing_date = filed date.
+- Issuer identity: issuer.cik (US) / company_code (KR corp_code) is the STABLE
+  identity. Same company may file under different tickers over time (e.g.
+  issuerTradingSymbol "FB" in 2022, "META" in 2026, same issuerCik 0001326801).
+  Store ticker as the document's value AND display_ticker; preserve prior tickers
+  in former_symbols[] and prior names in former_names[] (from SEC header FORMER
+  COMPANY). Set grouping_key = "issuer_cik:<cik>" (US) or "corp_code:<code>" (KR).
+  Grouping/dedup MUST use cik/corp_code, never ticker alone.
+
+SEPARATION RULES (critical)
+- Put real movements in transactions[]; static positions in holdings[]. A US
+  filing may have BOTH nonDerivativeTransaction AND nonDerivativeHolding — keep
+  them in their own arrays. Never merge.
+- Keep transaction_code and acquired_disposed_code (A/D) as SEPARATE fields.
+  Store code="S", a/d from transactionAcquiredDisposedCode — do not collapse.
+- Derivatives / rights (RSU, Stock Option, 신주인수권, 전환사채권,
+  신주인수권부사채권, 교환사채권) go to derivative_or_rights[], with
+  underlying_security_title / shares / exercise price / exercise_date /
+  expiration_date.
+
+KR D002 SPECIFICS
+- 직전보고서→holding_summary.previous, 이번보고서→current, 증감→change. No prior
+  report → previous=null, status="no_previous_report".
+- Separate quantity change from ratio change (opposite signs possible when a
+  rights exercise issues new shares: qty up, ratio down). Judge
+  quantity_change_direction / ratio_change_direction independently
+  (increase|decrease|neutral).
+- 합계/소계 row in 세부변동내역 → is_summary_row=true (exclude from per-row math).
+- 거래계획 보고일자 → trading_plan.kr_plan_report_date.
+- "주식배당(+)" → transaction_category="stock_dividend", a/d="A", price=null
+  (price_missing_reason="not_applicable_or_not_reported"). Not a market buy.
+- KR 거래방법/보고사유: preserve the original raw label in transaction_reason_raw
+  (e.g. "장내매수(+)"), AND store transaction_category ("market_purchase") and
+  transaction_category_label ("장내매수"). Never store only the +/- stripped label.
+- Keep total_specific_securities (특정증권등) and shares_only (주권) as SEPARATE
+  objects, even if equal.
+- 종류별 소유내역 table: A,B,C…J may be COLUMN codes, not security titles. Respect
+  original table header/colspan/rowspan; do not treat a lone A~J cell as a heading.
+
+US FORM SPECIFICS
+- noSecuritiesOwned=1 → holding_summary.no_securities_owned=true,
+  status="no_securities_owned", holdings=[], missing_tables_allowed=true.
+  noSecuritiesOwned=0 is NOT "no securities" (Form 3 holding-only).
+- reportingOwner may NOT be an individual officer. owner_type from
+  individual | institution | financial_institution | company | unknown. Derive
+  relationship from is_director/is_officer/is_ten_percent_owner/is_other; all
+  false → "관계 미기재". Do NOT hardcode "officer". A reporting owner may hold
+  MULTIPLE roles at once (Director + Officer + 10% Owner) — populate
+  roles_display[] with ALL of them (UI shows every role as a chip, never a single
+  collapsed text). Same for KR multi-role.
+- officer_title: store SEC officerTitle verbatim in officer_title_raw AND
+  officer_title_display (no restoration/cleanup even if truncated like "EVP,
+  Chief Human Resources Off").
+- directOrIndirectOwnership: D→"direct", I→"indirect". Copy natureOfOwnership
+  verbatim (By Trust, By spouse, 401(k), By LLC ...). 401(k)/retirement/benefit
+  plan → ownership_subtype="retirement_plan_account".
+- aff10b5One=1 → trading_plan.is_10b5_1=true. Extract adoption_date from footnote
+  ("adopted on 11/10/2025" → "2025-11-10").
+- Form 5: preserve form5_flags {not_subject_to_section16, form3_holdings_reported,
+  form4_transactions_reported} (null if absent). periodOfReport is the report base
+  date, NOT a transaction date — keep separate; transactions may predate it by
+  years (contains_historical=true, transaction_date_range{from,to}). Not an error.
+- transactionTimeliness "L" → transaction_timeliness="L", is_late_reported=true.
+  SEPARATE from transaction_code — never treat "L" as a code.
+
+CLASSIFICATION (conservative — never from code alone)
+- Combine code + a/d + price + footnote text + nature_of_ownership + KR
+  reason/note + table context. When unsure → "unknown".
+- G + price 0 + NO footnote → gift_or_transfer,
+  classification_confidence="low_without_footnote". Do NOT invent GRAT/trust.
+- G + footnote(GRAT, annuity payment, trust, trustee, annuitant, spouse, "mere
+  change in form of beneficial ownership", "exempt from Section 16", "Rule
+  16a-13") → transaction_category="trust_transfer_or_annuity_payment",
+  transaction_subtype="GRAT_annuity_payment". Keep code="G".
+- A + price 0 + footnote(RSU/award/grant/no consideration/vesting) →
+  compensation_award / RSU_award (same category as KR 자사주상여금). A + price>0 +
+  no footnote → acquisition_or_purchase. A + plan/employee purchase →
+  plan_purchase.
+- W: keep code="W". footnote(inheritance/will/estate/"previously omitted") →
+  inheritance_or_estate_transfer. Do not coerce to buy/sell.
+
+M / EXERCISE / DERIVATIVE LINKING
+- transactionCode "M" (or securityTitle/footnote with Exercise, Vesting, Option,
+  Stock Option, RSU, Restricted Stock Unit, derivativeTransaction,
+  underlyingSecurity, conversionOrExercisePrice) →
+  transaction_category="exercise_or_vesting". Do NOT label a non-derivative M
+  (price 0/A) as a plain free acquisition.
+- ALWAYS parse derivativeTable (derivativeTransaction AND derivativeHolding) into
+  derivative_or_rights[] with id, underlying_security_title,
+  underlying_security_shares, conversion_or_exercise_price, exercise_date,
+  expiration_date. Link the non-derivative M row to its derivative via
+  transactions[].linked_derivative_ids = [derivative id]. This applies to Form 5
+  too — never skip derivativeTable on a Form 5. Empty derivativeTable → empty state.
+
+PAIRED A/D TRANSFER (Form 4 & 5)
+- Same date + security + shares + footnote as a D (out of trust) and an A (to
+  reporting person): KEEP BOTH rows untouched. ADD a UI-only group
+  transaction_group_id, group_display_type:"paired_transfer",
+  paired_transfer:{from,to,shares,security_title,footnote_ids}.
+
+NUMBERS & PRICES
+- Quantities DECIMAL-allowed (35.944, 21836.814, 6606.917). Preserve exactly.
+- price 0/0.00 (Gift, award, exercise) is VALID: number 0, price_is_zero=true,
+  price_zero_valid=true, price_zero_reason. Missing price → null,
+  price_missing_reason="not_reported". NEVER merge 0 and null.
+
+FOOTNOTES
+- Extract every footnote with id (F1, F2, …) and full text into footnotes[].
+- Row-level footnote_ids[] AND field_footnotes {transaction_shares,
+  transaction_price_per_share, shares_owned_following_transaction,
+  security_title, nature_of_ownership} — a footnote may attach to a single field.
+- Stock Units in holdings: securityTitle with Stock Unit(s)/GSU/RSU/PSU →
+  holding_type="stock_unit", compensation_security=true, link
+  vesting_schedule_footnote_ids. Keep in holdings[] (do not move).
+- remarks is a top-level string, separate from footnotes[]. EX-24 / EX-24.POA
+  (Power of Attorney) → exhibits[]{type, description, is_transaction_data:false}.
+  NEVER parse exhibits as transaction/holding rows.
+
+KR 거래계획보고서 — OUT OF SCOPE
+- KR 임원ㆍ주요주주 특정증권등 "거래계획보고서" (form_subtype_code=="00633",
+  title contains "거래계획보고서", or item_list contains 거래계획/거래규모 판단/
+  거래계획 완료후 예상 소유상황) is OUT OF SCOPE for this common UI. It is a
+  PLANNED (future) transaction filing, distinct from D002 ownership/holdings and
+  US Form 3/4/5 executed-transaction reports.
+- Do NOT coerce it into D002. Set form_type="KR_TRADING_PLAN",
+  document_meta.status="out_of_scope" and STOP (do not populate transactions/
+  holdings). No planned_transactions / current_holdings_before_plan /
+  expected_holdings_after_plan / plan_scale_assessment / trading_plan in this scope.
+
+KR FALLBACK / SOURCE PRIORITY (metadata may be empty)
+- KR DART metadata.corps[] (corp_name, symbols, corp_code) and filing_date may be
+  BLANK. Do NOT leave issuer null. Use the body "발행회사에 관한 사항" table as
+  source of truth: issuer.name, ticker/company_code, market (법인구분: 코스닥상장법인
+  →KOSDAQ, 유가증권→KOSPI), shares_outstanding (발행주식 총수). Record
+  issuer.source_priority="body_table_issuer_info" and log it in source_mapping.
+- KR filing/event dates fallback order: (1) cover/표지 text (거래시작일,
+  보고의무발생일, 보고서작성기준일), (2) title date, (3) receipt_number first 8
+  digits (20260609→2026-06-09), (4) metadata date, (5) null. Keep them SEPARATE:
+  보고의무발생일→event_date, 보고서작성기준일→report_base_date, 거래시작일→
+  planned_trade_start_date. Do NOT mistake 거래시작일 for filing_date. Record each
+  in filing_dates.date_source_priority and source_mapping.
+
+EMPTY STATE HINTS
+- Fill ui_empty_states.{transactions|holdings|derivative_or_rights|footnotes}
+  with {is_empty, reason, message} when empty, else null. Examples:
+  reason:"form3_initial_no_transactions", "no_securities_owned",
+  "no_derivative_or_rights", "no_footnotes".
+
+- If a parser QA artifact (verdict.json) accompanies the source, record it in
+  source_mapping.parser_qa {verdict, section_pass_count, section_total_count,
+  notes}. It is reliability metadata only, separate from UI data; null if absent.
+
+Return the JSON now.</pre>
+          <div style="{{ fadeStyle }}"></div>
+        </div>
+        <button class="togglebtn" onClick="{{ onToggle }}" style="margin-top:10px; padding:0; border:none; background:transparent; color:#6B7280; font-size:12.5px; font-weight:600; cursor:pointer; font-family:inherit;">{{ toggleLabel }}</button>
+      </div>
+    </div>
+
+    <!-- TOC -->
+    <div style="margin-top:24px; display:grid; grid-template-columns:1fr 1fr; gap:8px 24px; font-size:13px;">
+      <div style="color:#9AA3B2; font-weight:700; grid-column:1 / -1; font-size:11px; letter-spacing:.08em;">목차 · CONTENTS</div>
+      <div style="color:#374151;">1 · 화면 흐름 (4-View)</div>
+      <div style="color:#374151;">2 · Current UI Rules</div>
+      <div style="color:#374151;">3 · Filing Detail 섹션 구조</div>
+      <div style="color:#374151;">4 · Common Schema 요약</div>
+      <div style="color:#374151;">5 · UI ↔ Schema 매핑</div>
+      <div style="color:#374151;">6 · Rendering / Empty State</div>
+      <div style="color:#374151;">7 · Critical Edge Cases</div>
+      <div style="color:#374151;">8 · Out-of-scope · 거래계획</div>
+      <div style="color:#374151;">9 · QA Checklist</div>
+      <div style="color:#374151;">Appendix A · Full Schema</div>
+      <div style="color:#374151;">Appendix B · Transaction Code Table</div>
+      <div style="color:#374151;">Appendix C · Edge Case Notes</div>
+      <div style="color:#374151;">Appendix D · Responsive · Change Log</div>
+    </div>
+
+    <!-- 1. view flow -->
+    <h2 style="margin:42px 0 6px; font-size:18px; font-weight:700; color:#111827;">1 · 화면 흐름 (4-View)</h2>
+    <p style="margin:0 0 14px; font-size:13px; color:#6B7280;">단일 컴포넌트 내 <code>view</code> 상태(list·ticker·history·detail). <b>목록/히스토리=탐색</b>, <b>상세=해석</b>. 7섹션 상세는 목록으로 대체하지 않는다.</p>
+    <div style="border:1px solid #E6EAF0; border-radius:12px; overflow:hidden; margin-bottom:10px;">
+      <table>
+        <thead><tr><th>View</th><th>목적</th><th>진입</th><th class="mono">전달 key</th></tr></thead>
+        <tbody>
+          <tr><td><b>List / Search</b></td><td>전체 검색·그룹형 목록(종목 기준 그룹)</td><td>기본 화면</td><td class="mono">—</td></tr>
+          <tr><td><b>Ticker / Issuer</b></td><td>특정 종목 거래/공시 이력(여러 보고자 혼재)</td><td>ticker 클릭</td><td class="mono">issuer ticker</td></tr>
+          <tr><td><b>Owner History</b></td><td>특정 보고자 거래/공시 이력</td><td>보고자명 클릭</td><td class="mono">reporting_owner</td></tr>
+          <tr><td><b>Filing Detail</b></td><td>공시 1건의 공통 schema 기반 해석(메타카드+6섹션)</td><td>row / 공시 요약 보기</td><td class="mono">filing key · row id · footnote_ids</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin:0; font-size:12.5px; color:#6B7280;"><code>row_type</code>: transaction · holding_only_filing · no_securities_owned_filing · late_transaction · d002_change · d002_initial · planned_transaction_report. filing-level event(보유만·보유없음·거래계획)도 목록/히스토리에 포함한다.</p>
+
+    <!-- 2. current ui rules -->
+    <h2 style="margin:42px 0 6px; font-size:18px; font-weight:700; color:#111827;">2 · Current UI Rules</h2>
+    <p style="margin:0 0 14px; font-size:13px; color:#6B7280;">현재 구현 기준(최종). 누적 버전 이력은 Appendix D 참조.</p>
+
+    <h3 style="margin:18px 0 8px; font-size:14px; font-weight:700; color:#374151;">List / Search</h3>
+    <ul style="font-size:13px; color:#475467; line-height:1.8;">
+      <li><b>Multi-transaction filing(v8.9)</b>: 같은 filing 내 F/S/G transaction은 <b>개별 row로 분리</b>(단일 net 합산 금지). 메인 요약은 「거래 N건 · S 3건·G 1건」 형태. 예: Stevens Jun = S 200k/100k/400k + G 307.5k(모두 By Trust). Filing Detail·거래목록 상세는 개별 row 표시.</li>
+      <li><b>10b5-1은 transaction/footnote 단위</b>: filing 전체 일괄 적용 금지. 같은 filing 안에서도 F=비10b5 / S=10b5 가능(예: Puri·Robertson·Kress). row별 <code>is10b5</code>로 판단, footnote 연결. <b>Adoption date</b>: Shah 2024-11-25, Dabiri 2025-12-10, Kress 2025-03-04 등 footnote/remarks에 보존.</li>
+      <li><b>Trust / indirect ownership</b>: <code>directOrIndirectOwnership=I</code> + <code>natureOfOwnership</code>(By Trust / Envy Trust / Horne Teter Family Living Trust 등) + footnote 연결 필수. Filing Detail 보유 내역에 Trust 명의 노출.</li>
+      <li><b>Weighted average / price range</b>: 단일=price, 가중평균=Avg 표시, range는 footnote에 가격범위(예: Shah $175.82~$176.57, Kress $171.85~$177.92). 내부 <code>value_source: reported|calculated|unavailable</code> 구분 유지.</li>
+      <li><b>NVDA 배치 표기 정정(v8.8)</b>: US NVDA 12건 = <b>12 filing / 1 issuer group(cik 0001045810) / 12 reporting owner</b>(12 issuer/13 issuer group 아님). 벡트 D002 포함 시 13 filing / 2 issuer group / 13 reporting-owner filing.</li>
+      <li><b>Event cluster 규칙(v8.8)</b>: 동일 issuer + 동일 transaction_date + 동일 transactionCode + 유사 reason이 여러 reporting owner에서 동시 발생(예: NVDA 2026-03-18 F 6명) → issuer card 내부에서 cluster summary("F · 세금원천징수 · 6명 동시 보고") + 펼침 시 개별 owner row 노출, row별 「거래목록 보기」 유지.</li>
+      <li><b>10b5-1 vs KR 거래계획 분리</b>: KR 거래계획보고서·planned_transactions 등은 out-of-scope. <b>US Rule 10b5-1은 in-scope</b>(Form 4 footnote/status badge로 유지, Planned/Trading plan badge로 바꾸지 않음). adoption date는 footnote/remarks에 보존.</li>
+      <li><b>UI placeholder 금지</b>: 사용자-facing UI에 <code>(qty)</code>·<code>undefined</code>·<code>NaN</code>·raw <code>null</code> 노출 금지. 추출 실패 시 <b>「수량 미추출」/「단가 미추출」/「확인 필요」</b> 같은 사용자 문구로 표시, schema 값은 null 유지.</li>
+      <li><b>Parser Input Pipeline 유지</b>: PDF/HTML은 LLM에 직접 투입 금지. DART parser로 metadata/contents/tables/tables_mdkv 추출 후 prompt에 투입. KR D002는 파서 산출물 함께 업로드 권장.</li>
+      <li>그룹형 단일 뷰(테이블·카드 뷰 제거, 보기 전환 UI 없음). 종목 기준 그룹 고정(<code>group_by=issuer/ticker</code>).</li>
+      <li>필터 toolbar(v8.7): 단일 행 compact toolbar — [국가 segmented] · [변동유형 segmented] · [공시유형 <b>select dropdown</b>]. 컨테이너 배경 매우 약하게, 비선택 투명, 선택만 강조. 공시유형은 길이 줄이려 dropdown으로 전환. <b>정렬</b>은 필터에서 제외하고 <b>결과 안내 줄 우측</b>에 배치(라벨 없음, 값만 노출). placeholder 「회사명, 티커, 내부자·보고자 검색」.</li>
+      <li>회사명 primary, ticker/code secondary. 검색바 아래는 KPI 카드 대신 한 줄 메타.</li>
+      <li>그룹 헤더 CTA(v7.3): <b>「최신 공시 보기 ›」</b> 1개만 — issuer group의 최신 filing 1건 상세로 이동. <b>「종목 거래 목록 보기」 제거</b>. <b>Form 4 고정 아님</b> — filing_date 최신 기준, 동일 날짜는 거래/변동 있음 &gt; Form4 &gt; Form5 &gt; Form3 &gt; 정정 &gt; holding-only/no-securities tie-break(Late·Amendment·No securities 비숨김). KR은 최신 D002 기준. 헤더 전체 클릭 없음.</li>
+      <li>그룹 헤더 identity: <code>[국가] 회사명  ticker·market</code> 한 줄(국가 badge 좌, 회사명 primary, ticker·market secondary 우) + 아래 줄 공시·보고자 수·최신 공시일. 사용자-facing 문구에 7섹션·공통 스키마 등 내부 용어 미사용.</li>
+      <li><b>그룹핑 키(v6.2): issuer.cik(US) / corp_code(KR) 우선</b>, ticker는 표시용 metadata. 동일 issuer의 ticker 변경(FB↔META, 동일 cik)이 있어도 한 그룹으로 묶고 분리하지 않는다. <b>former_symbols[]</b>=과거 변경 ticker(FB→META) / <b>alternate_symbols[]</b>=동시 복수 클래스(GOOG/GOOGL) — 둘을 섞지 않음. former_symbols/alternate_symbols는 historical 검색·중복 방지용 보조 필드(이전 ticker는 보조 텍스트로만 노출).</li>
+      <li>그룹 행은 <b>5컬럼 grid</b>(<b>내부자 · 보고자</b>·거래일 / 거래·공시 유형 / 수량·금액 / 공시일·상태 / 액션) + 미니 컬럼 헤더. 모두 좌측 정렬, 액션만 우측. List/Search 컬럼명은 v8.4부터 <b>「내부자 · 보고자」</b>(KR D002 보고자와 US Form 3·4·5 reporting owner/insider 동시 포괄). Filing Detail 1번 섹션명은 <b>「보고자 · 내부자 정보」</b> 유지. 거래목록 상세 표현은 <b>「내부자 거래목록」</b> 또는 「내부자 · 보고자 거래목록」.</li>
+      <li><b>정렬(v7.7)</b>: issuer group은 <b>latest_filing_date DESC</b>(group 내 모든 filing/row 중 최신 — Form4 고정 아님, D002·3·4·5·정정·noSec·holding-only 전부 포함, cik/corp_code 그룹핑 후 계산). <b>카드 내부 row는 filing_date DESC 우선</b>(Form 종류는 정렬 우선순위 아님) → 동일 날짜에만 거래있음 → Late › Amendment › No securities › Holding-only › 원본순. 날짜는 <code>YYYY-MM-DD / YYYY.MM.DD / YYYY년MM월DD일</code> normalize 후 비교. <b>header 최신 공시일 = 첫 row filing_date 일치</b>. 기본 5개 row는 이 정렬 결과 상위 5개.</li>
+      <li><b>행 action(v7.4): 「거래목록 보기」</b> — 해당 row의 보고자/거래·공시 묶음 기준 거래·변동 내역(Owner History)으로 이동. <b>「공시 상세 보기」로 쓰지 않음</b>. row 유형별 다른 액션명 금지. <b>그룹 내 아코디언</b>: 기본 5개 row, 6개 이상이면 <b>「+ N건 더 보기 / 접기」</b>로 같은 카드 안에서 확장(페이지 이동 없음). 노출 5개는 <b>상태 우선 정렬</b>(Late › Amendment › No securities › Holding-only, 그다음 최신일) — 중요 상태 row가 +N에 숨겨지지 않음. 버튼에 <code>aria-expanded·aria-label</code>, focus-visible ring.</li>
+      <li><b>수량/금액 컬럼(v8.0): 집계 타입별 평균가</b> — <b>같은 방향·같은 증권</b>(single/multi_same_direction)일 때만 「평균가 · 금액」 표시. <b>혼재(취득+처분)·derivative-linked(M/S)·D002 이중기준·Form5 gift A/D pair는 대표 평균가 금지</b> → 「거래금액 합계」 또는 「거래 N건」. 단가 없음=「단가 미기재」, 금액 없음=「거래금액 없음」.</li>단가 없으면 「단가 미기재 · 거래금액 없음」). 컬럼 추가 없이 기존 칸 압축. 보고자별 상세(거래목록 보기→Owner History)는 수량·단가·금액·공시일·상태·footnote 컬럼 분리.</li>
+      <li>badge 우선순위(v6.0): 최대 2개 + <code>+N</code> 축약하되 <b>Late › Amendment › No securities › Holding-only › 10b5-1 › Trading plan/Planned › Derivative/Stock Units › Footnote</b> 순. <b>Late는 +N 안에 숨기지 않는다</b>(Amendment도 가능한 한 노출). 빈값은 dash + 보조문구.</li>
+    </ul>
+
+    <h3 style="margin:20px 0 8px; font-size:14px; font-weight:700; color:#374151;">Ticker / Issuer History</h3>
+    <ul style="font-size:13px; color:#475467; line-height:1.8;">
+      <li>상단 히어로 2열: 좌 identity(<b>회사명 primary title</b> + 우측 「공시 요약 보기 ›」, 그 아래 <code>[국가] 코드 · 시장</code> secondary metadata line), 우 metrics(공시·거래·보고자 수·최신공시일) 세로 중앙정렬. (v6.0: 회사명을 메타 위로 — List 그룹 헤더와 동일 순서). KR/US 공통.</li>신공시일) 가로 일렬.</li>
+      <li>대표 CTA 「공시 요약 보기 ›」 = 해당 종목 <b>최신 공시</b> Detail. 하단 표 행은 텍스트 링크 「거래 목록 ›」(→ Owner History). 보고자 셀 내부 중복 링크 없음.</li>
+    </ul>
+
+    <h3 style="margin:20px 0 8px; font-size:14px; font-weight:700; color:#374151;">Owner History</h3>
+    <ul style="font-size:13px; color:#475467; line-height:1.8;">
+      <li>특정 종목+특정 보고자(단일 종목) 화면이면 <b>종목 컬럼 제거</b>; 여러 issuer가 섞이면 유지(<code>histMultiTicker</code>).</li>
+      <li>owner_type / role / title 분리 badge. UI에 <code>Individual</code> 등 internal value 직접 노출 금지 — 한글 label(개인·기관·임원·10% 이상 주주). 행별 공시 상세 액션 컬럼 없음(row 클릭으로 진입).</li>
+    </ul>
+
+    <h3 style="margin:20px 0 8px; font-size:14px; font-weight:700; color:#374151;">Filing Detail</h3>
+    <ul style="font-size:13px; color:#475467; line-height:1.8;">
+      <li>우측 「공시 선택」 dropdown 제거. breadcrumb 대신 좌측 <b>「← 돌아가기」</b>(<code>prev_view</code> 기억). 타이틀 아래 시스템 설명문구 없음.</li>
+      <li>「공시 요약」 본문 섹션 → <b>상단 Page Meta Card로 이동</b>(삭제 아님). 본문은 <b>「보고자 · 내부자 정보」부터</b> 시작.</li>
+      <li><b>Form family 탭바(v8.3 · US only)</b>: <b>상단 메타 카드 위</b>(타이틀 아래)에 배치 — 페이지 전체 기준 Form을 전환하는 최상위 전환 장치. <b>Form 3/3A · Form 4/4A · Form 5/5A</b> 3개 family — 각 탭은 해당 issuer(cik)의 family 최신 filing 1건(filing_date DESC, Amendment 포함) 대표. 탭 클릭 시 <code>selectedId</code> 교체 → <b>메타 카드 + 1~6섹션 전체</b>가 해당 filing으로 갈아끼움. 메타 카드 badge는 실제 filing 타입(Form 3/A 등). 존재하지 않는 family는 탭 비노출. 기본 선택은 진입 filing. <b>KR D002에는 탭바 미적용</b>. role=tablist/tab + aria-selected. 모바일에서는 wrap 허용.</li>
+      <li>Page Meta Card 2열: 좌 identity([국가][문서유형] badge + 회사명 + 코드·시장), 우 핵심 메타 2×2(공시일·보고기준일·보고의무발생일·접수번호). <b>국가·문서유형은 badge에서만</b>(grid 제외). <b>(v5.8) Page Meta Card는 issuer/document meta 전용 — reporting_owner(보고자명·직위·owner_type·관계) 표시 금지</b>. 보고자 정보는 본문 「보고자·내부자 정보」 섹션에서만 렌더링. KR/US 모든 공시 유형 공통, 특정 샘플에 종속되지 않음.</li> <b>하단 보조 메타 줄(v5.6)</b>: 보고구분·원 제출일·보고서작성기준일 등 상단/배너 중복 항목은 노출 금지 — KR은 하단 줄 자체를 숨김, US만 10b5-1·Form5 flags 노출. 중복 정보 반복 금지.</li>
+      <li>거래계획 문서는 alert banner(해석 안내) + plan summary card(핵심 수치) 유지.</li>
+      <li><b>레이아웃·시각화(v5.1)</b>: 카드 사용은 <b>Page Meta Card · 거래계획 요약 · 보고자+stat 통합 panel</b>에만. 그 외는 section block / table / divider list / compact empty row.</li>
+      <li><b>보고자+KPI 통합 panel</b>: 4개 KPI를 독립 카드로 띄우지 않고, 하나의 panel 안에서 좌 profile + 우 2×2 stat grid(divider 구분). <b>이름/메타(v5.4)</b>: 이름=가장 큰 타이틀 + <b>오른쪽 inline meta</b>(개인·Individual·소속/기관명만, badge 아님). <b>이름 바로 아래 관계 텍스트 중복 금지</b> — 관계(대표이사)는 하단 상세 「관계 / Relationship」에서 <b>1회만</b> 노출. 임원 단독 badge 제거. KPI 2×2 셀은 동일 padding·min-height + <b>상단 라벨 / 하단 큰 값</b> 구조 통일, 좌우 divider는 연속된 grid로.</li>
+      <li><b>비교/변화 시각화</b>: 거래계획 보유 전/후는 <b>horizontal comparison bar</b>(현재=muted, 예정 취득분=red accent), 거래규모 판단은 <b>stacked progress bar</b>(직전 6개월=muted, 계획=amber, 우측 거래비율). 도넛·3D·단일값 차트화 금지. <b>누적 비교 바 연결 규칙(v5.6)</b>: 현재 보유+예정 취득분 누적 바는 <b>양 끝만 rounded, 두 구간이 맞닿는 내부 접점은 flat</b>(좌 구간 <code>7px 0 0 7px</code>·우 구간 <code>0 7px 7px 0</code>)으로 하나의 연속 막대처럼.</li>
+      <li><b>보유 변화 요약(v5.5)</b>: 표현 방식 토글 제거, <b>2 비교 패널</b>. 보유수량=<b>현재 vs 예상 세로 컬럼 비교</b>(값 비례 높이 + 가운데 delta/화살표, 대각선 추이형 금지). 보유비율=<b>현재·예상 도넛 비교</b>(세로 중앙정렬, <b>예상 도넛을 더 크게 강조</b>, delta <code>%p</code>는 카드 외곽이 아닌 <b>두 도넛 사이 화살표 위</b>). label: 거래계획=현재→예상, D002 변동=직전→이번, US Form 3=empty. 증가/예정취득 Red·감소 Blue. <b>비율 밸런스(v5.7)</b>: 수량 컬럼은 슬림하게(기준/현재 폭 더 작게, 예상 컬럼 폭 더 크게 강조, 과도한 가로 확장 금지). 보유비율 도넛 그룹은 카드 세로 중앙정렬·전체 스케일 업(예상 도넛 최대), 허전한 여백 축소.</li>
+      <li><b>Footnotes</b>: 카드형 금지 — <b>divider list</b>(ID=작은 monospace, 본문 일반 텍스트, line divider 구분). remarks·exhibits는 하단 보조 라인.</li>
+      <li><b>Empty state</b>: 큰 카드·아이콘 원 대신 낮은 높이 <b>muted row</b>(solid 1px border, 좌측 정렬 1~2줄).</li>
+    </ul>
+
+    <!-- 3. detail sections -->
+    <h2 style="margin:42px 0 6px; font-size:18px; font-weight:700; color:#111827;">3 · Filing Detail 섹션 구조</h2>
+    <div style="margin:0 0 12px; padding:12px 16px; background:#FFF8EE; border:1px solid #F4D9A8; border-radius:11px; font-size:12.5px; color:#7A5212;"><b style="color:#92580B;">Disclosure Summary section moved to Page Meta Card.</b> 삭제가 아니라 상단 메타 카드로 이동한 것이다.</div>
+    <div style="border:1px solid #E6EAF0; border-radius:12px; overflow:hidden;">
+      <table>
+        <thead><tr><th style="width:60px;">#</th><th>섹션</th><th style="width:74px;">구분</th><th class="mono">스키마 소스</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">Meta</td><td>Page Meta Card (구 공시 요약)</td><td><span style="color:#1D4ED8; font-weight:600;">공통</span></td><td class="mono">document_meta · issuer · filing_dates</td></tr>
+          <tr><td class="mono">1</td><td>보고자 · 내부자 정보 + KPI</td><td><span style="color:#1D4ED8; font-weight:600;">공통</span></td><td class="mono">reporting_owner · owner_relationship</td></tr>
+          <tr><td class="mono">2</td><td>보유 변화 요약</td><td><span style="color:#B45309; font-weight:600;">조건부</span></td><td class="mono">holding_summary</td></tr>
+          <tr><td class="mono">3</td><td>거래 · 변동 내역</td><td><span style="color:#1D4ED8; font-weight:600;">공통</span></td><td class="mono">transactions[]</td></tr>
+          <tr><td class="mono">4</td><td>보유 내역</td><td><span style="color:#1D4ED8; font-weight:600;">공통</span></td><td class="mono">holdings[]</td></tr>
+          <tr><td class="mono">5</td><td>권리성 · 파생성 증권</td><td><span style="color:#B45309; font-weight:600;">조건부</span></td><td class="mono">derivative_or_rights[]</td></tr>
+          <tr><td class="mono">6</td><td>주석 · 비고 · Footnotes</td><td><span style="color:#1D4ED8; font-weight:600;">공통</span></td><td class="mono">footnotes[] · remarks</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 4. schema summary -->
+    <h2 style="margin:42px 0 6px; font-size:18px; font-weight:700; color:#111827;">4 · Common Schema 요약</h2>
+    <p style="margin:0 0 14px; font-size:13px; color:#6B7280;"><code>insider-ownership-common-v1</code> field group. 전체 JSON은 <b>Appendix A</b>.</p>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(210px,1fr)); gap:8px;">
+      <div style="border:1px solid #E6EAF0; border-radius:10px; padding:11px 14px; font-family:'SFMono-Regular',ui-monospace,Menlo,monospace; font-size:12px; color:#1F2937;">document_meta</div>
+      <div style="border:1px solid #E6EAF0; border-radius:10px; padding:11px 14px; font-family:'SFMono-Regular',ui-monospace,Menlo,monospace; font-size:12px; color:#1F2937;">issuer</div>
+      <div style="border:1px solid #E6EAF0; border-radius:10px; padding:11px 14px; font-family:'SFMono-Regular',ui-monospace,Menlo,monospace; font-size:12px; color:#1F2937;">reporting_owner</div>
+      <div style="border:1px solid #E6EAF0; border-radius:10px; padding:11px 14px; font-family:'SFMono-Regular',ui-monospace,Menlo,monospace; font-size:12px; color:#1F2937;">owner_relationship</div>
+      <div style="border:1px solid #E6EAF0; border-radius:10px; padding:11px 14px; font-family:'SFMono-Regular',ui-monospace,Menlo,monospace; font-size:12px; color:#1F2937;">filing_dates</div>
+      <div style="border:1px solid #E6EAF0; border-radius:10px; padding:11px 14px; font-family:'SFMono-Regular',ui-monospace,Menlo,monospace; font-size:12px; color:#1F2937;">holding_summary</div>
+      <div style="border:1px solid #E6EAF0; border-radius:10px; padding:11px 14px; font-family:'SFMono-Regular',ui-monospace,Menlo,monospace; font-size:12px; color:#1F2937;">transactions[]</div>
+      <div style="border:1px solid #E6EAF0; border-radius:10px; padding:11px 14px; font-family:'SFMono-Regular',ui-monospace,Menlo,monospace; font-size:12px; color:#1F2937;">holdings[]</div>
+      <div style="border:1px solid #E6EAF0; border-radius:10px; padding:11px 14px; font-family:'SFMono-Regular',ui-monospace,Menlo,monospace; font-size:12px; color:#1F2937;">derivative_or_rights[]</div>
+      <div style="border:1px solid #E6EAF0; border-radius:10px; padding:11px 14px; font-family:'SFMono-Regular',ui-monospace,Menlo,monospace; font-size:12px; color:#1F2937;">trading_plan</div>
+      <div style="border:1px solid #E6EAF0; border-radius:10px; padding:11px 14px; font-family:'SFMono-Regular',ui-monospace,Menlo,monospace; font-size:12px; color:#1F2937;">planned_transactions[]</div>
+      <div style="border:1px solid #E6EAF0; border-radius:10px; padding:11px 14px; font-family:'SFMono-Regular',ui-monospace,Menlo,monospace; font-size:12px; color:#1F2937;">prior_6_month_transactions[]</div>
+      <div style="border:1px solid #E6EAF0; border-radius:10px; padding:11px 14px; font-family:'SFMono-Regular',ui-monospace,Menlo,monospace; font-size:12px; color:#1F2937;">plan_scale_assessment</div>
+      <div style="border:1px solid #E6EAF0; border-radius:10px; padding:11px 14px; font-family:'SFMono-Regular',ui-monospace,Menlo,monospace; font-size:12px; color:#1F2937;">expected_holdings_after_plan</div>
+      <div style="border:1px solid #E6EAF0; border-radius:10px; padding:11px 14px; font-family:'SFMono-Regular',ui-monospace,Menlo,monospace; font-size:12px; color:#1F2937;">footnotes[]</div>
+      <div style="border:1px solid #E6EAF0; border-radius:10px; padding:11px 14px; font-family:'SFMono-Regular',ui-monospace,Menlo,monospace; font-size:12px; color:#1F2937;">remarks · signatures</div>
+      <div style="border:1px solid #E6EAF0; border-radius:10px; padding:11px 14px; font-family:'SFMono-Regular',ui-monospace,Menlo,monospace; font-size:12px; color:#1F2937;">ui_empty_states</div>
+      <div style="border:1px solid #E6EAF0; border-radius:10px; padding:11px 14px; font-family:'SFMono-Regular',ui-monospace,Menlo,monospace; font-size:12px; color:#1F2937;">source_mapping</div>
+    </div>
+
+    <!-- 5. mapping -->
+    <h2 style="margin:42px 0 6px; font-size:18px; font-weight:700; color:#111827;">5 · UI ↔ Schema 매핑 (핵심)</h2>
+    <div style="border:1px solid #E6EAF0; border-radius:12px; overflow:hidden;">
+      <table>
+        <thead><tr><th>UI 영역</th><th class="mono">스키마 키</th><th>비고</th></tr></thead>
+        <tbody>
+          <tr><td>Page Meta Card</td><td class="mono">document_meta · issuer · filing_dates</td><td>국가·문서유형=badge / 공시일·보고기준일·의무발생일·접수번호=grid</td></tr>
+          <tr><td>Reporting Owner 헤더</td><td class="mono">reporting_owner.name · owner_relationship.roles_display</td><td>owner_type별 관계 라벨 가변</td></tr>
+          <tr><td>보유 변화 요약</td><td class="mono">holding_summary.previous/current/change</td><td>previous=null → Empty. 수량/비율 증감 독립</td></tr>
+          <tr><td>Transactions</td><td class="mono">transactions[]</td><td>code·A/D 분리 badge · footnote_ids 행 펼침</td></tr>
+          <tr><td>Holdings</td><td class="mono">holdings[]</td><td>ownership_type · nature_of_ownership 병기 · <b>D002는 security_category(주권/신주인수권/전환사채권/교환사채권/기타 특정증권등) 라벨 병기</b></td></tr>
+          <tr><td>Derivative / Rights</td><td class="mono">derivative_or_rights[]</td><td>underlying · 행사·전환가 · 만기</td></tr>
+          <tr><td>Footnotes</td><td class="mono">footnotes[] · remarks · exhibits[]</td><td>row의 footnote_ids와 연결. remarks·EX-24 별도</td></tr>
+          <tr><td>Planned Transaction Panel</td><td class="mono">planned_transactions[] · plan_scale_assessment · expected_holdings_after_plan</td><td>거래계획 전용. 실거래와 분리</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin:8px 0 0; font-size:12px; color:#9AA3B2;">세부 컬럼별 매핑은 Appendix C / 전체 스키마(Appendix A) 참조.</p>
+
+    <!-- 6. empty state -->
+    <h2 style="margin:42px 0 6px; font-size:18px; font-weight:700; color:#111827;">6 · Rendering / Empty State</h2>
+    <p style="margin:0 0 14px; font-size:13px; color:#6B7280;">섹션은 유지하고 내용만 Empty 카드로 대체(레이아웃 보존). 단일 값 누락은 <b class="mono">—</b>.</p>
+    <div style="border:1px solid #E6EAF0; border-radius:12px; overflow:hidden;">
+      <table>
+        <thead><tr><th>case</th><th class="mono">condition</th><th>UI treatment</th></tr></thead>
+        <tbody>
+          <tr><td>Form 3 거래 없음</td><td class="mono">transactions=[] &amp; form 3</td><td>섹션3 Empty "최초 보고 — 거래 내역 없음"</td></tr>
+          <tr><td>noSecuritiesOwned=1</td><td class="mono">no_securities_owned=true</td><td>KPI "없음" · 보유/변화 Empty "보유 증권 없음"</td></tr>
+          <tr><td>holdings만</td><td class="mono">holdings≠[] &amp; transactions=[]</td><td>거래 Empty + 보유 정상 (Form 3 전형)</td></tr>
+          <tr><td>transactions만</td><td class="mono">transactions≠[] &amp; holdings=[]</td><td>거래 정상 + 보유 Empty</td></tr>
+          <tr><td>파생/권리 없음</td><td class="mono">derivative_or_rights=[]</td><td>섹션5 Empty "권리성·파생성 증권 내역 없음"</td></tr>
+          <tr><td>주석 없음</td><td class="mono">footnotes=[]</td><td>섹션6 Empty "주석 없음"</td></tr>
+          <tr><td>KR 신규(직전 없음)</td><td class="mono">previous=null · no_previous_report</td><td>변화 요약 Empty "직전보고서 없음"</td></tr>
+          <tr><td>KR 거래계획</td><td class="mono">form_type=KR_TRADING_PLAN</td><td>예정 거래 패널 + 경고 배너. 실거래로 표시 금지</td></tr>
+          <tr><td>가격 null vs 0</td><td class="mono">price=null / price=0</td><td>null="단가 미기재" / 0="$0.00"+price_note. 병합 금지</td></tr>
+          <tr><td>수량 decimal</td><td class="mono">shares_*: number</td><td>원문 보존, 반올림 금지(최대 6자리)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 7. critical edge case index -->
+    <h2 style="margin:42px 0 6px; font-size:18px; font-weight:700; color:#111827;">7 · Critical Edge Case Index</h2>
+    <p style="margin:0 0 14px; font-size:13px; color:#6B7280;">1줄 인덱스. 상세는 <b>Appendix C</b>.</p>
+    <div style="border:1px solid #E6EAF0; border-radius:12px; overflow:hidden;">
+      <table>
+        <tbody>
+          <tr><td style="width:34%;"><b>Form 3 holding-only</b></td><td>거래 없음 + 보유 있음. noSecurities=0이면 "보유 없음" 처리 금지</td></tr>
+          <tr><td><b>Form 3 noSecuritiesOwned=1</b></td><td>전체 빈 문서도 정상. 4개 섹션 Empty + remarks 별도</td></tr>
+          <tr><td><b>Form 3 no table</b></td><td>테이블 부재 정상(<code>missing_tables_allowed</code>)</td></tr>
+          <tr><td><b>Form 4/5 txn + holdings 동시</b></td><td>각자 배열 유지, 병합 금지</td></tr>
+          <tr><td><b>Form 5 historical / late</b></td><td>period≠txnDate 정상. <code>L</code>=지연 badge</td></tr>
+          <tr><td><b>G without footnote</b></td><td>gift_or_transfer + low_without_footnote. GRAT 추정 금지</td></tr>
+          <tr><td><b>G trust / GRAT</b></td><td>footnote 키워드 → trust_transfer_or_annuity_payment</td></tr>
+          <tr><td><b>A with price &gt; 0</b></td><td>acquisition_or_purchase (RSU 아님)</td></tr>
+          <tr><td><b>A RSU award</b></td><td>price 0 + RSU footnote → compensation_award / RSU_award</td></tr>
+          <tr><td><b>W inheritance</b></td><td>상속·누락 보고. 일반 매수로 분류 금지</td></tr>
+          <tr><td><b>field-level footnotes</b></td><td>값별 [F#] 보존(수량·단가·보유수량)</td></tr>
+          <tr><td><b>decimal quantity</b></td><td>215.327 등 원문 보존</td></tr>
+          <tr><td><b>10b5-1 adoption date</b></td><td>footnote에서 채택일 추출</td></tr>
+          <tr><td><b>401(k) / retirement plan</b></td><td>nature → retirement_plan_account</td></tr>
+          <tr><td><b>KR D002 신규 / 변동</b></td><td>report_type + previous 유무로 변화 요약 분기</td></tr>
+          <tr><td><b>KR 주식배당</b></td><td>stock_dividend · 단가 null(해당 없음)</td></tr>
+          <tr><td><b>KR 권리행사 pair</b></td><td>신주인수권 − → 보통주 + 그룹. 수량↑·지분율↓ 분리</td></tr>
+          <tr><td><b>KR 자사주상여금</b></td><td>compensation_award(US RSU와 공통 카테고리)</td></tr>
+          <tr><td><b>KR 특정증권등 vs 주권</b></td><td>이중 기준 별도 보존, 기본 표시=주권</td></tr>
+          <tr><td><b>DART A~J 컬럼코드</b></td><td>컬럼 코드를 heading/종목명으로 오인 금지</td></tr>
+          <tr><td><b>KR 거래계획보고서</b></td><td>planned_transactions[] 분리. 실거래와 섞지 않음</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 8. Out of scope -->
+    <h2 style="margin:42px 0 6px; font-size:18px; font-weight:700; color:#111827;">8 · Out-of-scope · 거래계획보고서</h2>
+    <div style="border:1px solid #F4D9A8; background:#FFFBF3; border-radius:12px; padding:16px 18px; font-size:13px; color:#475467; line-height:1.8;">
+      <p style="margin:0 0 8px;">KR 거래계획보고서는 이번 KR D002 + US Form 3/4/5 공통 UI 범위에서 <b>제외</b>한다. 따라서 planned transaction 관련 UI, badge, schema field는 본문 common schema와 active UI에서 사용하지 않는다.</p>
+      <ul style="line-height:1.85;">
+        <li><b>감지</b>: <code>form_subtype_code=00633</code> · title "거래계획보고서" · item_list "거래계획 / 거래규모 판단 / 거래계획 완료후 예상 소유상황".</li>
+        <li><b>처리</b>: <code>document_meta.status=out_of_scope</code>로 표기하고 D002로 오인하지 않는다. transactions/holdings를 채우지 않고 active UI에 렌더하지 않는다.</li>
+        <li>archive된 planned 스키마 필드(<code>planned_transactions·current/expected_holdings·plan_scale_assessment·trading_plan</code>)는 본 범위에서 비활성이며, 향후 별도 "예정 거래" 화면에서만 사용.</li>
+      </ul>
+    </div>
+
+    <!-- 9. QA Checklist -->
+    <h2 style="margin:42px 0 6px; font-size:18px; font-weight:700; color:#111827;">9 · QA Checklist</h2>
+    <p style="margin:0 0 14px; font-size:13px; color:#6B7280;">새 데이터/회귀 시 4-View 공통 점검. 화면별 예외는 문서화된 조건(아래)에서만 허용.</p>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+      <div style="border:1px solid #E6EAF0; border-radius:12px; padding:14px 16px;">
+        <div style="font-size:13px; font-weight:700; color:#111827; margin-bottom:7px;">공통</div>
+        <ul style="margin:0; padding-left:17px; font-size:12.5px; color:#475467; line-height:1.85;">
+          <li>회사명 primary / ticker·code secondary</li>
+          <li>국가·문서유형 중복 표시 없음(badge 1회)</li>
+          <li>액션과 상태 badge 분리</li>
+          <li>internal value(Individual 등) 과다 노출 없음(한글 label)</li>
+        </ul>
+      </div>
+      <div style="border:1px solid #E6EAF0; border-radius:12px; padding:14px 16px;">
+        <div style="font-size:13px; font-weight:700; color:#111827; margin-bottom:7px;">List / Search</div>
+        <ul style="margin:0; padding-left:17px; font-size:12.5px; color:#475467; line-height:1.85;">
+          <li>그룹형만(테이블·카드 토글 없음)</li>
+          <li>Form 필터 제거(국가·방향만)</li>
+          <li>CTA: 종목 거래 목록 보기 / 공시 요약 보기 › / 거래 목록 ›</li>
+          <li>그룹 row 정보 누락 없음 · 5컬럼 정렬</li>
+        </ul>
+      </div>
+      <div style="border:1px solid #E6EAF0; border-radius:12px; padding:14px 16px;">
+        <div style="font-size:13px; font-weight:700; color:#111827; margin-bottom:7px;">Ticker History</div>
+        <ul style="margin:0; padding-left:17px; font-size:12.5px; color:#475467; line-height:1.85;">
+          <li>상단 KPI 우측·세로 중앙정렬</li>
+          <li>장황한 안내문 제거</li>
+          <li>row의 공시 요약 반복 버튼 제거</li>
+          <li>row 액션은 「거래 목록 ›」만</li>
+        </ul>
+      </div>
+      <div style="border:1px solid #E6EAF0; border-radius:12px; padding:14px 16px;">
+        <div style="font-size:13px; font-weight:700; color:#111827; margin-bottom:7px;">Owner History</div>
+        <ul style="margin:0; padding-left:17px; font-size:12.5px; color:#475467; line-height:1.85;">
+          <li>단일 종목+보고자면 종목 컬럼 제거(여러 issuer면 유지)</li>
+          <li>보고자 관계/직위 중복 없음</li>
+          <li>행별 공시 요약 버튼 제거(row 클릭 진입)</li>
+        </ul>
+      </div>
+      <div style="border:1px solid #E6EAF0; border-radius:12px; padding:14px 16px; grid-column:1 / -1;">
+        <div style="font-size:13px; font-weight:700; color:#111827; margin-bottom:7px;">Filing Detail</div>
+        <ul style="margin:0; padding-left:17px; font-size:12.5px; color:#475467; line-height:1.85; column-count:2; column-gap:24px;">
+          <li>공시 선택 dropdown 제거</li>
+          <li>breadcrumb → 「← 돌아가기」(prev_view)</li>
+          <li>타이틀 아래 시스템 설명문구 제거</li>
+          <li>Page Meta Card = issuer/document 전용(보고자 정보 없음)</li>
+          <li>국가·문서유형 badge에서만(grid 제외)</li>
+          <li>공시 요약 섹션 → Page Meta Card로 이동</li>
+          <li>본문은 「보고자·내부자 정보」부터</li>
+          <li>보유 변화 요약 시각화 패널(토글 없음). <b>(v7.8)</b> 모든 섹션 헤더(1~6)는 동일 한 줄형(번호 배지 + 17px 한글 타이틀 + 12.5px 영문/보조 라벨, baseline 정렬). 1섹션 KPI 2×2는 <code>align-content:center</code> 세로 중앙정렬. Quantity 막대 수량은 <code>white-space:nowrap</code>(숫자+주 한 세트, 컬럼 min-width 확보). Quantity 증감은 Ownership %와 동일 pill badge + 막대 사이 중앙 정렬.</li>
+          <li>Footnotes divider list/compact table</li>
+          <li>거래계획: alert strip + 요약 시각화</li>
+        </ul>
+      </div>
+    </div>
+    <div style="margin:14px 0 0; padding:12px 16px; background:#FFF8EE; border:1px solid #F4D9A8; border-radius:11px; font-size:12.5px; color:#7A5212; line-height:1.7;"><b style="color:#92580B;">문서화된 화면별 예외:</b> ① Owner History 종목 컬럼은 <code>histMultiTicker</code>(여러 issuer)일 때만 유지 · ② 보유 변화 요약 label은 거래계획=현재→예상 / D002 변동=직전→이번 / US Form 3(직전 없음)=empty · ③ Page Meta Card 하단 보조 메타 줄은 US(10b5-1·Form5 flags)에서만 노출.</div>
+
+    <!-- APPENDIX A -->
+    <h2 style="margin:48px 0 6px; font-size:18px; font-weight:700; color:#111827; padding-top:18px; border-top:2px solid #E6EAF0;">Appendix A · Full Schema (JSON)</h2>
+    <p style="margin:0 0 14px; font-size:13px; color:#6B7280;">추출 프롬프트의 출력 계약과 동일. nullable, 판단 불가 시 null.</p>
+    <pre>{
+  "schema_version": "insider-ownership-common-v1",
+  "document_meta": {
+    "country": "KR | US", "source": "DART | SEC",
+    "form_type": "D002 | KR_TRADING_PLAN | 3 | 4 | 5 | 3/A | 5/A",
+    "form_name": "", "form_subtype_code": null,
+    "is_amendment": false,
+    "report_type": "신규 | 변동 | 정정 | initial | annual | change | amendment",
+    "row_type": null, "event_status": null,
+    "accession_number": null, "receipt_number": null, "document_number": null,
+    "filing_date": null, "period_of_report": null,
+    "date_of_original_submission": null,
+    "form5_flags": { "not_subject_to_section16": null,
+      "form3_holdings_reported": null, "form4_transactions_reported": null },
+    "contains_historical": null, "transaction_date_range": { "from": null, "to": null },
+    "missing_tables_allowed": false
+  },
+  "issuer": { "name": "", "ticker": null, "display_ticker": null, "company_code": null,
+    "cik": null, "market": null, "shares_outstanding": null, "source_priority": null,
+    "former_symbols": [], "alternate_symbols": [], "former_names": [], "grouping_key": null },
+  "reporting_owner": { "name": "", "owner_cik": null,
+    "owner_type": "individual | institution | financial_institution | company | unknown",
+    "address": null },
+  "owner_relationship": { "kr_role": null, "kr_position": null,
+    "is_director": null, "is_officer": null, "is_ten_percent_owner": null,
+    "is_other": null, "officer_title": null, "officer_title_raw": null,
+    "officer_title_display": null, "relationship_label": null,
+    "roles_display": [] },
+  "filing_dates": { "event_date": null, "report_base_date": null,
+    "planned_trade_start_date": null, "date_source_priority": null,
+    "transaction_dates": [], "filing_date": null, "original_submission_date": null },
+  "holding_summary": {
+    "previous": { "date": null, "total_securities": null, "total_securities_ratio": null,
+                  "common_stock_shares": null, "common_stock_ratio": null },
+    "current":  { "date": null, "total_securities": null, "total_securities_ratio": null,
+                  "common_stock_shares": null, "common_stock_ratio": null },
+    "change":   { "total_securities": null, "total_securities_ratio_point": null,
+                  "common_stock_shares": null, "common_stock_ratio_point": null },
+    "total_specific_securities": null, "shares_only": null,
+    "quantity_change_direction": "increase | decrease | neutral",
+    "ratio_change_direction": "increase | decrease | neutral",
+    "no_securities_owned": false,
+    "status": "available | not_applicable | no_previous_report | no_securities_owned | plan"
+  },
+  "transactions": [{
+    "source_table": "nonDerivativeTransaction | KR_D002_detail",
+    "transaction_date": null,
+    "transaction_code": null, "transaction_code_label": null,
+    "acquired_disposed_code": null, "acquired_disposed_label": null,
+    "transaction_category": null, "transaction_category_label": null,
+    "transaction_reason_raw": null, "transaction_subtype": null,
+    "linked_derivative_ids": [],
+    "classification_confidence": null,
+    "security_title": null,
+    "security_category": "common_stock | rights | derivative | other",
+    "shares_before": null, "shares_changed": null, "shares_after": null,
+    "price_per_share": null, "price_currency": null, "price_note": null,
+    "price_is_zero": null, "price_zero_valid": null, "price_zero_reason": null,
+    "price_missing_reason": null,
+    "ownership_type": "direct | indirect | unknown", "nature_of_ownership": null,
+    "ownership_subtype": null,
+    "transaction_timeliness": null, "is_late_reported": null,
+    "is_summary_row": false, "trading_plan_report_date": null,
+    "transaction_group_id": null, "group_display_type": null,
+    "paired_transfer": null,
+    "footnote_ids": [],
+    "field_footnotes": { "transaction_shares": [], "transaction_price_per_share": [],
+      "shares_owned_following_transaction": [], "security_title": [], "nature_of_ownership": [] },
+    "notes": null
+  }],
+  "holdings": [{
+    "source_table": "nonDerivativeHolding | derivativeHolding | KR_D002_security_breakdown",
+    "security_title": null, "security_category": null, "shares_owned": null,
+    "ownership_type": "direct | indirect | unknown", "nature_of_ownership": null,
+    "ownership_subtype": null, "holding_type": null,
+    "compensation_security": null, "vesting_schedule_footnote_ids": [],
+    "footnote_ids": [], "notes": null
+  }],
+  "derivative_or_rights": [{
+    "id": null,
+    "source_table": "derivativeTransaction | derivativeHolding | KR_D002_rights",
+    "security_title": null, "underlying_security_title": null,
+    "underlying_security_shares": null, "conversion_or_exercise_price": null,
+    "transaction_date": null, "transaction_code": null, "acquired_disposed_code": null,
+    "shares_changed": null, "shares_after": null,
+    "exercise_date": null, "expiration_date": null,
+    "footnote_ids": [], "notes": null
+  }],
+  "footnotes": [{ "id": "F1", "text": "", "footnote_summary": null, "footnote_raw": null,
+    "linked_sections": [], "linked_rows": [] }],
+  "remarks": null,
+  "exhibits": [{ "type": null, "description": null, "is_transaction_data": false }],
+  "signatures": [{ "name": null, "date": null, "capacity": null }],
+  "ui_empty_states": {
+    "transactions": null, "holdings": null,
+    "derivative_or_rights": null, "footnotes": null
+  },
+  "source_mapping": { "raw_form": "", "parser_notes": [],
+    "parser_qa": { "verdict": null, "section_pass_count": null,
+      "section_total_count": null, "notes": null } }
+}</pre>
+    <div style="margin-top:14px; padding:16px 18px; background:#F3F4F6; border:1px dashed #C4CCD8; border-radius:12px;">
+      <div style="font-size:13px; font-weight:700; color:#6B7280;">Archived / Out-of-scope · KR Trading Plan</div>
+      <p style="margin:6px 0 8px; font-size:12.5px; color:#6B7280;">Planned transaction related fields are archived and out-of-scope for the current KR D002 + US Form 3/4/5 common UI. 현재 범위에서는 사용하지 않으며, 향후 별도 "예정 거래" 화면에서만 사용한다.</p>
+      <pre style="background:#1F2430; color:#AAB3C5;">{
+  "trading_plan": { "is_10b5_1", "is_applicable", "plan_type", "adoption_date", "kr_plan_report_date", … },
+  "planned_transactions": [{ "planned_start_date", "planned_end_date", "period_days",
+    "transaction_category":"planned_market_purchase", "security_type", "planned_quantity",
+    "planned_price", "planned_value" }],
+  "prior_6_month_transactions": [],
+  "current_holdings_before_plan": { "security_type", "shares", "ratio" },
+  "expected_holdings_after_plan": { "security_type", "shares", "ratio" },
+  "plan_scale_assessment": { "prior_6_month_quantity", "prior_6_month_value",
+    "prior_6_month_avg_price", "planned_quantity", "planned_value",
+    "total_quantity", "total_value", "trade_ratio" }
+}</pre>
+    </div>
+
+    <!-- APPENDIX A2 · B-3 coverage / D002 QA / error rules -->
+    <h2 style="margin:44px 0 6px; font-size:18px; font-weight:700; color:#111827;">Appendix A2 · Form 커버리지 · D002 QA · 에러 규칙</h2>
+    <div style="border:1px solid #E6EAF0; border-radius:12px; overflow:hidden; margin-bottom:14px;">
+      <table>
+        <thead><tr><th>schema field</th><th>D002</th><th>Form 3</th><th>Form 4</th><th>Form 5</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">holding_summary(직전/이번/증감)</td><td>●</td><td>○(최초)</td><td>△</td><td>△</td></tr>
+          <tr><td class="mono">total_specific_securities / shares_only</td><td>●</td><td>—</td><td>—</td><td>—</td></tr>
+          <tr><td class="mono">transactions[]</td><td>●(세부변동)</td><td>—</td><td>●</td><td>●</td></tr>
+          <tr><td class="mono">holdings[]</td><td>●(종류별)</td><td>●</td><td>△</td><td>△</td></tr>
+          <tr><td class="mono">derivative_or_rights[]</td><td>△(신주인수권 등)</td><td>△</td><td>△(M)</td><td>△</td></tr>
+          <tr><td class="mono">footnotes/field_footnotes</td><td>△</td><td>△</td><td>●</td><td>●</td></tr>
+          <tr><td class="mono">form5_flags / timeliness(L)</td><td>—</td><td>—</td><td>—</td><td>●</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin:0 0 8px; font-size:12px; color:#9AA3B2;">● 필수 · △ 케이스에 따라 · ○ 최초보유 · — 해당 없음</p>
+    <div style="border:1px solid #CDEBD9; background:#F3FBF6; border-radius:12px; padding:14px 16px; margin-bottom:14px;">
+      <div style="font-size:13px; font-weight:700; color:#1B7A45; margin-bottom:6px;">D002 Real Filing Validation (2026-06-16 소유상황보고서)</div>
+      <div style="font-size:13px; font-weight:700; color:#1B7A45; margin-bottom:6px;">D002 Real Filing Validation (v10.3 · parser-output 12건 + 벡트)</div>
+      <div style="font-size:12.5px; color:#3F7A57; line-height:1.75;"><b>parser-output 검증: d00220~d00231 = 12/12 PASS</b>. 입력=DART parser <code>common_schema_preview.json</code>, <code>insider-ownership-common-v1</code>로 전건 정상 정규화·UI 대체. 벡트 포함 <b>13 real D002 filings</b>(벡트+12)만 노출, representative sample 전부 keep set 제외.<br>
+      <b>source 계층</b>: <code>source_original</code>="DART PDF"(official, 대체 아님) · <code>source_parsed</code>={metadata.json, contents.json, tables.json, tables_mdkv.md, common_schema_preview.json}(machine-readable extraction layer). PDF 직접 추출이 CMap/custom subset font로 실패하면 <code>source_status:"needs_parser_output"</code> — <b>KR D002는 out-of-scope 처리 금지</b>(in-scope 유지).<br>
+      커버 케이스: 신규/변동/정정 · 직전보고서 없음(신규 3건) · 다건 거래(일진파워 5·엔젯 2·HLB 2) · 개인/국내법인 보고자(엔케이·대림통상) · 장내매수/증여 처분(에스피소프트, 단가 미기재+사유 footnote) · 신규상장 무단가(세미티에스) · 10%주주/사실상지배주주 · KOSPI/KOSDAQ 혼재.<br>
+      <b>parser QA 보완점</b>: ① d00220 정정인데 <code>date_of_original_submission</code> 누락 → UI 「—」, raw null 금지(parser에 원제출일 필드 추가 권장) · ② 일부 preview <code>report_date</code>에 확인문구 노이즈(UI는 <code>reportBaseDate</code> 사용해 영향 없음, parser 정정 권장) · ③ d00229 거래일(06-18)>공시일(06-17) → <code>parser_qa.warning: transaction_date_after_filing_date</code> 기록(렌더는 정상) · ④ <b>corp_code(8자리 고유번호) ≠ stock_code(6자리 종목코드)</b> 분리 — UI 표시는 stock_code, grouping key는 corp_code 우선, 누락 시 stock_code→회사명 fallback. <b>거래계획 컬럼</b>은 source note만 보존, planned transaction 의미로 active UI 노출 금지.</div>
+    </div>
+    <div style="border:1px solid #E6EAF0; border-radius:12px; padding:14px 16px; margin-bottom:14px;">
+      <div style="font-size:13px; font-weight:700; color:#111827; margin-bottom:6px;">D002 전용 QA 체크리스트</div>
+      <ul style="margin:0; padding-left:17px; font-size:12.5px; color:#475467; line-height:1.85;">
+        <li>종류별 소유내역 다행(주권/신주인수권/전환사채권/교환사채권/기타) + <code>security_category</code> 표시</li>
+        <li>합계 row <code>is_summary_row=true</code> 분리(정렬·합산 제외)</li>
+        <li>직전보고서 없음(신규) → previous=null · no_previous_report empty state</li>
+        <li>특정증권등 vs 주권 이중 기준(같거나 다를 수 있음)</li>
+        <li>권리행사 pair(권리성 −, 보통주 +) · 수량↑·비율↓ 독립 판단</li>
+        <li>DART 표 A~J·P 컬럼코드를 heading/종목명으로 오인 금지</li>
+      </ul>
+    </div>
+    <div style="border:1px solid #E6EAF0; border-radius:12px; padding:14px 16px; margin-bottom:14px;">
+      <div style="font-size:13px; font-weight:700; color:#111827; margin-bottom:6px;">에러 / 예외 처리 규칙</div>
+      <div style="font-size:12.5px; color:#475467; line-height:1.8;">알 수 없는 transactionCode → 원문 코드 노출 + footnote · CIK/corp_code 누락 → 회사명 fallback grouping · 비-USD/원·달러 혼재 → <code>price_currency</code> 보존 · 음수 수량 → 처분 방향(Blue) · 0 수량 → 표시하되 강조 안 함 · price 0(정상)≠price null(미기재) · 날짜 누락 → null + parser_notes · footnote id만 있고 내용 없음 → id 배지만, 본문 "원문 없음" · derivativeTable 있으나 linked transaction 없음 → derivative_or_rights[] 단독 표시(고아 처리, 추정 연결 금지).</div>
+    </div>
+    <div style="border:1px solid #E6EAF0; border-radius:12px; padding:14px 16px;">
+      <div style="font-size:13px; font-weight:700; color:#111827; margin-bottom:6px;">Form별 compact 샘플 (핵심 필드)</div>
+      <pre style="background:#0F172A; color:#E6EDF7;">// KR D002 변동
+{ "document_meta":{"country":"KR","form_type":"D002","report_type":"변동"},
+  "issuer":{"name":"(주)벡트","company_code":"457600","market":"KOSDAQ"},
+  "holding_summary":{"previous":{"common_stock_shares":8443376,"common_stock_ratio":61.60},
+    "current":{"common_stock_shares":8451533,"common_stock_ratio":61.66},
+    "change":{"common_stock_shares":8157,"common_stock_ratio_point":0.06}},
+  "transactions":[{"transaction_date":"2026-03-19","transaction_reason_raw":"장내매수(+)",
+    "transaction_category":"market_purchase","acquired_disposed_code":"A","shares_changed":8157,"price_per_share":2385}],
+  "holdings":[{"security_title":"보통주","security_category":"주권","shares_owned":8451533}] }
+// KR D002 신규 (직전 없음)
+{ "document_meta":{"country":"KR","form_type":"D002","report_type":"신규"},
+  "holding_summary":{"previous":null,"current":{"common_stock_shares":25000,"common_stock_ratio":0.30},
+    "status":"no_previous_report"} }
+// US Form 3 noSecuritiesOwned=1
+{ "document_meta":{"country":"US","form_type":"3"},
+  "holding_summary":{"no_securities_owned":true,"status":"no_securities_owned"},
+  "transactions":[],"holdings":[],"ui_empty_states":{"holdings":{"is_empty":true,"reason":"no_securities_owned"}} }
+// US Form 4 매도
+{ "document_meta":{"country":"US","form_type":"4"},
+  "transactions":[{"transaction_code":"S","acquired_disposed_code":"D","shares_changed":-700,"price_per_share":993.00}] }
+// US Form 4 M + derivative 연결
+{ "transactions":[{"transaction_code":"M","acquired_disposed_code":"A","shares_changed":6538,"price_per_share":0,
+    "transaction_category":"exercise_or_vesting","linked_derivative_ids":["D1"]}],
+  "derivative_or_rights":[{"id":"D1","security_title":"Stock Option","underlying_security_title":"Common Stock",
+    "underlying_security_shares":6538,"conversion_or_exercise_price":0,"expiration_date":"2032-06-05"}] }
+// US Form 5 late/historical
+{ "document_meta":{"country":"US","form_type":"5","contains_historical":true,
+    "transaction_date_range":{"from":"2019-02-07","to":"2021-12-03"}},
+  "transactions":[{"transaction_date":"2019-02-07","transaction_timeliness":"L","is_late_reported":true}] }</pre>
+    </div>
+
+    <!-- APPENDIX B -->
+    <h2 style="margin:44px 0 6px; font-size:18px; font-weight:700; color:#111827;">Appendix B · Transaction Code Table</h2>
+    <p style="margin:0 0 14px; font-size:13px; color:#6B7280;"><code>transaction_code</code>와 <code>acquired_disposed_code</code>는 독립. 색=방향(취득 Red / 처분 Blue / 중립 Gray). code 하나로 category 확정 금지.</p>
+    <div style="border:1px solid #E6EAF0; border-radius:12px; overflow:hidden;">
+      <table>
+        <thead><tr><th class="mono">code</th><th>국가</th><th>label</th><th class="mono">방향</th><th>A/D</th><th>주의</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">매수</td><td>KR</td><td>장내매수</td><td class="mono" style="color:#D23B4E;">acquire</td><td>A</td><td>—</td></tr>
+          <tr><td class="mono">매도</td><td>KR</td><td>장내매도</td><td class="mono" style="color:#2D6FE0;">dispose</td><td>D</td><td>—</td></tr>
+          <tr><td class="mono">권리행사</td><td>KR</td><td>권리행사</td><td class="mono" style="color:#D23B4E;">acquire</td><td>A</td><td>파생 소멸 row와 같은 날짜로 그룹</td></tr>
+          <tr><td class="mono">주식배당</td><td>KR</td><td>주식배당</td><td class="mono" style="color:#D23B4E;">acquire</td><td>A</td><td><code>stock_dividend</code>. 단가 null. 매수 오분류 금지</td></tr>
+          <tr><td class="mono">자사주상여금</td><td>KR</td><td>보상성 취득</td><td class="mono" style="color:#D23B4E;">acquire</td><td>A</td><td>US RSU award와 공통 카테고리</td></tr>
+          <tr><td class="mono">기타</td><td>KR</td><td>기타 변동</td><td class="mono" style="color:#2D6FE0;">dispose</td><td>D</td><td>신주인수권 소멸 등</td></tr>
+          <tr><td class="mono">P</td><td>US</td><td>P · Purchase</td><td class="mono" style="color:#D23B4E;">acquire</td><td>A</td><td>—</td></tr>
+          <tr><td class="mono">M</td><td>US</td><td>M · Exercise/Vesting</td><td class="mono" style="color:#D23B4E;">acquire</td><td>A</td><td>단가=행사가. footnote 연결</td></tr>
+          <tr><td class="mono">A</td><td>US</td><td>A · Grant/Award</td><td class="mono" style="color:#D23B4E;">acquire</td><td>A</td><td>price 0 흔함. price&gt;0이면 acquisition_or_purchase</td></tr>
+          <tr><td class="mono">S</td><td>US</td><td>S · Sale</td><td class="mono" style="color:#2D6FE0;">dispose</td><td>D</td><td>일반 매도 단정 금지(weighted avg·10b5-1·tax)</td></tr>
+          <tr><td class="mono">F</td><td>US</td><td>F · Tax Withholding</td><td class="mono" style="color:#2D6FE0;">dispose</td><td>D</td><td>세금 원천징수</td></tr>
+          <tr><td class="mono">G</td><td>US</td><td>G · Gift/Transfer</td><td class="mono" style="color:#2D6FE0;">dispose</td><td>D</td><td>price 0. GRAT/annuity면 subtype, 없으면 추정 금지</td></tr>
+          <tr><td class="mono">W</td><td>US</td><td>W · Will/Inheritance</td><td class="mono" style="color:#D23B4E;">acquire</td><td>A</td><td>상속·누락 보고. 매수 오분류 금지</td></tr>
+          <tr><td class="mono">J·기타</td><td>US</td><td>원문 코드 그대로</td><td class="mono" style="color:#6B7280;">코드 성격</td><td>원문</td><td>알 수 없으면 코드 노출 + footnote</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- APPENDIX C -->
+    <h2 style="margin:44px 0 6px; font-size:18px; font-weight:700; color:#111827;">Appendix C · Edge Case Notes (상세)</h2>
+    <div style="display:flex; flex-direction:column; gap:9px;">
+      <div style="border:1px solid #E6EAF0; border-radius:11px; padding:13px 15px;"><b style="color:#111827; font-size:13px;">소수점 주식</b><div style="font-size:12.5px; color:#6B7280; margin-top:3px; line-height:1.6;"><code>shares_changed·shares_after·shares_owned·underlying_security_shares</code> decimal 허용. <code>35.944 · 21836.814 · 6606.917</code> 등 원문 보존(UI 최대 6자리). 반올림·절삭 금지.</div></div>
+      <div style="border:1px solid #E6EAF0; border-radius:11px; padding:13px 15px;"><b style="color:#111827; font-size:13px;">가격 0 vs null</b><div style="font-size:12.5px; color:#6B7280; margin-top:3px; line-height:1.6;">Gift·award·exercise·trust transfer·vesting·tax에서 <code>price=0</code> 정상(number 0, price_is_zero, price_zero_reason, "$0.00"+price_note). 미기재=null("단가 미기재"). 절대 병합 금지.</div></div>
+      <div style="border:1px solid #E6EAF0; border-radius:11px; padding:13px 15px;"><b style="color:#111827; font-size:13px;">Weighted average / 동일날짜 복수 row</b><div style="font-size:12.5px; color:#6B7280; margin-top:3px; line-height:1.6;">Form 4 같은 날 가격대별 가중평균 매도 row 여럿. 날짜 그룹핑(<code>↳</code>) + footnote(가격범위) 연결. 긴 footnote에도 셀 폭 고정.</div></div>
+      <div style="border:1px solid #E6EAF0; border-radius:11px; padding:13px 15px;"><b style="color:#111827; font-size:13px;">정정 보고 (/A)</b><div style="font-size:12.5px; color:#6B7280; margin-top:3px; line-height:1.6;"><code>is_amendment=true</code> → <code>정정</code> badge + 배너(원/정정 제출일). 사유는 footnote 연결.</div></div>
+      <div style="border:1px solid #E6EAF0; border-radius:11px; padding:13px 15px;"><b style="color:#111827; font-size:13px;">권리행사 변환형 (KR)</b><div style="font-size:12.5px; color:#6B7280; margin-top:3px; line-height:1.6;">같은 날 신주인수권 −N → 보통주 +N. 날짜 그룹. 보유수량↑인데 발행주식총수 증가로 지분율↓ 가능 → 수량/비율 증감 분리 + 노트.</div></div>
+      <div style="border:1px solid #E6EAF0; border-radius:11px; padding:13px 15px;"><b style="color:#111827; font-size:13px;">합계 row (KR)</b><div style="font-size:12.5px; color:#6B7280; margin-top:3px; line-height:1.6;">세부변동내역 합계 row는 <code>is_summary_row=true</code>로 일반 거래 row와 분리(정렬·필터·합산 제외).</div></div>
+      <div style="border:1px solid #E6EAF0; border-radius:11px; padding:13px 15px;"><b style="color:#111827; font-size:13px;">Form 3 holding-only / noSecuritiesOwned</b><div style="font-size:12.5px; color:#6B7280; margin-top:3px; line-height:1.6;"><code>noSecuritiesOwned=0</code> + holding 있음 → 거래 Empty, 보유 정상. <code>=1</code>만 "보유 증권 없음"(테이블 부재 정상, remarks 별도). 둘을 반드시 구분.</div></div>
+      <div style="border:1px solid #E6EAF0; border-radius:11px; padding:13px 15px;"><b style="color:#111827; font-size:13px;">기관/법인 10% 이상 주주</b><div style="font-size:12.5px; color:#6B7280; margin-top:3px; line-height:1.6;">reportingOwner가 개인 임원 아닐 수 있음(예: ELI LILLY가 Aktis 10% 주주로 Form 3). <code>owner_type=institution</code>, 관계 플래그로 라벨. 불확실 시 unknown.</div></div>
+      <div style="border:1px solid #E6EAF0; border-radius:11px; padding:13px 15px;"><b style="color:#111827; font-size:13px;">A/D paired transfer (Form 4·5)</b><div style="font-size:12.5px; color:#6B7280; margin-top:3px; line-height:1.6;">같은 날·수량·footnote의 D(신탁)+A(보고자) 쌍. 원본 row 병합·삭제 금지, UI용 <code>paired_transfer</code> 그룹만 별도. 행 펼침에 쌍 정보.</div></div>
+      <div style="border:1px solid #E6EAF0; border-radius:11px; padding:13px 15px;"><b style="color:#111827; font-size:13px;">indirect ownership · natureOfOwnership</b><div style="font-size:12.5px; color:#6B7280; margin-top:3px; line-height:1.6;">I만 표시 불충분. <code>간접보유 · By Spouse / By LP / By Trust / 신탁명 / 401(k) plan account</code> 병기. nature의 footnoteId 연결 유지. 401(k)/retirement → <code>retirement_plan_account</code>.</div></div>
+      <div style="border:1px solid #E6EAF0; border-radius:11px; padding:13px 15px;"><b style="color:#111827; font-size:13px;">Stock Units / RSU / GSU in holdings</b><div style="font-size:12.5px; color:#6B7280; margin-top:3px; line-height:1.6;">securityTitle 키워드(Stock Unit·GSU·RSU·PSU) → <code>holding_type=stock_unit · compensation_security=true</code> + "Stock Unit·보상성" badge. holdings[]에 유지하되 vesting footnote 연결.</div></div>
+      <div style="border:1px solid #E6EAF0; border-radius:11px; padding:13px 15px;"><b style="color:#111827; font-size:13px;">Form 5 flags / historical / late(L)</b><div style="font-size:12.5px; color:#6B7280; margin-top:3px; line-height:1.6;"><code>form5_flags</code> 보존. periodOfReport≠transactionDate 정상(수년 전 가능). <code>L</code>=지연 badge(코드와 별도). 여러 해 거래 정렬·더보기.</div></div>
+      <div style="border:1px solid #E6EAF0; border-radius:11px; padding:13px 15px;"><b style="color:#111827; font-size:13px;">field-level footnotes</b><div style="font-size:12.5px; color:#6B7280; margin-top:3px; line-height:1.6;">footnoteId가 개별 필드(shares·price·sharesOwned·title·nature)에 붙을 수 있음. <code>field_footnotes</code>로 보존, 값 옆 [F#]. row-level로만 합치면 소실.</div></div>
+      <div style="border:1px solid #E6EAF0; border-radius:11px; padding:13px 15px;"><b style="color:#111827; font-size:13px;">KR 특정증권등 vs 주권 / 수량≠비율</b><div style="font-size:12.5px; color:#6B7280; margin-top:3px; line-height:1.6;">두 기준 별도 보존(기본 주권). 수량 +N인데 비율 0.00%p 가능 → <code>quantity_change_direction</code>/<code>ratio_change_direction</code> 독립. 색도 독립.</div></div>
+      <div style="border:1px solid #E6EAF0; border-radius:11px; padding:13px 15px;"><b style="color:#111827; font-size:13px;">DART 표 A~J 컬럼코드 오인 방지</b><div style="font-size:12.5px; color:#6B7280; margin-top:3px; line-height:1.6;">종류별 소유내역 표의 A,B,C…J는 컬럼 코드일 수 있음. heading·security title·holder name으로 오인 금지. 원문 table header/colspan/rowspan 우선.</div></div>
+      <div style="border:1px solid #F4D9A8; background:#FFFBF3; border-radius:11px; padding:13px 15px;"><b style="color:#111827; font-size:13px;">KR 거래계획보고서 (예정 거래)</b><div style="font-size:12.5px; color:#6B7280; margin-top:3px; line-height:1.6;">§8 참조. 감지 기준(title·item_list·00633), <code>planned_transactions[]</code> 분리, 직전 6개월 실거래·예상 보유·거래규모 판단. 실거래처럼 표시 금지.</div></div>
+    </div>
+
+    <!-- APPENDIX D -->
+    <h2 style="margin:44px 0 6px; font-size:18px; font-weight:700; color:#111827;">Appendix D · 반응형 · Change Log</h2>
+    <div style="margin:0 0 12px; padding:12px 16px; background:#FFF8EE; border:1px solid #F4D9A8; border-radius:11px; font-size:12.5px; color:#7A5212; line-height:1.7;"><b style="color:#92580B;">768px 이하에서는 거래/보유/파생/footnote table을 가능한 card list 형태로 전환한다. 단, 데이터 손실 없이 핵심 필드와 footnote 연결을 유지해야 한다. Ticker/Issuer History·Reporting Owner History 하단 table도 동일하게 .ix-rtable로 전환하며, 특정 issuer 화면에서는 회사명을 반복하지 않고 owner-only(여러 issuer 혼재) 화면에서만 종목 정보를 card에 포함한다.</b> 구현: <code>.ix-rtable</code>(thead 숨김 + td data-label ::before) · 그룹 행 ≤1024px 1컬럼 · Page Meta Card ≤760px 1단. 접근성: focus-visible ring, 터치 타겟 ≥40px(coarse pointer), badge는 text label 유지.</div>
+    <div style="border:1px solid #E6EAF0; border-radius:12px; overflow:hidden; margin-bottom:18px;">
+      <table>
+        <thead><tr><th>영역</th><th>데스크톱</th><th>태블릿 / 모바일</th></tr></thead>
+        <tbody>
+          <tr><td>요약·KPI</td><td>2~3단 그리드</td><td>1단 스택(auto-fit minmax)</td></tr>
+          <tr><td>그룹 행 5컬럼</td><td>grid 정렬</td><td>≤1024px 1컬럼 stacked, 미니헤더 숨김</td></tr>
+          <tr><td>거래/보유/파생/footnote 테이블</td><td>전체 컬럼 · 가로 스크롤(min-width)</td><td><b>≤768px card list 전환(.ix-rtable)</b> — 각 셀 data-label 명시, 핵심 필드·footnote 연결 유지</td></tr>
+          <tr><td>컬럼 우선순위</td><td>전부</td><td>날짜·코드·수량·거래후 우선, 비고·주석은 full-width 셀</td></tr>
+          <tr><td>접근성</td><td>focus-visible ring · aria-label</td><td>터치 타겟 ≥40px · badge text label 유지(색상 단독 의존 금지)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="border:1px solid #E6EAF0; border-radius:12px; overflow:hidden;">
+      <table>
+        <thead><tr><th style="width:64px;">ver</th><th>변경 요약</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">v1.0</td><td>7섹션 공통 UI · 공통 스키마 · KR/US 7케이스</td></tr>
+          <tr><td class="mono">v1.1</td><td>owner_type · 관계 플래그 · G GRAT · paired transfer · indirect nature · GSU · field footnote</td></tr>
+          <tr><td class="mono">v1.2</td><td>noSecuritiesOwned=1 · form5_flags · period≠txnDate · L 지연 · W · price 0 vs null · remarks/EX-24</td></tr>
+          <tr><td class="mono">v1.3</td><td>분류 보수성 · G/A 미확정 · decimal 강화 · 10b5-1 채택일 · 401(k) · 주식배당 · 특정증권등/주권 · A~J 코드</td></tr>
+          <tr><td class="mono">v1.4</td><td>KR 거래계획보고서(planned transactions) 분리</td></tr>
+          <tr><td class="mono">v2.x</td><td>다크 프리미엄 테마 · KR 관례 색(Red/Blue) · 글로벌 헤더 탭</td></tr>
+          <tr><td class="mono">v3.x</td><td>4-View 플로우 · 그룹형 단일 뷰 · 필터/액션 단순화 · 회사명 우선 · 5컬럼 grid · Filing Detail 메타카드 통합</td></tr>
+          <tr><td class="mono">v4.x</td><td>Ticker/Owner History 액션 분리 · 종목 컬럼 조건부 · 히어로 2열</td></tr>
+          <tr><td class="mono">v5.0</td><td>문서 재구성: 핵심 본문 + Quick Copy 프롬프트 + Appendix 분리</td></tr>
+          <tr><td class="mono">v5.1</td><td>Filing Detail 시각화: 카드 사용 제한 · 보유 전/후 비교 bar · 거래규모 stacked bar · 보고자+stat 통합 panel · Footnotes divider list · empty compact</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- footer -->
+    <div style="margin-top:40px; padding-top:18px; border-top:1px solid #E6EAF0; display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+      <div style="font-size:12px; color:#9AA3B2;">insider-ownership-common-v1 · 화면 변경 시 ①스키마 ②매핑 ③Empty ④프롬프트 동기화 필수</div>
+      <a href="내부자거래 공통 UI.dc.html" style="font-size:13px; font-weight:600; color:#2563EB; text-decoration:none;">← 공통 UI 화면으로</a>
+    </div>
+
+  </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { promptOpen:false, copied:false };
+  toggle(){ this.setState(s=>({ promptOpen:!s.promptOpen })); }
+  flash(){ this.setState({ copied:true }); clearTimeout(this._t); this._t=setTimeout(()=>this.setState({ copied:false }), 1800); }
+  fallback(txt){ try{ const t=document.createElement('textarea'); t.value=txt; t.style.position='fixed'; t.style.opacity='0'; document.body.appendChild(t); t.select(); document.execCommand('copy'); document.body.removeChild(t); this.flash(); }catch(e){} }
+  copy(){
+    const el=document.getElementById('extract-prompt');
+    if(!el) return;
+    const txt=el.innerText;
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(()=>this.flash()).catch(()=>this.fallback(txt));
+    } else { this.fallback(txt); }
+  }
+  renderVals(){
+    const open=this.state.promptOpen;
+    return {
+      promptOpen:open,
+      onToggle:()=>this.toggle(),
+      onCopy:()=>this.copy(),
+      copyLabel:this.state.copied?'복사됨 ✓':'복사하기',
+      toggleLabel:open?'프롬프트 접기 ▲':'프롬프트 펼치기 ▼',
+      promptWrapStyle:{ position:'relative', maxHeight:open?'none':'240px', overflow:'hidden', borderRadius:'12px' },
+      fadeStyle:{ display:open?'none':'block', position:'absolute', left:'0', right:'0', bottom:'0', height:'80px', background:'linear-gradient(180deg, rgba(15,23,42,0), #0F172A)', borderRadius:'0 0 12px 12px', pointerEvents:'none' },
+    };
+  }
+}
+</script>
+</body>
+</html>
