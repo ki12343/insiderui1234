@@ -53,7 +53,7 @@
         <h1 style="margin:8px 0 6px; font-size:25px; font-weight:700; color:#111827; letter-spacing:-.01em;">내부자거래 공통 UI · 설계 핸드오프</h1>
         <div style="font-size:13.5px; color:#6B7280;">DART D002 · SEC Form 3·4·5 — 공통 스키마 · UI 규칙 · 정규화 프롬프트</div>
       </div>
-      <div style="text-align:right; font-size:12px; color:#9AA3B2; line-height:1.7;">v10.10 · 2026-06<br>schema: <b style="color:#2563EB;">insider-ownership-common-v1</b><br>관련 화면: <a href="index.html" style="color:#2563EB; font-weight:600; text-decoration:none;">내부자거래 공통 UI →</a></div>
+      <div style="text-align:right; font-size:12px; color:#9AA3B2; line-height:1.7;">v10.13 · 2026-06<br>schema: <b style="color:#2563EB;">insider-ownership-common-v1</b><br>관련 화면: <a href="index.html" style="color:#2563EB; font-weight:600; text-decoration:none;">내부자거래 공통 UI →</a></div>
     </div>
 
     <!-- 핵심 원칙 -->
@@ -285,6 +285,20 @@ Return the JSON now.</pre>
       <div style="color:#374151;">Appendix D · Responsive · Change Log</div>
     </div>
 
+    <!-- Validation Summary -->
+    <h2 style="margin:34px 0 8px; font-size:18px; font-weight:700; color:#111827;">검증 요약 · Validation Summary</h2>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:10px; margin-bottom:14px;">
+      <div style="border:1px solid #E6EAF0; border-radius:11px; padding:13px 15px;"><div style="font-size:11px; color:#6B7280; font-weight:600;">총 active 문서</div><div style="font-size:20px; font-weight:700; color:#111827; margin-top:3px;">94건</div><div style="font-size:12px; color:#475467; margin-top:2px;">KR D002 39 + US Form 3/4/5 55 (keep set 기준)</div></div>
+      <div style="border:1px solid #E6EAF0; border-radius:11px; padding:13px 15px;"><div style="font-size:11px; color:#6B7280; font-weight:600;">KR DART D002</div><div style="font-size:20px; font-weight:700; color:#111827; margin-top:3px;">39건</div><div style="font-size:12px; color:#475467; margin-top:2px;">신규·변동·정정 / 개인·국내법인·10%주주·사실상지배주주 / dual basis·divergence 포함</div></div>
+      <div style="border:1px solid #E6EAF0; border-radius:11px; padding:13px 15px;"><div style="font-size:11px; color:#6B7280; font-weight:600;">US SEC Form 3/4/5</div><div style="font-size:20px; font-weight:700; color:#111827; margin-top:3px;">55건</div><div style="font-size:12px; color:#475467; margin-top:2px;">3·4·5 및 3/A·4/A·5/A / holding-only·no securities·late·historical·decimal</div></div>
+      <div style="border:1px solid #DDE7F0; background:#F5F9FD; border-radius:11px; padding:13px 15px;"><div style="font-size:11px; color:#1B5E8A; font-weight:700;">D002 dual basis / divergence</div><div style="font-size:12.5px; color:#475467; margin-top:4px;">아시아나항공(divergence=true)·빌리언스(current 동일·change 발산)·랩지노믹스 등 — 특정증권등/주권 기준 비교·divergence note 검증 완료.</div></div>
+      <div style="border:1px solid #DDE7F0; background:#F5F9FD; border-radius:11px; padding:13px 15px;"><div style="font-size:11px; color:#1B5E8A; font-weight:700;">US 10b5-1</div><div style="font-size:12.5px; color:#475467; margin-top:4px;">NVDA(Kress·Puri·Robertson·Shah 등)·Apple(Cook·O'Brien·Borders) row 단위 footnote/adoption date 검증 완료.</div></div>
+      <div style="border:1px solid #DDE7F0; background:#F5F9FD; border-radius:11px; padding:13px 15px;"><div style="font-size:11px; color:#1B5E8A; font-weight:700;">Derivative / RSU / 권리성 증권</div><div style="font-size:12.5px; color:#475467; margin-top:4px;">Apple RSU(derivative holdings/transactions)·KR 전환사채권(보유/거래·섹션4·5 매핑) 검증 완료.</div></div>
+      <div style="border:1px solid #F4D9A8; background:#FFFBF3; border-radius:11px; padding:13px 15px;"><div style="font-size:11px; color:#92580B; font-weight:700;">제외 처리</div><div style="font-size:12.5px; color:#475467; margin-top:4px;">KR 거래계획보고서 out-of-scope · d00233 needs_source 제외 · parser raw output 사용자 비노출 · synthetic/demo US 14건 비활성 유지.</div></div>
+      <div style="border:1px solid #E6EAF0; border-radius:11px; padding:13px 15px;"><div style="font-size:11px; color:#6B7280; font-weight:700;">배포 / 패키징</div><div style="font-size:12.5px; color:#475467; margin-top:4px;">release ZIP 루트=index.html + handoff.dc.html + support.js + vercel.json. app.dc.html·uploads·qa·PDF 제외. <b>known risk</b>: React/Babel(unpkg)·Pretendard(jsDelivr) 외부 CDN(폐쇄망 시 로컬화 필요).</div></div>
+    </div>
+    <div style="border:1px solid #E6EAF0; border-radius:11px; padding:12px 15px; margin-bottom:6px; font-size:12px; color:#475467; line-height:1.7;"><b style="color:#111827;">현행 사양(과거 불일치 정정)</b> — 사용자-facing Disclosure Summary는 <b>6섹션</b>(7섹션 아님, "common schema"는 내부 용어로만). 상세 상단: centered title hero + filing selector(<b>단일 filing이어도 항상 표시</b>, 외부 helper text 없이 trigger 내부 「공시 선택」 라벨), US=Form tabbar+selector / KR=selector only(Form tabbar 없음). CTA: group header 「최신 공시 보기」·row 「거래목록 보기」·Ticker 히어로 「공시 요약 보기」(group header를 「공시 요약 보기」로 적던 과거 표기는 무효). empty state는 title 반복 없이 body 한 줄. 거래계획/planned 계열은 active UI 미노출(source-only).</div>
+
     <!-- 1. view flow -->
     <h2 style="margin:42px 0 6px; font-size:18px; font-weight:700; color:#111827;">1 · 화면 흐름 (4-View)</h2>
     <p style="margin:0 0 14px; font-size:13px; color:#6B7280;">단일 컴포넌트 내 <code>view</code> 상태(list·ticker·history·detail). <b>목록/히스토리=탐색</b>, <b>상세=해석</b>. 7섹션 상세는 목록으로 대체하지 않는다.</p>
@@ -319,7 +333,7 @@ Return the JSON now.</pre>
       <li>그룹형 단일 뷰(테이블·카드 뷰 제거, 보기 전환 UI 없음). 종목 기준 그룹 고정(<code>group_by=issuer/ticker</code>).</li>
       <li>필터 toolbar(v8.7): 단일 행 compact toolbar — [국가 segmented] · [변동유형 segmented] · [공시유형 <b>select dropdown</b>]. 컨테이너 배경 매우 약하게, 비선택 투명, 선택만 강조. 공시유형은 길이 줄이려 dropdown으로 전환. <b>정렬</b>은 필터에서 제외하고 <b>결과 안내 줄 우측</b>에 배치(라벨 없음, 값만 노출). placeholder 「회사명, 티커, 내부자·보고자 검색」.</li>
       <li>회사명 primary, ticker/code secondary. 검색바 아래는 KPI 카드 대신 한 줄 메타.</li>
-      <li>그룹 헤더 CTA(v7.3): <b>「최신 공시 보기 ›」</b> 1개만 — issuer group의 최신 filing 1건 상세로 이동. <b>「종목 거래 목록 보기」 제거</b>. <b>Form 4 고정 아님</b> — filing_date 최신 기준, 동일 날짜는 거래/변동 있음 &gt; Form4 &gt; Form5 &gt; Form3 &gt; 정정 &gt; holding-only/no-securities tie-break(Late·Amendment·No securities 비숨김). KR은 최신 D002 기준. 헤더 전체 클릭 없음.</li>
+      <li>그룹 헤더 CTA(v7.3): <b>「최신 공시 보기 ›」</b> 1개만 — issuer group의 최신 filing 1건 상세로 이동. <b>「종목 거래 목록 보기」 제거</b>. <b>Form 4 고정 아님</b> — filing_date 최신 기준, 동일 날짜는 거래/변동 있음 &gt; Form4 &gt; Form5 &gt; Form3 &gt; 정정 &gt; holding-only/no-securities tie-break(Late·Amendment·No securities 비숨김). KR은 최신 D002 기준. 헤더 전체 클릭 없음. <b>최종 확정(v10.14): issuer 그룹 카드 header CTA 기본 라벨은 「최신 공시 보기 ›」로 유지</b> — QA v10.13에서 「공시 요약 보기」로 바꾸자던 판단은 <b>철회·정정</b>(제품 의도상 「최신 공시 보기」가 맞음). 그룹 카드 header CTA와 Ticker/Issuer 히어로 CTA는 <b>의도적으로 분리</b>: <b>그룹 카드 = 「최신 공시 보기 ›」</b>(issuer group의 최신 filing 1건 → Filing Detail), <b>Ticker/Issuer 히어로 = 「공시 요약 보기 ›」</b>(해당 종목 최신 공시 → Filing Detail). 둘 다 Filing Detail로 이동하지만 진입 표면이 다르므로 라벨을 통일하지 않는다. List/Search row에는 「공시 상세 보기」·「종목 거래 목록 보기」를 쓰지 않는다.</li>
       <li>그룹 헤더 identity: <code>[국가] 회사명  ticker·market</code> 한 줄(국가 badge 좌, 회사명 primary, ticker·market secondary 우) + 아래 줄 공시·보고자 수·최신 공시일. 사용자-facing 문구에 7섹션·공통 스키마 등 내부 용어 미사용.</li>
       <li><b>그룹핑 키(v6.2): issuer.cik(US) / corp_code(KR) 우선</b>, ticker는 표시용 metadata. 동일 issuer의 ticker 변경(FB↔META, 동일 cik)이 있어도 한 그룹으로 묶고 분리하지 않는다. <b>former_symbols[]</b>=과거 변경 ticker(FB→META) / <b>alternate_symbols[]</b>=동시 복수 클래스(GOOG/GOOGL) — 둘을 섞지 않음. former_symbols/alternate_symbols는 historical 검색·중복 방지용 보조 필드(이전 ticker는 보조 텍스트로만 노출).</li>
       <li>그룹 행은 <b>5컬럼 grid</b>(<b>내부자 · 보고자</b>·거래일 / 거래·공시 유형 / 수량·금액 / 공시일·상태 / 액션) + 미니 컬럼 헤더. 모두 좌측 정렬, 액션만 우측. List/Search 컬럼명은 v8.4부터 <b>「내부자 · 보고자」</b>(KR D002 보고자와 US Form 3·4·5 reporting owner/insider 동시 포괄). Filing Detail 1번 섹션명은 <b>「보고자 · 내부자 정보」</b> 유지. 거래목록 상세 표현은 <b>「내부자 거래목록」</b> 또는 「내부자 · 보고자 거래목록」.</li>
@@ -498,7 +512,7 @@ Return the JSON now.</pre>
         <ul style="margin:0; padding-left:17px; font-size:12.5px; color:#475467; line-height:1.85;">
           <li>그룹형만(테이블·카드 토글 없음)</li>
           <li>Form 필터 제거(국가·방향만)</li>
-          <li>CTA: 종목 거래 목록 보기 / 공시 요약 보기 › / 거래 목록 ›</li>
+          <li>CTA: 그룹 헤더 「최신 공시 보기 ›」 · 행 「거래목록 보기」 (「종목 거래 목록 보기」·「공시 상세 보기」 미사용)</li>
           <li>그룹 row 정보 누락 없음 · 5컬럼 정렬</li>
         </ul>
       </div>
@@ -698,6 +712,151 @@ Return the JSON now.</pre>
       <div style="font-size:13px; font-weight:700; color:#111827; margin-bottom:6px;">에러 / 예외 처리 규칙</div>
       <div style="font-size:12.5px; color:#475467; line-height:1.8;">알 수 없는 transactionCode → 원문 코드 노출 + footnote · CIK/corp_code 누락 → 회사명 fallback grouping · 비-USD/원·달러 혼재 → <code>price_currency</code> 보존 · 음수 수량 → 처분 방향(Blue) · 0 수량 → 표시하되 강조 안 함 · price 0(정상)≠price null(미기재) · 날짜 누락 → null + parser_notes · footnote id만 있고 내용 없음 → id 배지만, 본문 "원문 없음" · derivativeTable 있으나 linked transaction 없음 → derivative_or_rights[] 단독 표시(고아 처리, 추정 연결 금지).</div>
     </div>
+    <div style="border:1px solid #F4D9A8; background:#FFFBF3; border-radius:12px; padding:14px 16px; margin-bottom:14px;">
+      <div style="font-size:13px; font-weight:700; color:#111827; margin-bottom:6px;">v10.15 추출/표시 보강 규칙 (신규 원본 검증 반영)</div>
+      <ul style="margin:0; padding-left:17px; font-size:12.5px; color:#475467; line-height:1.85;">
+        <li><b>D002 report_date 가드</b>: <code>report_date</code>/<code>report_date_raw</code>는 <b>날짜 패턴만</b> 허용 — <code>YYYY-MM-DD</code> · <code>YYYY.MM.DD</code> · <code>YYYY/MM/DD</code> · <code>YYYY년 MM월 DD일</code>. 확인·서명·기재누락 선언 문구(예: "…허위기재 또는 기재누락이 없음을 확인합니다.")를 날짜로 추출 금지. 미검출 시 <b>null</b>. 선언/서명 문구는 remarks·source_note 등으로도 <b>사용자-facing 노출 금지</b>(필요 시 내부 trace에만 보존).</li>
+        <li><b>D002 dual basis divergence 산출</b>: 특정증권등(<code>total_specific_securities_*</code>)과 주권(<code>common_stock_*</code>)의 current 수량/비율 또는 change 수량/비율 중 하나라도 다르면 <code>divergence=true</code>, 모두 같으면 <code>false</code>, 한쪽 누락·비교 불가면 <code>null</code>. <code>true</code>일 때 UI note: <i>"특정증권등 기준과 주권 기준의 보유 수량 또는 비율이 달라 기준별로 구분해 확인해야 합니다."</i> 이 note는 <b>거래계획(planned)과 무관</b> — 연결 금지.</li>
+        <li><b>Dedup</b>: US Form 3/4/5 <code>.txt</code>는 <b>accession number 기준</b> 1건만 유지(해시 접미사 사본 예: <code>…-86323d2e.txt</code> = 원본과 동일 문서). KR DART는 <b>rcpNo 기준</b>으로 PDF/parser output/preview를 한 문서로 묶음. 거래계획보고서는 rcpNo가 있어도 active ingest에서 제외.</li>
+        <li><b>UI report_date 표시 가드</b>: 메타카드 날짜 필드(공시일·보고기준일·보고의무발생일[KR])는 표시 전 날짜 패턴 검증, 불일치 시 <b>"미기재"</b> 표시. undefined·NaN·raw null·긴 확인 문구·parser error 문구는 화면 비노출. 표시 전용 안전장치이며 데이터/계산 로직 불변(active UI <code>dateOk</code>/<code>dmv</code>).</li>
+      </ul>
+    </div>
+    <div style="border:1px solid #F4D9A8; background:#FFFBF3; border-radius:12px; padding:14px 16px; margin-bottom:14px;">
+      <div style="font-size:13px; font-weight:700; color:#111827; margin-bottom:6px;">v10.16 추출/ingest 보강 규칙 (d00232–d00240 검증 반영)</div>
+      <ul style="margin:0; padding-left:17px; font-size:12.5px; color:#475467; line-height:1.85;">
+        <li><b>notes 산식/boilerplate 필터</b>: <code>notes/remarks/footnotes</code>에는 실제 의미 있는 비고만 보존. 제외: <code>] × 100</code>·<code>(A / J) × 100</code>·"소유비율 산정" 반복 산식·표 수식 파편·DART 기본 안내·확인/서명 문구. 유지: 발행주식총수 변경·자사주 소각·상속 절차 미완료/재공시 예정 등 실질 비고. UI 렌더에도 2차 필터(<code>noiseNote</code>); 전부 필터되면 기존 empty "이 공시에는 별도 주석이나 비고가 없습니다." 사용.</li>
+        <li><b>report_type 도출</b>: 원문 "보고구분" 우선(신규→<code>new</code>·변동→<code>change</code>·정정→<code>amendment</code>). is_amendment=true면 amendment 우선. 보고구분 없으면 — previous(date/holdings)가 null·"-"이고 current 존재 → new / previous 존재 + change·tx 있음 → change / 판단불가 → null. UI 라벨: new=신규·change=변동·amendment=정정.</li>
+        <li><b>rcpNo 일관 추출 + dedup_source</b>: DART URL·표지·파일명·metadata에서 rcpNo(숫자열) 추출해 KR dedup_key 우선 사용, <code>dedup_source="rcpNo"</code>. 없으면 fallback = issuer_name + reporting_owner_name_normalized + report_date + obligation_date + current_qty, <code>dedup_source="fallback"</code>. needs_source 문서도 rcpNo 있으면 보존.</li>
+        <li><b>보고자명 정규화 · 한자 alt 글리프</b>: <code>name_raw</code> 원문 보존, <code>name_normalized</code>는 한글 성명 자간 공백 제거("장 웅 상"→"장웅상", "정 영 흠"→"정영흠"). 법인명·영문·의미 있는 공백은 유지. UI 기본 표시=name_normalized. 한자/영문 alt의 <code>?</code>·glyph decode artifact는 사용자-facing 비노출, alt 원문은 source_raw/내부 trace에만.</li>
+        <li><b>needs_source active ingest 제외</b>: <code>source_status</code> ∈ {needs_source, partial_cover_only_needs_full_source, needs_parser_output} 또는 issuer 결손 문서는 active list/group/detail에서 제외(내부 QA "원문 확인 필요" 상태로만 보존). 사용자-facing에 parser stack trace·source error·raw null·undefined 비노출. UI 가드: <code>if(!d.company || /needs_source|partial_cover|needs_parser/.test(d.sourceStatus)) return;</code></li>
+      </ul>
+      <div style="font-size:11.5px; color:#92580B; margin-top:8px;">불변: 거래계획보고서·거래계획 컬럼 out-of-scope 유지 · US 10b5-1 in-scope 유지 · D002 dual basis/divergence note 유지.</div>
+    </div>
+    <div style="border:1px solid #F4D9A8; background:#FFFBF3; border-radius:12px; padding:14px 16px; margin-bottom:14px;">
+      <div style="font-size:13px; font-weight:700; color:#111827; margin-bottom:6px;">v10.17 dual-basis 매핑 · 섹션5 · divergence 문구 (아시아나·빌리언스 검증 반영)</div>
+      <ul style="margin:0; padding-left:17px; font-size:12.5px; color:#475467; line-height:1.85;">
+        <li><b>preview → active UI dual-basis 매핑</b>: 주권 <code>common_stock_*</code> → <code>holding</code>(prevQty/curQty/prevRatio/curRatio) · 특정증권등 <code>total_specific_securities_*</code> → <code>holdingAlt</code> · <code>dual_basis.divergence_note</code> → <code>divergenceNote</code>(섹션2 ⓘ 노출 트리거). 주권/특정증권등을 <b>뒤바꾸지 말 것</b>(메인 Quantity/Ownership 카드는 holding=주권 기준).</li>
+        <li><b>divergence 의미 구분</b>: 파서 <code>dual_basis.divergence</code> = current/change/ratio 중 하나라도 다른 <b>any-diff</b>(note 표시 트리거). UI <code>hcAlt.divergent</code> = 특정증권등 vs 주권 <b>증감 부호가 반대</b>일 때만 켜지는 보조 강조(amber 박스). 둘은 다른 개념 — 혼동 금지. 빌리언스(둘 다 감소)는 any-diff=true라도 부호 동일 → amber 미점등, ⓘ note는 표시.</li>
+        <li><b>D002 권리성 증권 ↔ 섹션 5</b>: 전환사채권·신주인수권부사채권·신주인수권·교환사채권·이익참가부사채권·증권예탁증권은 D002 <code>holdings[]</code>(종류별 소유내역)·<code>transactions[]</code>로 <b>섹션 4·3에 표시</b>(섹션 5로 중복 렌더 안 함). 이때 섹션 5 empty 카피 조건부 보정 — title "권리성 증권은 보유 내역에서 확인" / body "이 공시의 권리성 증권은 「보유 내역」 또는 「거래·변동 내역」에 포함되어 표시됩니다." 진짜 없을 때는 기존 "권리성·파생성 증권 내역 없음" 유지.</li>
+        <li><b>divergence 문구 일반화</b>: amber 보조 문구를 flat·폭 차이까지 포괄하도록 "특정증권등 기준과 주권 기준의 변동 방향 또는 폭이 다릅니다."로 일반화(파서 divergence_note 있으면 우선). 거래계획/planned 의미 표현 금지.</li>
+      </ul>
+      <div style="font-size:11.5px; color:#92580B; margin-top:8px;">불변: 거래계획보고서·거래계획 컬럼 out-of-scope(source-only) · US 10b5-1 in-scope · D002 dual basis/divergence note 유지.</div>
+    </div>
+    <div style="border:1px solid #DDE7F0; background:#F5F9FD; border-radius:12px; padding:14px 16px; margin-bottom:14px;">
+      <div style="font-size:13px; font-weight:700; color:#111827; margin-bottom:6px;">v10.18 active 데이터 반영 (KR D002 신규 10건 와이어링)</div>
+      <ul style="margin:0; padding-left:17px; font-size:12.5px; color:#475467; line-height:1.85;">
+        <li><b>추가(keep set 등록·10건)</b>: 신영와코루/최광열(신규)·씨엔알리서치/김윤호·제이스로보틱스/장웅상(신규)·제이스로보틱스/정영흠·삼영에스앤씨/박상익(6건)·삼영에스앤씨/고승남(4건)·대동스틸/임주희·대동스틸/임지현 + <b>divergence 실표본</b> 아시아나항공/(주)대한항공·빌리언스/휴마시스.</li>
+        <li><b>제외</b>: d00233(김덕현) source_status=partial_cover·issuer null → active 제외 / 거래계획보고서·needs_source·중복 rcpNo·parser raw(qa_report·verdict·raw_text) 비연결.</li>
+        <li><b>dedup</b>: KR rcpNo 우선, 없으면 issuer+owner_normalized+report_date+obligation_date+current_qty fallback. US accession 기준(해시 접미사 사본 1건만). 기존 d00220~d00231·US 샘플은 유지(중복 추가 없음).</li>
+        <li><b>D002 매핑 적용</b>: issuer.name→company · corp_code→corpCode/code · market→market · owner name_normalized→reporter · owner_type→ownerType · relationship/title/major_shareholder→relation · report_type→reportType · report_date→filingDate/reportBaseDate · obligation_date→eventDate · <b>common_stock_*→holding(주권) · total_specific_securities_*→holdingAlt(특정증권등)</b> · divergence_note→divergenceNote · holdings/transactions/footnotes 매핑 · 거래계획 컬럼은 source-only(미연결).</li>
+        <li><b>divergence 실렌더 확인</b>: 아시아나 주권 131,578,947(63.88%) flat vs 특정증권등 182,172,593(71.00%, +7,136,887) → 섹션2 ⓘ note + "특정증권등 vs 주권" 비교 블록 표시, 전환사채권 50,593,646은 섹션4 보유·섹션3 거래 3행. 빌리언스 current 동일·직전/증감 발산 케이스도 혼동 없이 표시.</li>
+      </ul>
+      <div style="font-size:11.5px; color:#1B5E8A; margin-top:8px;">QA: 콘솔 0건 · undefined/NaN/raw null·산식 파편·planned 계열 UI 미노출 · 거래계획 out-of-scope·US 10b5-1·D002 dual basis/divergence note 유지 · CTA/레이아웃 불변.</div>
+    </div>
+    <div style="border:1px solid #DDE7F0; background:#F5F9FD; border-radius:12px; padding:14px 16px; margin-bottom:14px;">
+      <div style="font-size:13px; font-weight:700; color:#111827; margin-bottom:6px;">v10.19 KR D002 비활성 16건 활성화 (keep set 등록)</div>
+      <ul style="margin:0; padding-left:17px; font-size:12.5px; color:#475467; line-height:1.85;">
+        <li><b>활성화(keep 추가·16건)</b>: kr-kukdo(국도화학)·kr-gtf(글로벌텍스프리)·<b>kr-lab-luha(랩지노믹스 · divergence 특정증권등≠주권)</b>·kr-jetema(제테마)·kr-wonik-kim·kr-wonik-cho(원익피앤이 2인)·kr-aztech-jewon·kr-aztech-yusong(아즈텍더블유비이 2인)·kr-kbg-boo-t·kr-kbg-boo-s(케이비지 부태웅·부삼열)·kr-younghung(영흥 · 액면병합)·kr-hanwha-ins(한화손해보험)·kr-pnc(피앤씨테크)·kr-esang(이상네트웍스)·kr-hns(에이치엔에스하이텍)·kr-g2g(지투지바이오). 모두 업로드 [회사명]소유상황보고서 PDF 기반 기존 _data 레코드 — 데이터 변경 없이 keep set 등록만.</li>
+        <li><b>제외 유지</b>: d00233(needs_source)·거래계획보고서·parser raw(qa_report/verdict/raw_text) 비연결. 거래계획 컬럼 source-only.</li>
+        <li><b>US 미반영</b>: US 비활성 레코드는 합성 데모 + 일부 실 .txt 미연결 혼재 → 이번 라운드 미수정. accession 기준 별도 대조 후 진행 예정.</li>
+        <li><b>유지 확인</b>: group sort latest_filing_date DESC · row sort filing_date DESC · issuer group card · 5행+더보기 · CTA(최신 공시 보기/거래목록 보기/공시 요약 보기) · D002 dual basis/divergence note · US 10b5-1 · 거래계획 out-of-scope 전부 불변.</li>
+      </ul>
+      <div style="font-size:11.5px; color:#1B5E8A; margin-top:8px;">QA: 콘솔 0건 · undefined/NaN/raw null·산식 파편·planned 계열 UI 미노출 · 랩지노믹스 divergence note 실렌더 확인.</div>
+    </div>
+    <div style="border:1px solid #DDE7F0; background:#F5F9FD; border-radius:12px; padding:14px 16px; margin-bottom:14px;">
+      <div style="font-size:13px; font-weight:700; color:#111827; margin-bottom:6px;">v10.20 US Apple 실데이터 batch 반영 (accession 대조 B그룹 우선)</div>
+      <ul style="margin:0; padding-left:17px; font-size:12.5px; color:#475467; line-height:1.85;">
+        <li><b>추가(11건 · keep 등록)</b>: us-aapl-khan-f3(Khan Sabih·Form 3 holding-only+RSU)·us-aapl-cook(Tim Cook·F4·<b>10b5-1 adopted 2024-05-24</b>·M/F/S 8행)·us-aapl-newstead-f4/f3(Newstead·F4·F3)·us-aapl-khan-f4(Khan·F4)·us-aapl-obrien(O'Brien·F4·10b5-1)·us-aapl-parekh(Parekh CFO·F4)·us-aapl-borders-a/b/c(Borders PAO·F4×3·일부 10b5-1)·us-aapl-newstead-f4b. accession: 0000320193-25-000066, 0001780525-26-000003/000005, 0001140361-26-013190/013191/013192/015420/015421/020871/025620/025622.</li>
+        <li><b>매핑</b>: issuer Apple Inc.(cik 0000320193·AAPL) · reporting owner/relationship/officerTitle · documentType→Form 3/4 · transactions(code M/F/S·A/D·shares·price·postQty·direct/indirect·nature) · nonDerivativeHolding→holdings(Form 3) · derivativeHolding→derivatives(RSU) · footnotes(엔티티 정제·요약) · aff10b5One→tradingPlan.is10b5 + adoption_date row 단위 보존.</li>
+        <li><b>처리</b>: Form 3 holding-only/RSU 정상(거래 없음 empty) · Form 4 transaction row 보존 · 10b5-1 footnote/adoption date row 단위 유지 · 기존 us-aapl-adams 유지 · 중복 accession 없음.</li>
+        <li><b>제외 유지</b>: Group D 합성 데모 14건 미활성 · Apple 외 B그룹 나머지(0001818224·0001051401·0001214128·0001462356·0001216519·0001179864·0001690882·0001453149·0002100523·0001209191-21/22 등)는 다음 라운드 issuer/owner 식별 후 · Group C(accession 미확보 4건)는 미변경 · d00233·거래계획보고서 제외.</li>
+      </ul>
+      <div style="font-size:11.5px; color:#1B5E8A; margin-top:8px;">QA: 콘솔 0건 · undefined/NaN/raw null·&quot; 엔티티·planned 계열 UI 미노출 · Apple Form 3/4 tabbar·10b5-1 row 단위 실렌더 확인 · KR D002 v10.19·dual basis 불변.</div>
+    </div>
+    <div style="border:1px solid #DDE7F0; background:#F5F9FD; border-radius:12px; padding:14px 16px; margin-bottom:14px;">
+      <div style="font-size:13px; font-weight:700; color:#111827; margin-bottom:6px;">v10.21 US Apple 이사진 실데이터 batch 반영 (7건)</div>
+      <ul style="margin:0; padding-left:17px; font-size:12.5px; color:#475467; line-height:1.85;">
+        <li><b>추가(7 · keep 등록)</b>: Jung Andrea·Sugar Ronald·Lozano Monica·Austin Wanda·Gorsky Alex(이사 Form 4·RSU 연례 부여·derivative)·Levinson Arthur(Form 4·G 증여+A·holding+derivative)·Borders Ben(Form 3·최초 보유·RSU 5건). accession 0001051401-26-000004·0001214128-26-000004·0001216519-26-000004·0001179864-26-000004·0001690882-26-000004·0001453149-26-000005·0002100523-26-000002. 전부 기존 Apple 그룹 확장(신규 issuer 없음).</li>
+        <li><b>Adams 조건부 = 중복(미추가)</b>: 후보 0001462356-25-000012가 기존 active <code>us-aapl-adams</code>와 <b>동일 accession</b> → EXCLUDE_DUPLICATE.</li>
+        <li><b>중복 제외(재추가 안 함)</b>: Dabiri 0001818224(=us-nvda-dabiri)·Jelinek 0001209191-21-054355(=us-cost-jelinek)·Ferguson 0001209191-22-009048(=us-googl-ferguson) — Group C accession 확정·기존 active와 동일.</li>
+        <li><b>처리</b>: Form 3 holding-only+RSU(섹션5 derivative) 정상 · Form 4 G 증여/A 부여 거래행 구분 · derivativeTransaction→derivatives 카드 · 10b5-1 없는 문서에 임의 생성 안 함(이사 RSU 부여는 비-10b5).</li>
+      </ul>
+      <div style="font-size:11.5px; color:#1B5E8A; margin-top:8px;">QA: 콘솔 0건 · undefined/NaN·&quot; 엔티티·planned 계열 UI 미노출 · 합성 데모·Apple 외 잔여 B그룹 미추가 · KR D002 v10.19·dual basis 불변.</div>
+    </div>
+    <div style="border:1px solid #DDE7F0; background:#F5F9FD; border-radius:12px; padding:14px 16px; margin-bottom:14px;">
+      <div style="font-size:13px; font-weight:700; color:#111827; margin-bottom:6px;">v10.22 Filing Selector (issuer 단위 공시 선택기)</div>
+      <ul style="margin:0; padding-left:17px; font-size:12.5px; color:#475467; line-height:1.85;">
+        <li><b>위치/표시</b>: Disclosure Summary 타이틀·Form tabbar 아래, meta card 위. 같은 issuer active filing 수와 무관하게 <b>항상 표시</b>(1건=현재 공시 확인용, 2건 이상=전환 가능). needs_source/issuer null/거래계획 문서는 옵션 제외.</li>
+        <li><b>US</b>: 기존 <b>Form family tabbar 유지</b> + 그 아래 selector. tabbar=Form 3/4/5 family 필터, selector=해당 family 내 filing/보고자 선택. Form 탭 변경 시 그 family 최신 filing 기본 선택. 실제 filing badge(Form 3/4/5·/A) 정확 유지.</li>
+        <li><b>KR</b>: Form tabbar 없음, selector만. 같은 issuer D002 active filing 전체, filing_date DESC→보고자 안정 정렬. dual basis/divergence note·거래계획 source-only 유지.</li>
+        <li><b>옵션</b>: 보고자·문서유형·filing date·요약 + badge 최대 3(Amendment·No securities·Holding-only·10b5-1·Derivative·D002). planned/Planned/Trading plan·undefined/NaN 금지.</li>
+        <li><b>전환</b>: 선택 시 <code>selectFiling(id)</code>→<code>select(id)</code>로 selectedId만 변경, 기존 detail renderer 재사용(데이터 무변경). meta card·6섹션·badge·footnote·dual basis·10b5-1·Form 탭 상태 전체 전환.</li>
+        <li><b>접근성</b>: trigger button(aria-haspopup/expanded/controls)·listbox·option(aria-selected)·ArrowDown/Enter/Escape, ellipsis trigger·max-height scroll·mobile full-width.</li>
+        <li><b>CTA 의미</b>: List group header 「최신 공시 보기」=issuer 최신 1건 진입(유지), 진입 후 selector로 같은 issuer 다른 filing 전환. row 「거래목록 보기」·Ticker 히어로 「공시 요약 보기」 유지.</li>
+      </ul>
+      <div style="font-size:11.5px; color:#1B5E8A; margin-top:8px;">QA: 콘솔 0건 · Apple Form 4 selector 16건·Form 3 family 분리 · KR 다중 보고자 전환 · 단일 filing issuer selector 숨김 · planned 계열 미노출 · CTA/레이아웃 불변.</div>
+    </div>
+    <div style="border:1px solid #DDE7F0; background:#F5F9FD; border-radius:12px; padding:14px 16px; margin-bottom:14px;">
+      <div style="font-size:13px; font-weight:700; color:#111827; margin-bottom:6px;">v10.23 Disclosure Summary 상단 레이아웃 (title hero + control rail)</div>
+      <ul style="margin:0; padding-left:17px; font-size:12.5px; color:#475467; line-height:1.85;">
+        <li><b>Title hero(center)</b>: eyebrow 「공시 요약 · DISCLOSURE SUMMARY」 + title 「임원·주요주주 보유/거래 변동」을 <code>.ix-detail-hero</code>로 가운데 정렬. desktop spacing <b>top 100px / bottom 60px</b>, mobile(≤768px) <b>top 64px / bottom 40px</b>. 「← 돌아가기」는 hero 위 좌측 유지(중앙정렬 비적용).</li>
+        <li><b>Control rail</b>: title hero 아래·meta card 위. content-left 정렬, 과한 카드 래핑 없이 기존 dark control 톤. control rail → meta card 약 30px · meta card → 섹션 약 60px.</li>
+        <li><b>US 2단</b>: ① Form family tabbar(3/4/5 필터·동작 불변) ② filing selector(해당 family 내 filing) → meta card. tabbar→selector gap ~20px, selector→meta 약 30px. selector max-width 560px, 모바일 full-width, trigger ellipsis·option max-height scroll.</li>
+        <li><b>KR</b>: Form tabbar 없음, filing selector만(content-left, max-width 560px). dual basis/divergence note 유지.</li>
+        <li><b>selector copy</b>: selector 외부 helper 없음 — 의미는 trigger 내부 좌측 「공시 선택」 라벨로 전달(v10.27b). planned/거래계획 표현 금지.</li>
+        <li>데이터/로직/CTA/Form tabbar 동작·10b5-1·dual basis 불변. 단일 filing issuer도 selector 항상 표시(trigger 내 「공시 선택」 라벨).</li>
+      </ul>
+      <div style="font-size:11.5px; color:#1B5E8A; margin-top:8px;">QA: 콘솔 0건 · hero center·top100/bot60 · selector 단일 숨김 · 전환 시 meta·6섹션 동기 · planned 미노출 · CTA/레이아웃 의미 불변.</div>
+    </div>
+    <div style="border:1px solid #DDE7F0; background:#F5F9FD; border-radius:12px; padding:14px 16px; margin-bottom:14px;">
+      <div style="font-size:13px; font-weight:700; color:#111827; margin-bottom:6px;">v10.24 상세 상단 helper block + 2단 control rail</div>
+      <ul style="margin:0; padding-left:17px; font-size:12.5px; color:#475467; line-height:1.85;">
+        <li><b>helper block(centered)</b>: 「공시 선택」 + 「같은 종목의 다른 보고자 공시를 확인할 수 있습니다.」를 좌측 컬럼에서 <b>title hero 아래 가운데 정렬 안내 블록</b>으로 이동(저대비·소형). selector 표시(2건 이상)일 때만 노출, 아래 control rail까지 18px.</li>
+        <li><b>control rail(1줄)</b>: <code>showControlRail = (US Form tabbar 有) || (filing 2건 이상)</code>. <b>US</b>=Form tabbar(좌, flex:1) + filing selector(우, flex:0 1 560px) 한 줄. <b>KR</b>=selector만(좌측, max 560). tabbar↔selector gap 24px, rail↔meta card 26px.</li>
+        <li><b>responsive</b>: 데스크톱 2열, 폭 부족 시 flex-wrap으로 세로 stack 허용(tabbar 위/selector 아래). selector full-width(min 240). option max-height 320 scroll, 가로 스크롤 없음.</li>
+        <li>tabbar/selector 동작 로직·CTA·10b5-1·dual basis·단일 filing selector 숨김 규칙 불변. planned/거래계획 미노출.</li>
+      </ul>
+      <div style="font-size:11.5px; color:#1B5E8A; margin-top:8px;">QA: 콘솔 0건 · helper centered · US tabbar+selector 동일 rail · KR selector only · 좁은 폭 stack · CTA/레이아웃 의미 불변.</div>
+    </div>
+    <div style="border:1px solid #DDE7F0; background:#F5F9FD; border-radius:12px; padding:14px 16px; margin-bottom:14px;">
+      <div style="font-size:13px; font-weight:700; color:#111827; margin-bottom:6px;">v10.25 control rail 최종 보정 (KR centered / US 2열 compact)</div>
+      <ul style="margin:0; padding-left:17px; font-size:12.5px; color:#475467; line-height:1.85;">
+        <li><b>KR</b>: centered helper(별도 블록) + <b>centered dropdown</b>(rail justify-content:center, selCol width min(100%,900px)·max 900px). Form tabbar 없음.</li>
+        <li><b>US</b>: 2열 rail — 좌측 <b>compact Form tabbar</b>(컨테이너 flex:0 0 auto로 콘텐츠에 shrink-wrap, tab gap 12px) + 우측 helper+dropdown stack(selCol flex:0 1 560px·margin-left:auto). helper(「공시 선택」+설명)는 <b>dropdown 바로 위 left-aligned</b>(공용 centered 블록 아님), helper↔dropdown 8px.</li>
+        <li><b>country 분리</b>: helper는 KR=centered 공용 / US=우측 컬럼 전용. railStyle·tablistStyle·selColStyle은 isKR 기준 분기.</li>
+        <li><b>responsive</b>: 데스크톱 KR centered·US 2열, 폭 부족 시 flex-wrap stack(US tabbar 위/helper+dropdown 아래), selancer full-width, option max-height scroll, 가로 스크롤 없음.</li>
+        <li>tabbar/selector 동작·CTA·10b5-1·dual basis·단일 filing 숨김 불변. planned 미노출.</li>
+      </ul>
+      <div style="font-size:11.5px; color:#1B5E8A; margin-top:8px;">QA: 콘솔 0건 · KR rail center·col 900 · US compact tabbar + 우측 helper+dropdown · CTA/레이아웃 의미 불변.</div>
+    </div>
+    <div style="border:1px solid #DDE7F0; background:#F5F9FD; border-radius:12px; padding:14px 16px; margin-bottom:14px;">
+      <div style="font-size:13px; font-weight:700; color:#111827; margin-bottom:6px;">v10.26 Filing Selector 항상 표시</div>
+      <ul style="margin:0; padding-left:17px; font-size:12.5px; color:#475467; line-height:1.85;">
+        <li><b>표시 조건 변경</b>: issuer active filing 수와 무관하게 Disclosure Summary 상단에 filing selector를 <b>항상 표시</b>(<code>filingSel.show = _sibs.length>=1</code>). helper(KR centered / US 우측)도 항상 노출.</li>
+        <li><b>2건 이상</b>: 기존처럼 선택 전환 가능 dropdown. <b>1건</b>: 현재 공시 확인용 selector(옵션 1개, 동일 trigger 스타일 유지, 비활성처럼 과하게 죽이지 않음). undefined/empty label/raw null 노출 없음.</li>
+        <li>US: 현재 Form family에 filing 1건이어도 selector 고정 표시(해당 family에 filing 없으면 기존 empty/비활성 유지). KR: 1건이어도 centered helper+dropdown 유지, Form tabbar 없음.</li>
+        <li>tabbar/selector 동작·CTA·10b5-1·D002 dual basis/divergence note·거래계획 out-of-scope 불변.</li>
+      </ul>
+      <div style="font-size:11.5px; color:#1B5E8A; margin-top:8px;">QA: 단일 filing(신영와코루) selector 표시·label 정상·undefined 없음 · 다중 filing 전환 정상 · 콘솔 0건.</div>
+    </div>
+    <div style="border:1px solid #DDE7F0; background:#F5F9FD; border-radius:12px; padding:14px 16px; margin-bottom:14px;">
+      <div style="font-size:13px; font-weight:700; color:#111827; margin-bottom:6px;">v10.27 empty state 문구 간결화</div>
+      <ul style="margin:0; padding-left:17px; font-size:12.5px; color:#475467; line-height:1.85;">
+        <li>섹션 타이틀이 이미 있으므로 empty card 내부의 <b>title 줄(보유 내역 없음 등) 제거</b>, <b>body 설명 한 줄만</b> 표시(아이콘/카드 스타일 유지).</li>
+        <li>적용: 보유 변화 요약·거래·변동 내역·보유 내역·권리성·파생성 증권·주석·비고 empty(+ no securities/holding-only/D002 previous 없음/Form 3 거래 없음).</li>
+        <li>body 권장 문구 유지(포맷명 직접 언급 지양): "이 공시에는 표시할 보유 내역이 없습니다." / "…거래·변동 내역이 없습니다." / "…권리성·파생성 증권 내역이 없습니다." / "…별도 주석이나 비고가 없습니다." / "이전 기준 정보가 없어 보유 변화 비교를 제공하지 않습니다. 현재 보유 현황은 「보유 내역」에서 확인할 수 있습니다." / D002 권리성 증권 보유 시 "권리성 증권은 「보유 내역」 또는 「거래·변동 내역」에 포함되어 표시됩니다."</li>
+        <li>데이터 조건 분기·CTA·selector·10b5-1·dual basis 불변. undefined/NaN/raw null·planned 계열 미노출.</li>
+      </ul>
+    </div>
+    <div style="border:1px solid #DDE7F0; background:#F5F9FD; border-radius:12px; padding:14px 16px; margin-bottom:14px;">
+      <div style="font-size:13px; font-weight:700; color:#111827; margin-bottom:6px;">v10.27b filing selector 라벨 내재화</div>
+      <ul style="margin:0; padding-left:17px; font-size:12.5px; color:#475467; line-height:1.85;">
+        <li>selector 바깥 helper text 2줄(「공시 선택」 + 설명) <b>전부 제거</b>(KR centered helper·US 우측 helper). selector 정체성은 <b>dropdown trigger 내부 왼쪽 「공시 선택」 라벨</b>(secondary tone)로 전달, 그 오른쪽이 선택값(보고자·문서유형·날짜·요약, ellipsis), 우측 chevron.</li>
+        <li>KR/US 공통 패턴. KR=centered dropdown / US=tabbar left + dropdown right 구조 유지. 단일 filing이어도 selector·라벨 항상 표시.</li>
+        <li>selector 동작·CTA·10b5-1·D002 dual basis/divergence note·거래계획 out-of-scope 불변. undefined/NaN/raw null·planned 계열 미노출.</li>
+      </ul>
+      <div style="font-size:11.5px; color:#1B5E8A; margin-top:8px;">QA: trigger "공시 선택  임주희 · D002 · …" 정상 · 바깥 helper 제거 · 콘솔 0건.</div>
+    </div>
     <div style="border:1px solid #E6EAF0; border-radius:12px; padding:14px 16px;">
       <div style="font-size:13px; font-weight:700; color:#111827; margin-bottom:6px;">Form별 compact 샘플 (핵심 필드)</div>
       <pre style="background:#0F172A; color:#E6EDF7;">// KR D002 변동
@@ -796,7 +955,7 @@ Return the JSON now.</pre>
       <table>
         <thead><tr><th style="width:64px;">ver</th><th>변경 요약</th></tr></thead>
         <tbody>
-          <tr><td class="mono">v1.0</td><td>7섹션 공통 UI · 공통 스키마 · KR/US 7케이스</td></tr>
+          <tr><td class="mono">v1.0</td><td>초기 7섹션 → 현행 6섹션 공통 UI로 통합 · 공통 스키마 · KR/US 7케이스</td></tr>
           <tr><td class="mono">v1.1</td><td>owner_type · 관계 플래그 · G GRAT · paired transfer · indirect nature · GSU · field footnote</td></tr>
           <tr><td class="mono">v1.2</td><td>noSecuritiesOwned=1 · form5_flags · period≠txnDate · L 지연 · W · price 0 vs null · remarks/EX-24</td></tr>
           <tr><td class="mono">v1.3</td><td>분류 보수성 · G/A 미확정 · decimal 강화 · 10b5-1 채택일 · 401(k) · 주식배당 · 특정증권등/주권 · A~J 코드</td></tr>

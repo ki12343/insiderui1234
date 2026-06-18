@@ -41,6 +41,8 @@
   .ix-metacard { display: grid; grid-template-columns: minmax(0,42fr) minmax(0,58fr); gap: 0 28px; align-items: start; }
   @media (max-width: 760px) { .ix-metacard { grid-template-columns: 1fr; gap: 18px; } .ix-metacard > div:last-child { border-left: none !important; padding-left: 0 !important; } }
   input::placeholder { color: #5A6478; }
+  .ix-detail-hero { text-align:center; padding-top:30px; padding-bottom:60px; }
+  @media (max-width:768px){ .ix-detail-hero { padding-top:24px; padding-bottom:40px; } }
   /* ---- accessibility: focus rings + touch targets ---- */
   a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-visible, .ix-row:focus-visible, [role="button"]:focus-visible {
     outline: 2px solid #7C8CFF; outline-offset: 2px; border-radius: 6px;
@@ -342,27 +344,64 @@
       <button onClick="{{ onGoBack }}" class="ix-crumb" style="display:inline-flex; align-items:center; gap:6px; background:transparent; border:none; color:#9DA8FF; font-size:13px; font-weight:600; cursor:pointer; padding:0;">← 돌아가기</button>
     </div>
 
-    <!-- ============ HEADER ============ -->
-    <div style="margin-bottom:16px;">
-      <div style="font-size:11px; font-weight:700; letter-spacing:.12em; color:#6F7A8E;">공시 요약 · DISCLOSURE SUMMARY</div>
-      <h1 style="margin:7px 0 0; font-size:27px; font-weight:700; color:#F4F7FB; letter-spacing:-.015em;">임원·주요주주 보유/거래 변동</h1>
+    <!-- ============ TITLE HERO (center) ============ -->
+    <div class="ix-detail-hero">
+      <div style="font-size:11px; font-weight:700; letter-spacing:.14em; color:#7C8CFF;">공시 요약 · DISCLOSURE SUMMARY</div>
+      <h1 style="margin:11px 0 0; font-size:28px; font-weight:800; color:#F4F7FB; letter-spacing:-.02em;">임원·주요주주 보유/거래 변동</h1>
     </div>
 
-    <!-- ============ Form family TABS (US only) — 상단 위치 (메타 카드 위) ============ -->
-    <sc-if value="{{ hasFormLatest }}" hint-placeholder-val="{{ false }}">
-      <div role="tablist" aria-label="Form별 공시 요약" style="display:flex; gap:4px; align-items:center; flex-wrap:wrap; margin-bottom:20px; padding:5px; background:linear-gradient(180deg, #0C1120, #080C16); border:1px solid rgba(255,255,255,0.08); border-radius:12px;">
-        <sc-for list="{{ formLatest }}" as="fl" hint-placeholder-count="3">
-          <button role="tab" onClick="{{ fl.onOpen }}" aria-selected="{{ fl.isCurrent }}" style="{{ fl.tabStyle }}">
-            <span style="font-weight:700;">{{ fl.label }}</span>
-            <span style="margin-left:6px; font-size:11px; opacity:.75;">· {{ fl.mean }}</span>
-            <span style="margin-left:8px; font-size:11px; opacity:.6; font-variant-numeric:tabular-nums;">{{ fl.filingDate }}</span>
+    <!-- ============ HELPER BLOCK (KR 전용 · centered 공시 선택 안내) ============ -->
+    <!-- (helper text 제거 · selector 정체성은 trigger 내부 「공시 선택」 라벨) -->
+
+    <!-- ============ CONTROL RAIL (US: Form tabbar left + selector right · KR: selector only) ============ -->
+    <sc-if value="{{ showControlRail }}" hint-placeholder-val="{{ false }}">
+      <div style="{{ filingSel.railStyle }}">
+        <sc-if value="{{ hasFormLatest }}" hint-placeholder-val="{{ false }}">
+          <div role="tablist" aria-label="Form별 공시 요약" style="{{ filingSel.tablistStyle }}">
+            <sc-for list="{{ formLatest }}" as="fl" hint-placeholder-count="3">
+              <button role="tab" onClick="{{ fl.onOpen }}" aria-selected="{{ fl.isCurrent }}" style="{{ fl.tabStyle }}">
+                <span style="font-weight:700;">{{ fl.label }}</span>
+                <span style="margin-left:6px; font-size:11px; opacity:.75;">· {{ fl.mean }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ filingSel.show }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ filingSel.selColStyle }}">
+          <div style="position:relative;">
+          <button onClick="{{ filingSel.onToggle }}" onKeyDown="{{ filingSel.onKey }}" aria-haspopup="listbox" aria-expanded="{{ filingSel.open }}" aria-controls="ix-filing-menu" style="width:100%; display:flex; align-items:center; justify-content:space-between; gap:10px; background:rgba(255,255,255,0.02); color:#F4F7FB; border:1px solid rgba(255,255,255,0.10); border-radius:9px; padding:10px 13px; font-size:13.5px; font-family:inherit; cursor:pointer; overflow:hidden;">
+            <span style="display:inline-flex; align-items:center; gap:13px; min-width:0; flex:1;"><span style="font-size:11px; font-weight:700; color:#7E8AA0; white-space:nowrap; flex-shrink:0;">공시 선택</span><span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ filingSel.currentLabel }}</span></span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7E8AA0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><polyline points="6 9 12 15 18 9"></polyline></svg>
           </button>
-        </sc-for>
+          <sc-if value="{{ filingSel.open }}" hint-placeholder-val="{{ false }}">
+            <div onClick="{{ onCloseDrop }}" style="position:fixed; inset:0; z-index:60;"></div>
+            <div role="listbox" id="ix-filing-menu" style="position:absolute; top:calc(100% + 6px); left:0; right:0; z-index:61; background:#0E1320; border:1px solid rgba(255,255,255,0.12); border-radius:11px; box-shadow:0 12px 32px rgba(0,0,0,.5); padding:5px; max-height:320px; overflow:auto;">
+              <sc-for list="{{ filingSel.options }}" as="op" hint-placeholder-count="3">
+                <button role="option" aria-selected="{{ op.isCurrent }}" onClick="{{ op.onSelect }}" class="ix-opt" style="{{ op.style }}">
+                  <div style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+                    <span style="font-size:13px; font-weight:600; color:#F4F7FB; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ op.reporter }}</span>
+                    <span style="{{ op.checkStyle }}">✓</span>
+                  </div>
+                  <div style="display:flex; align-items:center; gap:7px; margin-top:3px; flex-wrap:wrap;">
+                    <span style="font-size:11px; color:#9DA8FF; font-weight:600; white-space:nowrap;">{{ op.formLabel }}</span>
+                    <span style="font-size:11px; color:#6F7A8E; font-variant-numeric:tabular-nums; white-space:nowrap;">{{ op.date }}</span>
+                    <span style="font-size:11px; color:#7E8AA0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:230px;">{{ op.summary }}</span>
+                  </div>
+                  <sc-if value="{{ op.hasBadges }}" hint-placeholder-val="{{ false }}">
+                    <div style="display:flex; gap:4px; margin-top:5px; flex-wrap:wrap;"><sc-for list="{{ op.badges }}" as="b" hint-placeholder-count="1"><span style="{{ b.style }}">{{ b.label }}</span></sc-for></div>
+                  </sc-if>
+                </button>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+        </div>
+        </sc-if>
       </div>
     </sc-if>
 
     <!-- ============ PAGE META CARD (2-col: identity | key meta) ============ -->
-    <div style="background:radial-gradient(circle at 10% 10%, rgba(124,140,255,0.18), transparent 30%), radial-gradient(circle at 85% 0%, rgba(77,141,255,0.08), transparent 28%), linear-gradient(180deg, #0C1120 0%, #080C16 100%); border:1px solid rgba(255,255,255,0.10); border-radius:18px; box-shadow:0 8px 28px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,0.05); padding:22px 26px; margin-bottom:24px;">
+    <div style="background:radial-gradient(circle at 10% 10%, rgba(124,140,255,0.18), transparent 30%), radial-gradient(circle at 85% 0%, rgba(77,141,255,0.08), transparent 28%), linear-gradient(180deg, #0C1120 0%, #080C16 100%); border:1px solid rgba(255,255,255,0.10); border-radius:18px; box-shadow:0 8px 28px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,0.05); padding:22px 26px; margin-bottom:60px;">
       <div class="ix-metacard">
         <!-- left: identity -->
         <div style="min-width:0;">
@@ -624,8 +663,7 @@
       <sc-if value="{{ noHolding }}" hint-placeholder-val="{{ false }}">
         <div style="display:flex; gap:12px; background:linear-gradient(180deg, #0C1120, #080C16); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:17px 20px; box-shadow:inset 0 1px 0 rgba(255,255,255,0.04);">
           <div style="flex-shrink:0; width:8px; height:8px; border-radius:50%; margin-top:6px; background:#3A4256; box-shadow:0 0 0 4px rgba(58,66,86,0.18);"></div>
-          <div><div style="font-size:13.5px; font-weight:600; color:#C4CDDD;">{{ holdingEmptyTitle }}</div>
-          <div style="font-size:12.5px; color:#6F7A8E; margin-top:3px; line-height:1.6;">{{ holdingEmptyBody }}</div></div>
+          <div><div style="font-size:13px; color:#6F7A8E; line-height:1.6;">{{ holdingEmptyBody }}</div></div>
         </div>
       </sc-if>
     </div>
@@ -745,8 +783,7 @@
       <sc-if value="{{ noTxns }}" hint-placeholder-val="{{ false }}">
         <div style="display:flex; gap:12px; background:linear-gradient(180deg, #0C1120, #080C16); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:17px 20px; box-shadow:inset 0 1px 0 rgba(255,255,255,0.04);">
           <div style="flex-shrink:0; width:8px; height:8px; border-radius:50%; margin-top:6px; background:#3A4256; box-shadow:0 0 0 4px rgba(58,66,86,0.18);"></div>
-          <div><div style="font-size:13.5px; font-weight:600; color:#C4CDDD;">{{ txnEmptyTitle }}</div>
-          <div style="font-size:12.5px; color:#6F7A8E; margin-top:3px; line-height:1.6;">{{ txnEmptyBody }}</div></div>
+          <div><div style="font-size:13px; color:#6F7A8E; line-height:1.6;">{{ txnEmptyBody }}</div></div>
         </div>
       </sc-if>
     </div>
@@ -817,8 +854,7 @@
       <sc-if value="{{ noHoldings }}" hint-placeholder-val="{{ false }}">
         <div style="display:flex; gap:12px; background:linear-gradient(180deg, #0C1120, #080C16); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:17px 20px; box-shadow:inset 0 1px 0 rgba(255,255,255,0.04);">
           <div style="flex-shrink:0; width:8px; height:8px; border-radius:50%; margin-top:6px; background:#3A4256; box-shadow:0 0 0 4px rgba(58,66,86,0.18);"></div>
-          <div><div style="font-size:13.5px; font-weight:600; color:#C4CDDD;">{{ holdingsEmptyTitle }}</div>
-          <div style="font-size:12.5px; color:#6F7A8E; margin-top:3px;">{{ holdingsEmptyBody }}</div></div>
+          <div><div style="font-size:13px; color:#6F7A8E; line-height:1.6;">{{ holdingsEmptyBody }}</div></div>
         </div>
       </sc-if>
     </div>
@@ -863,8 +899,7 @@
       <sc-if value="{{ noDeriv }}" hint-placeholder-val="{{ true }}">
         <div style="display:flex; gap:12px; background:linear-gradient(180deg, #0C1120, #080C16); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:17px 20px; box-shadow:inset 0 1px 0 rgba(255,255,255,0.04);">
           <div style="flex-shrink:0; width:8px; height:8px; border-radius:50%; margin-top:6px; background:#3A4256; box-shadow:0 0 0 4px rgba(58,66,86,0.18);"></div>
-          <div><div style="font-size:13.5px; font-weight:600; color:#C4CDDD;">권리성·파생성 증권 내역 없음</div>
-          <div style="font-size:12.5px; color:#6F7A8E; margin-top:3px;">이 공시에는 신주인수권·전환사채·옵션·RSU 등 파생/권리성 증권 내역이 없습니다.</div></div>
+          <div><div style="font-size:13px; color:#6F7A8E; line-height:1.6;">{{ derivEmptyBody }}</div></div>
         </div>
       </sc-if>
     </div>
@@ -894,7 +929,7 @@
       <sc-if value="{{ noFootnotes }}" hint-placeholder-val="{{ false }}">
         <div style="display:flex; gap:12px; background:linear-gradient(180deg, #0C1120, #080C16); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:17px 20px;">
           <div style="flex-shrink:0; width:8px; height:8px; border-radius:50%; margin-top:6px; background:#3A4256; box-shadow:0 0 0 4px rgba(58,66,86,0.18);"></div>
-          <div style="font-size:13px; color:#6F7A8E; line-height:1.6;"><b style="color:#C4CDDD; font-weight:600;">주석 없음</b><br>이 공시에는 별도 주석·비고가 없습니다.</div>
+          <div style="font-size:13px; color:#6F7A8E; line-height:1.6;">이 공시에는 별도 주석이나 비고가 없습니다.</div>
         </div>
       </sc-if>
 
@@ -937,7 +972,7 @@
 class Component extends DCLogic {
   state = { view:'list', selectedOwner:null, selectedTicker:null, selectedTxnKey:null,
     q:'', fCountry:'all', fForm:'all', fDir:'all', listSort:'date', listSortDir:'desc', listLimit:50, listView:'group', groupBy:'ticker', openDropdown:null, activeOptIndex:0,
-    selectedId:'kr-vect', sortKey:'date', sortDir:'desc', filter:'all', holdingView:'cards', expandedRow:-1, dropdownOpen:false, holdingFilter:'all', holdingsExpanded:false, txnExpanded:false, expandedSecs:{} };
+    selectedId:'kr-vect', sortKey:'date', sortDir:'desc', filter:'all', holdingView:'cards', expandedRow:-1, dropdownOpen:false, filingSelOpen:false, holdingFilter:'all', holdingsExpanded:false, txnExpanded:false, expandedSecs:{} };
 
   // transaction code dictionary
   CODE = {
@@ -957,10 +992,383 @@ class Component extends DCLogic {
   };
 
   get data(){
-    const keep = new Set(['kr-vect','kr-posco-kim','kr-enjet-byun','kr-exem-cho','kr-ybio-park','kr-iljin-lee','kr-chunbo-lee','kr-semits-min','kr-nk-safety','kr-samick-choi','kr-daerim-dnd','kr-spsoft-lee','kr-hlbgenex-jin','us-msft-disibio','us-cost-frates','us-cost-george','us-msft-coleman','us-tsla-musk','us-lly-ricks','us-sym-walmart','us-tsla-taneja','us-meta-kimmitt','us-amzn-smith','us-nvda-stevens','us-meta-cox','us-meta-white','us-wmt-walton','us-nvda-gawel3','us-nvda-gawel4','us-tsla-hartung','us-lly-kaelin','us-amzn-herrington','us-googl-shriram','us-googl-ferguson','us-aapl-adams','us-nvda-huang','us-nvda-seawell','us-nvda-stevens-mar','us-nvda-stevens-jun','us-nvda-shoquist','us-nvda-puri','us-nvda-robertson','us-nvda-kress','us-nvda-teter','us-nvda-shah','us-nvda-neal','us-nvda-dabiri','us-aktis-lilly','us-googl-saraci','us-cost-jelinek']);
+    const keep = new Set(['kr-vect','kr-posco-kim','kr-enjet-byun','kr-exem-cho','kr-ybio-park','kr-iljin-lee','kr-chunbo-lee','kr-semits-min','kr-nk-safety','kr-samick-choi','kr-daerim-dnd','kr-spsoft-lee','kr-hlbgenex-jin','kr-shinyoung-choi','kr-cnr-kim','kr-jace-jang','kr-jace-jung','kr-samyoung-park','kr-samyoung-ko','kr-daedong-imju','kr-daedong-imji','kr-asiana-kal','kr-billions-humasis','kr-kukdo','kr-gtf','kr-lab-luha','kr-jetema','kr-wonik-kim','kr-wonik-cho','kr-aztech-jewon','kr-aztech-yusong','kr-kbg-boo-t','kr-kbg-boo-s','kr-younghung','kr-hanwha-ins','kr-pnc','kr-esang','kr-hns','kr-g2g','us-aapl-khan-f3','us-aapl-cook','us-aapl-newstead-f4','us-aapl-newstead-f3','us-aapl-khan-f4','us-aapl-obrien','us-aapl-parekh','us-aapl-borders-a','us-aapl-borders-b','us-aapl-borders-c','us-aapl-newstead-f4b','us-aapl-jung-20260226','us-aapl-levinson-20260226','us-aapl-sugar-20260226','us-aapl-lozano-20260226','us-aapl-austin-20260226','us-aapl-gorsky-20260226','us-aapl-borders-f3-20260102','us-msft-disibio','us-cost-frates','us-cost-george','us-msft-coleman','us-tsla-musk','us-lly-ricks','us-sym-walmart','us-tsla-taneja','us-meta-kimmitt','us-amzn-smith','us-nvda-stevens','us-meta-cox','us-meta-white','us-wmt-walton','us-nvda-gawel3','us-nvda-gawel4','us-tsla-hartung','us-lly-kaelin','us-amzn-herrington','us-googl-shriram','us-googl-ferguson','us-aapl-adams','us-nvda-huang','us-nvda-seawell','us-nvda-stevens-mar','us-nvda-stevens-jun','us-nvda-shoquist','us-nvda-puri','us-nvda-robertson','us-nvda-kress','us-nvda-teter','us-nvda-shah','us-nvda-neal','us-nvda-dabiri','us-aktis-lilly','us-googl-saraci','us-cost-jelinek']);
     return this._data.filter(d=>keep.has(d.id) && !d.isPlan);
   }
   _data = [
+    // ===== US · Apple 이사진 실데이터 batch (v10.21 · accession 대조 ADD) =====
+    { id:"us-aapl-jung-20260226", country:'US', docType:'Form 4', isAmendment:false, reportType:"change",
+      docLabel:"SEC Form 4 — Statement of Changes in Beneficial Ownership", market:'Nasdaq', company:'Apple Inc.', companyEn:'Apple Inc.', code:'AAPL', cik:'0000320193',
+      reporter:"JUNG ANDREA", ownerType:'개인 · Individual', relation:"Director", roles:["Director"],
+      txnSummary:"RSU 부여", mainSecurity:'Common Stock',
+      filingDate:"2026-02-26", periodOfReport:"2026-02-24", originalSubmission:null, eventDate:null, reportBaseDate:null, accessionNumber:"0001051401-26-000004",
+      ownerFlags:{ isDirector:true, isOfficer:false, isTenPercent:false, isOther:false },
+      tradingPlan:{ is10b5:false },
+      curQty:null, deltaQty:null, curRatio:null, prevRatio:null, noSecurities:false, holdingStatus:'not_applicable',
+      transactions:[],
+      holdings:[],
+      derivatives:[{ security:"Restricted Stock Unit", underlying:"Common Stock", underlyingShares:1139, delta:1139, exercisePrice:'—', sharesAfter:1139, exerciseDate:"2026-02-24", expirationDate:"2027-02-01", note:null }], footnotes:[] },
+
+    { id:"us-aapl-levinson-20260226", country:'US', docType:'Form 4', isAmendment:false, reportType:"change",
+      docLabel:"SEC Form 4 — Statement of Changes in Beneficial Ownership", market:'Nasdaq', company:'Apple Inc.', companyEn:'Apple Inc.', code:'AAPL', cik:'0000320193',
+      reporter:"LEVINSON ARTHUR D", ownerType:'개인 · Individual', relation:"Director", roles:["Director"],
+      txnSummary:"증여 (G)", mainSecurity:'Common Stock',
+      filingDate:"2026-02-26", periodOfReport:"2026-02-24", originalSubmission:null, eventDate:null, reportBaseDate:null, accessionNumber:"0001214128-26-000004",
+      ownerFlags:{ isDirector:true, isOfficer:false, isTenPercent:false, isOther:false },
+      tradingPlan:{ is10b5:false },
+      curQty:4069576, deltaQty:-1113, curRatio:null, prevRatio:null, noSecurities:false, holdingStatus:'not_applicable',
+      transactions:[{ date:"2026-02-26", code:"G", ad:"D", security:"Common Stock", before:null, qty:-1113, price:0, postQty:4069576, ownership:"direct", footnotes:[], note:"증여" }],
+      holdings:[{ security:"Common Stock", shares:56000, ownership:"indirect", nature:"By Spouse", footnotes:[] }],
+      derivatives:[{ security:"Restricted Stock Unit", underlying:"Common Stock", underlyingShares:1011, delta:1011, exercisePrice:'—', sharesAfter:1011, exerciseDate:"2026-02-24", expirationDate:"2027-02-01", note:null }], footnotes:[] },
+
+    { id:"us-aapl-sugar-20260226", country:'US', docType:'Form 4', isAmendment:false, reportType:"change",
+      docLabel:"SEC Form 4 — Statement of Changes in Beneficial Ownership", market:'Nasdaq', company:'Apple Inc.', companyEn:'Apple Inc.', code:'AAPL', cik:'0000320193',
+      reporter:"SUGAR RONALD D", ownerType:'개인 · Individual', relation:"Director", roles:["Director"],
+      txnSummary:"RSU 부여", mainSecurity:'Common Stock',
+      filingDate:"2026-02-26", periodOfReport:"2026-02-24", originalSubmission:null, eventDate:null, reportBaseDate:null, accessionNumber:"0001216519-26-000004",
+      ownerFlags:{ isDirector:true, isOfficer:false, isTenPercent:false, isOther:false },
+      tradingPlan:{ is10b5:false },
+      curQty:null, deltaQty:null, curRatio:null, prevRatio:null, noSecurities:false, holdingStatus:'not_applicable',
+      transactions:[],
+      holdings:[],
+      derivatives:[{ security:"Restricted Stock Unit", underlying:"Common Stock", underlyingShares:1139, delta:1139, exercisePrice:'—', sharesAfter:1139, exerciseDate:"2026-02-24", expirationDate:"2027-02-01", note:null }], footnotes:[] },
+
+    { id:"us-aapl-lozano-20260226", country:'US', docType:'Form 4', isAmendment:false, reportType:"change",
+      docLabel:"SEC Form 4 — Statement of Changes in Beneficial Ownership", market:'Nasdaq', company:'Apple Inc.', companyEn:'Apple Inc.', code:'AAPL', cik:'0000320193',
+      reporter:"LOZANO MONICA C", ownerType:'개인 · Individual', relation:"Director", roles:["Director"],
+      txnSummary:"RSU 부여", mainSecurity:'Common Stock',
+      filingDate:"2026-02-26", periodOfReport:"2026-02-24", originalSubmission:null, eventDate:null, reportBaseDate:null, accessionNumber:"0001179864-26-000004",
+      ownerFlags:{ isDirector:true, isOfficer:false, isTenPercent:false, isOther:false },
+      tradingPlan:{ is10b5:false },
+      curQty:null, deltaQty:null, curRatio:null, prevRatio:null, noSecurities:false, holdingStatus:'not_applicable',
+      transactions:[],
+      holdings:[],
+      derivatives:[{ security:"Restricted Stock Unit", underlying:"Common Stock", underlyingShares:1139, delta:1139, exercisePrice:'—', sharesAfter:1139, exerciseDate:"2026-02-24", expirationDate:"2027-02-01", note:null }], footnotes:[] },
+
+    { id:"us-aapl-austin-20260226", country:'US', docType:'Form 4', isAmendment:false, reportType:"change",
+      docLabel:"SEC Form 4 — Statement of Changes in Beneficial Ownership", market:'Nasdaq', company:'Apple Inc.', companyEn:'Apple Inc.', code:'AAPL', cik:'0000320193',
+      reporter:"Austin Wanda M", ownerType:'개인 · Individual', relation:"Director", roles:["Director"],
+      txnSummary:"RSU 부여", mainSecurity:'Common Stock',
+      filingDate:"2026-02-26", periodOfReport:"2026-02-24", originalSubmission:null, eventDate:null, reportBaseDate:null, accessionNumber:"0001690882-26-000004",
+      ownerFlags:{ isDirector:true, isOfficer:false, isTenPercent:false, isOther:false },
+      tradingPlan:{ is10b5:false },
+      curQty:null, deltaQty:null, curRatio:null, prevRatio:null, noSecurities:false, holdingStatus:'not_applicable',
+      transactions:[],
+      holdings:[],
+      derivatives:[{ security:"Restricted Stock Unit", underlying:"Common Stock", underlyingShares:1139, delta:1139, exercisePrice:'—', sharesAfter:1139, exerciseDate:"2026-02-24", expirationDate:"2027-02-01", note:null }], footnotes:[] },
+
+    { id:"us-aapl-gorsky-20260226", country:'US', docType:'Form 4', isAmendment:false, reportType:"change",
+      docLabel:"SEC Form 4 — Statement of Changes in Beneficial Ownership", market:'Nasdaq', company:'Apple Inc.', companyEn:'Apple Inc.', code:'AAPL', cik:'0000320193',
+      reporter:"Gorsky Alex", ownerType:'개인 · Individual', relation:"Director", roles:["Director"],
+      txnSummary:"RSU 부여", mainSecurity:'Common Stock',
+      filingDate:"2026-02-26", periodOfReport:"2026-02-24", originalSubmission:null, eventDate:null, reportBaseDate:null, accessionNumber:"0001453149-26-000005",
+      ownerFlags:{ isDirector:true, isOfficer:false, isTenPercent:false, isOther:false },
+      tradingPlan:{ is10b5:false },
+      curQty:null, deltaQty:null, curRatio:null, prevRatio:null, noSecurities:false, holdingStatus:'not_applicable',
+      transactions:[],
+      holdings:[],
+      derivatives:[{ security:"Restricted Stock Unit", underlying:"Common Stock", underlyingShares:1139, delta:1139, exercisePrice:'—', sharesAfter:1139, exerciseDate:"2026-02-24", expirationDate:"2027-02-01", note:null }], footnotes:[] },
+
+    { id:"us-aapl-borders-f3-20260102", country:'US', docType:'Form 3', isAmendment:false, reportType:"initial",
+      docLabel:"SEC Form 3 — Initial Statement of Beneficial Ownership", market:'Nasdaq', company:'Apple Inc.', companyEn:'Apple Inc.', code:'AAPL', cik:'0000320193',
+      reporter:"Borders Ben", ownerType:'개인 · Individual', relation:"Officer", roles:["Officer"], officerTitle:"Principal Accounting Officer",
+      txnSummary:"최초 보유 보고", mainSecurity:'Common Stock',
+      filingDate:"2026-01-02", periodOfReport:"2026-01-02", originalSubmission:null, eventDate:null, reportBaseDate:null, accessionNumber:"0002100523-26-000002",
+      ownerFlags:{ isDirector:false, isOfficer:true, isTenPercent:false, isOther:false },
+      tradingPlan:{ is10b5:false },
+      curQty:39130, deltaQty:null, curRatio:null, prevRatio:null, noSecurities:false, holdingStatus:'not_applicable',
+      transactions:[],
+      holdings:[{ security:"Common Stock", shares:39130, ownership:"direct", footnotes:[] }],
+      derivatives:[{ security:"Restricted Stock Unit", underlying:"Common Stock", underlyingShares:1080, delta:0, exercisePrice:'—', sharesAfter:1080, exerciseDate:"—", expirationDate:"—", note:null }, { security:"Restricted Stock Unit", underlying:"Common Stock", underlyingShares:1898, delta:0, exercisePrice:'—', sharesAfter:1898, exerciseDate:"—", expirationDate:"—", note:null }, { security:"Restricted Stock Unit", underlying:"Common Stock", underlyingShares:2223, delta:0, exercisePrice:'—', sharesAfter:2223, exerciseDate:"—", expirationDate:"—", note:null }, { security:"Restricted Stock Unit", underlying:"Common Stock", underlyingShares:2643, delta:0, exercisePrice:'—', sharesAfter:2643, exerciseDate:"—", expirationDate:"—", note:null }, { security:"Restricted Stock Unit", underlying:"Common Stock", underlyingShares:1916, delta:0, exercisePrice:'—', sharesAfter:1916, exerciseDate:"—", expirationDate:"—", note:null }], footnotes:[{ id:"F1", tag:"RSU", text:"This restricted stock unit award was granted September 25, 2022, and vests in equal installments on a semi-annual basis over a four year period ending October 15, 2026 subject to the terms and conditions of the underlying…" }, { id:"F2", tag:"RSU", text:"Each restricted stock unit represents the right to receive, at settlement, one share of common stock." }, { id:"F3", tag:"RSU", text:"This restricted stock unit award was granted October 1, 2023, and vests in equal installments on a semi-annual basis over a four year period ending October 15, 2027, subject to the terms and conditions of the underlying award…" }, { id:"F4", tag:"RSU", text:"This restricted stock unit award was granted September 29, 2024, and vests in equal installments on a semi-annual basis over a four year period ending October 15, 2028, subject to the terms and conditions of the underlying…" }, { id:"F5", tag:"RSU", text:"This restricted stock unit award was granted September 28, 2025, and vests in equal installments on a semi-annual basis over a four year period ending October 15, 2029, subject to the terms and conditions of the underlying…" }, { id:"F6", tag:"RSU", text:"This restricted stock unit award was granted December 15, 2025, and vests in equal installments on a semi-annual basis over a four year period ending December 15, 2029, subject to the terms and conditions of the underlying…" }] },
+
+    // ===== US · Apple 실데이터 batch (업로드 원본 추출 · accession 대조 B그룹) =====
+    { id:"us-aapl-khan-f3", country:'US', docType:'Form 3', isAmendment:false, reportType:"initial",
+      docLabel:"SEC Form 3 — Initial Statement of Beneficial Ownership", market:'Nasdaq', company:'Apple Inc.', companyEn:'Apple Inc.', code:'AAPL', cik:'0000320193',
+      reporter:"Khan Sabih", ownerType:'개인 · Individual', relation:"Officer", roles:["Officer"], officerTitle:"COO",
+      txnSummary:"최초 보유 보고", mainSecurity:'Common Stock',
+      filingDate:"2025-07-25", periodOfReport:"2025-07-25", originalSubmission:null, eventDate:null, reportBaseDate:null, accessionNumber:"0000320193-25-000066",
+      ownerFlags:{ isDirector:false, isOfficer:true, isTenPercent:false, isOther:false },
+      tradingPlan:{ is10b5:false },
+      curQty:1031391, deltaQty:null, curRatio:null, prevRatio:null, noSecurities:false, holdingStatus:'not_applicable',
+      transactions:[],
+      holdings:[{ security:"Common Stock", shares:999759, ownership:"direct", footnotes:[] }, { security:"Common Stock", shares:31632, ownership:"indirect", nature:"By family trust", footnotes:[] }],
+      derivatives:[{ security:"Restricted Stock Unit", underlying:'Common Stock', underlyingShares:22688, delta:0, exercisePrice:'—', sharesAfter:22688, exerciseDate:'—', expirationDate:'—', note:null }, { security:"Restricted Stock Unit", underlying:'Common Stock', underlyingShares:44318, delta:0, exercisePrice:'—', sharesAfter:44318, exerciseDate:'—', expirationDate:'—', note:null }, { security:"Restricted Stock Unit", underlying:'Common Stock', underlyingShares:66477, delta:0, exercisePrice:'—', sharesAfter:66477, exerciseDate:'—', expirationDate:'—', note:null }, { security:"Restricted Stock Unit", underlying:'Common Stock', underlyingShares:58408, delta:0, exercisePrice:'—', sharesAfter:58408, exerciseDate:'—', expirationDate:'—', note:null }, { security:"Restricted Stock Unit", underlying:'Common Stock', underlyingShares:58408, delta:0, exercisePrice:'—', sharesAfter:58408, exerciseDate:'—', expirationDate:'—', note:null }, { security:"Restricted Stock Unit", underlying:'Common Stock', underlyingShares:43901, delta:0, exercisePrice:'—', sharesAfter:43901, exerciseDate:'—', expirationDate:'—', note:null }, { security:"Restricted Stock Unit", underlying:'Common Stock', underlyingShares:43901, delta:0, exercisePrice:'—', sharesAfter:43901, exerciseDate:'—', expirationDate:'—', note:null }], footnotes:[{ id:"F1", tag:"RSU", text:"This restricted stock unit (\"RSU\") award was granted September 26, 2021. 22,689 shares of RSUs subject to the award vested on April 1, 2024 and 22,688 RSUs vested on April 1, 2025. 22,688 RSUs are scheduled to vest on April 1,…" }, { id:"F2", tag:"RSU", text:"Each RSU represents the right to receive, at settlement, one share of Apple Inc.'s (\"Apple's\") common stock." }, { id:"F3", tag:"RSU", text:"This RSU award was granted September 25, 2022. 22,159 RSUs subject to the award vested on April 1, 2025 and 22,159 RSUs are scheduled to vest on each of April 1, 2026 and April 1, 2027, subject to the terms and conditions of…" }, { id:"F4", tag:"RSU", text:"This performance-based RSU award was granted September 25, 2022, and is scheduled to vest on October 1, 2025, subject to the terms and conditions of the underlying award agreement. The \"target\" number of RSUs is reported.…" }, { id:"F5", tag:"RSU", text:"This RSU award was granted October 1, 2023, and is scheduled to vest as to one-third of the units on each of April 1, 2026, April 1, 2027, and April 1, 2028, subject to the terms and conditions of the underlying award agreement." }, { id:"F6", tag:"RSU", text:"This performance-based RSU award was granted October 1, 2023, and is scheduled to vest on October 1, 2026, subject to the terms and conditions of the underlying award agreement. The \"target\" number of RSUs is reported. Between…" }, { id:"F7", tag:"RSU", text:"This RSU award was granted September 29, 2024, and is scheduled to vest as to one-third of the units on each of April 1, 2027, April 1, 2028, and April 1, 2029, subject to the terms and conditions of the underlying award…" }, { id:"F8", tag:"RSU", text:"This performance-based RSU award was granted September 29, 2024, and is scheduled to vest on October 1, 2027, subject to the terms and conditions of the underlying award agreement. The \"target\" number of RSUs is reported.…" }] },
+
+    { id:"us-aapl-cook", country:'US', docType:'Form 4', isAmendment:false, reportType:"change",
+      docLabel:"SEC Form 4 — Statement of Changes in Beneficial Ownership", market:'Nasdaq', company:'Apple Inc.', companyEn:'Apple Inc.', code:'AAPL', cik:'0000320193',
+      reporter:"COOK TIMOTHY D", ownerType:'개인 · Individual', relation:"Director · Officer", roles:["Director","Officer"], officerTitle:"Chief Executive Officer",
+      txnSummary:"권리행사·세금원천징수·매도 (M/F/S)", mainSecurity:'Common Stock',
+      filingDate:"2026-04-03", periodOfReport:"2026-04-01", originalSubmission:null, eventDate:null, reportBaseDate:null, accessionNumber:"0001140361-26-013190",
+      ownerFlags:{ isDirector:true, isOfficer:true, isTenPercent:false, isOther:false },
+      tradingPlan:{ is10b5:true, adoptionDate:"May 24, 2024" },
+      curQty:3280418, deltaQty:0, curRatio:null, prevRatio:null, noSecurities:false, holdingStatus:'not_applicable',
+      transactions:[{ date:"2026-04-01", code:"M", ad:"A", security:"Common Stock", before:null, qty:131576, price:0, postQty:3411994, ownership:"direct", footnotes:["F1","F2","F3"], note:"권리행사" }, { date:"2026-04-01", code:"F", ad:"D", security:"Common Stock", before:null, qty:-66627, price:255.63, postQty:3345367, ownership:"direct", footnotes:["F4","F3"], note:"세금원천징수" }, { date:"2026-04-02", code:"S", ad:"D", security:"Common Stock", before:null, qty:-5087, price:251.25, postQty:3340280, ownership:"direct", footnotes:["F5","F6","F3"], note:"매도" }, { date:"2026-04-02", code:"S", ad:"D", security:"Common Stock", before:null, qty:-9147, price:252.11, postQty:3331133, ownership:"direct", footnotes:["F5","F7","F3"], note:"매도" }, { date:"2026-04-02", code:"S", ad:"D", security:"Common Stock", before:null, qty:-1878, price:253.13, postQty:3329255, ownership:"direct", footnotes:["F5","F8","F3"], note:"매도" }, { date:"2026-04-02", code:"S", ad:"D", security:"Common Stock", before:null, qty:-16083, price:254.37, postQty:3313172, ownership:"direct", footnotes:["F5","F9","F3"], note:"매도" }, { date:"2026-04-02", code:"S", ad:"D", security:"Common Stock", before:null, qty:-28188, price:255.17, postQty:3284984, ownership:"direct", footnotes:["F5","F10","F3"], note:"매도" }, { date:"2026-04-02", code:"S", ad:"D", security:"Common Stock", before:null, qty:-4566, price:256, postQty:3280418, ownership:"direct", footnotes:["F5","F11","F3"], note:"매도" }],
+      holdings:[],
+      derivatives:[], footnotes:[{ id:"F1", tag:"RSU", text:"Each restricted stock unit (\"RSU\") represents the right to receive, at settlement, one share of common stock. This transaction represents the settlement of RSUs in shares of common stock on their scheduled vesting date." }, { id:"F2", tag:"ESPP", text:"The number of securities reported reflects the acquisition on January 30, 2026 of 123 shares of Apple Inc.'s common stock pursuant to the Apple Inc. Employee Stock Purchase Plan (\"ESPP\") for the ESPP purchase period of August…" }, { id:"F3", tag:"By Trust", text:"These shares are held through Mr. Cook's trust." }, { id:"F4", tag:"Tax withholding", text:"Shares withheld by Apple to satisfy tax withholding requirements on vesting of RSUs." }, { id:"F5", tag:"Rule 10b5-1", text:"This transaction was made pursuant to a Rule 10b5-1 trading plan adopted by the reporting person on May 24, 2024." }, { id:"F6", tag:"Weighted avg", text:"This transaction was executed in multiple trades at prices ranging from $250.73 to $251.69; the price reported above reflects the weighted average sale price. The reporting person hereby undertakes to provide full information…" }, { id:"F7", tag:"Weighted avg", text:"This transaction was executed in multiple trades at prices ranging from $251.73 to $252.68; the price reported above reflects the weighted average sale price. The reporting person hereby undertakes to provide full information…" }, { id:"F8", tag:"Weighted avg", text:"This transaction was executed in multiple trades at prices ranging from $252.75 to $253.61; the price reported above reflects the weighted average sale price. The reporting person hereby undertakes to provide full information…" }, { id:"F9", tag:"Weighted avg", text:"This transaction was executed in multiple trades at prices ranging from $253.76 to $254.75; the price reported above reflects the weighted average sale price. The reporting person hereby undertakes to provide full information…" }, { id:"F10", tag:"Weighted avg", text:"This transaction was executed in multiple trades at prices ranging from $254.76 to $255.75; the price reported above reflects the weighted average sale price. The reporting person hereby undertakes to provide full information…" }, { id:"F11", tag:"Weighted avg", text:"This transaction was executed in multiple trades at prices ranging from $255.82 to $256.10; the price reported above reflects the weighted average sale price. The reporting person hereby undertakes to provide full information…" }] },
+
+    { id:"us-aapl-newstead-f4", country:'US', docType:'Form 4', isAmendment:false, reportType:"change",
+      docLabel:"SEC Form 4 — Statement of Changes in Beneficial Ownership", market:'Nasdaq', company:'Apple Inc.', companyEn:'Apple Inc.', code:'AAPL', cik:'0000320193',
+      reporter:"Newstead Jennifer", ownerType:'개인 · Individual', relation:"Officer", roles:["Officer"], officerTitle:"SVP, GC and Secretary",
+      txnSummary:"권리행사·세금원천징수 (M/F)", mainSecurity:'Common Stock',
+      filingDate:"2026-03-17", periodOfReport:"2026-03-15", originalSubmission:null, eventDate:null, reportBaseDate:null, accessionNumber:"0001780525-26-000005",
+      ownerFlags:{ isDirector:false, isOfficer:true, isTenPercent:false, isOther:false },
+      tradingPlan:{ is10b5:false },
+      curQty:27680, deltaQty:27680, curRatio:null, prevRatio:null, noSecurities:false, holdingStatus:'not_applicable',
+      transactions:[{ date:"2026-03-15", code:"M", ad:"A", security:"Common Stock", before:null, qty:60208, price:0, postQty:60208, ownership:"direct", footnotes:["F1"], note:"권리행사" }, { date:"2026-03-15", code:"F", ad:"D", security:"Common Stock", before:null, qty:-32528, price:250.12, postQty:27680, ownership:"direct", footnotes:["F2"], note:"세금원천징수" }],
+      holdings:[],
+      derivatives:[], footnotes:[{ id:"F1", tag:"RSU", text:"Each restricted stock unit (\"RSU\") represents the right to receive, at settlement, one share of common stock. This transaction represents the settlement of RSUs in shares of common stock on their scheduled vesting date." }, { id:"F2", tag:"Tax withholding", text:"Shares withheld by Apple to satisfy tax withholding requirements on vesting of RSUs. No shares were sold." }] },
+
+    { id:"us-aapl-newstead-f3", country:'US', docType:'Form 3', isAmendment:false, reportType:"initial",
+      docLabel:"SEC Form 3 — Initial Statement of Beneficial Ownership", market:'Nasdaq', company:'Apple Inc.', companyEn:'Apple Inc.', code:'AAPL', cik:'0000320193',
+      reporter:"Newstead Jennifer", ownerType:'개인 · Individual', relation:"Officer", roles:["Officer"], officerTitle:"SVP, GC and Secretary",
+      txnSummary:"최초 보유 보고", mainSecurity:'Common Stock',
+      filingDate:"2026-03-06", periodOfReport:"2026-03-01", originalSubmission:null, eventDate:null, reportBaseDate:null, accessionNumber:"0001780525-26-000003",
+      ownerFlags:{ isDirector:false, isOfficer:true, isTenPercent:false, isOther:false },
+      tradingPlan:{ is10b5:false },
+      curQty:null, deltaQty:null, curRatio:null, prevRatio:null, noSecurities:false, holdingStatus:'not_applicable',
+      transactions:[],
+      holdings:[],
+      derivatives:[{ security:"Restricted Stock Unit", underlying:'Common Stock', underlyingShares:301040, delta:0, exercisePrice:'—', sharesAfter:301040, exerciseDate:'—', expirationDate:'—', note:null }, { security:"Restricted Stock Unit", underlying:'Common Stock', underlyingShares:48871, delta:0, exercisePrice:'—', sharesAfter:48871, exerciseDate:'—', expirationDate:'—', note:null }], footnotes:[{ id:"F1", tag:"RSU", text:"This RSU award was granted February 15, 2026. 20% of the total number of RSUs subject to the award are scheduled to vest on March 15, 2026; 10% of the total number of RSUs subject to the award are scheduled to vest on each of…" }, { id:"F2", tag:"RSU", text:"Each RSU represents the right to receive, at settlement, one share of Apple Inc.'s (\"Apple's\") common stock." }, { id:"F3", tag:"RSU", text:"This performance-based RSU award was granted February 15, 2026, and is scheduled to vest on October 1, 2028, subject to the terms and conditions of the underlying award agreement. The \"target\" number of RSUs is reported.…" }] },
+
+    { id:"us-aapl-khan-f4", country:'US', docType:'Form 4', isAmendment:false, reportType:"change",
+      docLabel:"SEC Form 4 — Statement of Changes in Beneficial Ownership", market:'Nasdaq', company:'Apple Inc.', companyEn:'Apple Inc.', code:'AAPL', cik:'0000320193',
+      reporter:"Khan Sabih", ownerType:'개인 · Individual', relation:"Officer", roles:["Officer"], officerTitle:"COO",
+      txnSummary:"권리행사·세금원천징수 (M/F)", mainSecurity:'Common Stock',
+      filingDate:"2026-04-03", periodOfReport:"2026-04-01", originalSubmission:null, eventDate:null, reportBaseDate:null, accessionNumber:"0001140361-26-013191",
+      ownerFlags:{ isDirector:false, isOfficer:true, isTenPercent:false, isOther:false },
+      tradingPlan:{ is10b5:false },
+      curQty:1073895, deltaQty:31000, curRatio:null, prevRatio:null, noSecurities:false, holdingStatus:'not_applicable',
+      transactions:[{ date:"2026-04-01", code:"M", ad:"A", security:"Common Stock", before:null, qty:64317, price:0, postQty:1107212, ownership:"direct", footnotes:["F1","F2"], note:"권리행사" }, { date:"2026-04-01", code:"F", ad:"D", security:"Common Stock", before:null, qty:-33317, price:255.63, postQty:1073895, ownership:"direct", footnotes:["F3"], note:"세금원천징수" }],
+      holdings:[{ security:"Common Stock", shares:31632, ownership:"indirect", nature:"By family trust", footnotes:[] }],
+      derivatives:[], footnotes:[{ id:"F1", tag:"RSU", text:"Each restricted stock unit (\"RSU\") represents the right to receive, at settlement, one share of common stock. This transaction represents the settlement of RSUs in shares of common stock on their scheduled vesting date." }, { id:"F2", tag:"ESPP", text:"The number of securities reported reflects the acquisition on January 30, 2026 of 123 shares of Apple Inc.'s common stock pursuant to the Apple Inc. Employee Stock Purchase Plan (\"ESPP\") for the ESPP purchase period of August…" }, { id:"F3", tag:"Tax withholding", text:"Shares withheld by Apple to satisfy tax withholding requirements on vesting of RSUs. No shares were sold." }] },
+
+    { id:"us-aapl-obrien", country:'US', docType:'Form 4', isAmendment:false, reportType:"change",
+      docLabel:"SEC Form 4 — Statement of Changes in Beneficial Ownership", market:'Nasdaq', company:'Apple Inc.', companyEn:'Apple Inc.', code:'AAPL', cik:'0000320193',
+      reporter:"O'BRIEN DEIRDRE", ownerType:'개인 · Individual', relation:"Officer", roles:["Officer"], officerTitle:"Senior Vice President",
+      txnSummary:"권리행사·세금원천징수·매도 (M/F/S)", mainSecurity:'Common Stock',
+      filingDate:"2026-04-03", periodOfReport:"2026-04-01", originalSubmission:null, eventDate:null, reportBaseDate:null, accessionNumber:"0001140361-26-013192",
+      ownerFlags:{ isDirector:false, isOfficer:true, isTenPercent:false, isOther:false },
+      tradingPlan:{ is10b5:true, adoptionDate:"November 24, 2025" },
+      curQty:136810, deltaQty:0, curRatio:null, prevRatio:null, noSecurities:false, holdingStatus:'not_applicable',
+      transactions:[{ date:"2026-04-01", code:"M", ad:"A", security:"Common Stock", before:null, qty:64317, price:0, postQty:201127, ownership:"direct", footnotes:["F1","F2"], note:"권리행사" }, { date:"2026-04-01", code:"F", ad:"D", security:"Common Stock", before:null, qty:-34315, price:255.63, postQty:166812, ownership:"direct", footnotes:["F3"], note:"세금원천징수" }, { date:"2026-04-02", code:"S", ad:"D", security:"Common Stock", before:null, qty:-20338, price:255.12, postQty:146474, ownership:"direct", footnotes:["F4","F5"], note:"매도" }, { date:"2026-04-02", code:"S", ad:"D", security:"Common Stock", before:null, qty:-9664, price:255.82, postQty:136810, ownership:"direct", footnotes:["F4","F6"], note:"매도" }],
+      holdings:[],
+      derivatives:[], footnotes:[{ id:"F1", tag:"RSU", text:"Each restricted stock unit (\"RSU\") represents the right to receive, at settlement, one share of common stock. This transaction represents the settlement of RSUs in shares of common stock on their scheduled vesting date." }, { id:"F2", tag:"ESPP", text:"The number of securities reported reflects the acquisition on January 30, 2026 of 123 shares of Apple Inc.'s common stock pursuant to the Apple Inc. Employee Stock Purchase Plan (\"ESPP\") for the ESPP purchase period of August…" }, { id:"F3", tag:"Tax withholding", text:"Shares withheld by Apple to satisfy tax withholding requirements on vesting of RSUs." }, { id:"F4", tag:"Rule 10b5-1", text:"This transaction was made pursuant to a Rule 10b5-1 trading plan adopted by the reporting person on November 24, 2025." }, { id:"F5", tag:"Weighted avg", text:"This transaction was executed in multiple trades at prices ranging from $254.505 to 255.485; the price reported above reflects the weighted average sale price. The reporting person hereby undertakes to provide full information…" }, { id:"F6", tag:"Weighted avg", text:"This transaction was executed in multiple trades at prices ranging from $255.51 to $256.095; the price reported above reflects the weighted average sale price. The reporting person hereby undertakes to provide full information…" }] },
+
+    { id:"us-aapl-parekh", country:'US', docType:'Form 4', isAmendment:false, reportType:"change",
+      docLabel:"SEC Form 4 — Statement of Changes in Beneficial Ownership", market:'Nasdaq', company:'Apple Inc.', companyEn:'Apple Inc.', code:'AAPL', cik:'0000320193',
+      reporter:"Parekh Kevan", ownerType:'개인 · Individual', relation:"Officer", roles:["Officer"], officerTitle:"Senior Vice President, CFO",
+      txnSummary:"권리행사·세금원천징수 (M/F)", mainSecurity:'Common Stock',
+      filingDate:"2026-04-17", periodOfReport:"2026-04-15", originalSubmission:null, eventDate:null, reportBaseDate:null, accessionNumber:"0001140361-26-015420",
+      ownerFlags:{ isDirector:false, isOfficer:true, isTenPercent:false, isOther:false },
+      tradingPlan:{ is10b5:false },
+      curQty:14900, deltaQty:6135, curRatio:null, prevRatio:null, noSecurities:false, holdingStatus:'not_applicable',
+      transactions:[{ date:"2026-04-15", code:"M", ad:"A", security:"Common Stock", before:null, qty:10928, price:0, postQty:19693, ownership:"direct", footnotes:["F1"], note:"권리행사" }, { date:"2026-04-15", code:"F", ad:"D", security:"Common Stock", before:null, qty:-4793, price:266.43, postQty:14900, ownership:"direct", footnotes:["F2"], note:"세금원천징수" }],
+      holdings:[],
+      derivatives:[], footnotes:[{ id:"F1", tag:"RSU", text:"Each restricted stock unit (\"RSUs\") represents the right to receive, at settlement, one share of common stock. This transaction represents the settlement of RSUs in shares of common stock on their scheduled vesting date." }, { id:"F2", tag:"Tax withholding", text:"Shares withheld by Apple to satisfy tax withholding requirements on vesting of restricted stock units. No shares were sold." }] },
+
+    { id:"us-aapl-borders-a", country:'US', docType:'Form 4', isAmendment:false, reportType:"change",
+      docLabel:"SEC Form 4 — Statement of Changes in Beneficial Ownership", market:'Nasdaq', company:'Apple Inc.', companyEn:'Apple Inc.', code:'AAPL', cik:'0000320193',
+      reporter:"Borders Ben", ownerType:'개인 · Individual', relation:"Officer", roles:["Officer"], officerTitle:"Principal Accounting Officer",
+      txnSummary:"권리행사·세금원천징수 (M/F)", mainSecurity:'Common Stock',
+      filingDate:"2026-04-17", periodOfReport:"2026-04-15", originalSubmission:null, eventDate:null, reportBaseDate:null, accessionNumber:"0001140361-26-015421",
+      ownerFlags:{ isDirector:false, isOfficer:true, isTenPercent:false, isOther:false },
+      tradingPlan:{ is10b5:false },
+      curQty:39987, deltaQty:825, curRatio:null, prevRatio:null, noSecurities:false, holdingStatus:'not_applicable',
+      transactions:[{ date:"2026-04-15", code:"M", ad:"A", security:"Common Stock", before:null, qty:1717, price:0, postQty:40879, ownership:"direct", footnotes:["F1","F2"], note:"권리행사" }, { date:"2026-04-15", code:"F", ad:"D", security:"Common Stock", before:null, qty:-892, price:266.43, postQty:39987, ownership:"direct", footnotes:["F3"], note:"세금원천징수" }],
+      holdings:[],
+      derivatives:[], footnotes:[{ id:"F1", tag:"RSU", text:"Each restricted stock unit (\"RSU\") represents the right to receive, at settlement, one share of common stock. This transaction represents the settlement of RSUs in shares of common stock on their scheduled vesting date." }, { id:"F2", tag:"ESPP", text:"The number of securities reported reflects the acquisition on January 30, 2026 of 32 shares of Apple Inc.'s common stock pursuant to the Apple Inc. Employee Stock Purchase Plan (\"ESPP\") for the ESPP purchase period of August…" }, { id:"F3", tag:"Tax withholding", text:"Shares withheld by Apple to satisfy tax withholding requirements on vesting of RSUs. No shares were sold." }] },
+
+    { id:"us-aapl-borders-b", country:'US', docType:'Form 4', isAmendment:false, reportType:"change",
+      docLabel:"SEC Form 4 — Statement of Changes in Beneficial Ownership", market:'Nasdaq', company:'Apple Inc.', companyEn:'Apple Inc.', code:'AAPL', cik:'0000320193',
+      reporter:"Borders Ben", ownerType:'개인 · Individual', relation:"Officer", roles:["Officer"], officerTitle:"Principal Accounting Officer",
+      txnSummary:"매도 (S)", mainSecurity:'Common Stock',
+      filingDate:"2026-05-12", periodOfReport:"2026-05-08", originalSubmission:null, eventDate:null, reportBaseDate:null, accessionNumber:"0001140361-26-020871",
+      ownerFlags:{ isDirector:false, isOfficer:true, isTenPercent:false, isOther:false },
+      tradingPlan:{ is10b5:true, adoptionDate:"February 6, 2026" },
+      curQty:38713, deltaQty:-1274, curRatio:null, prevRatio:null, noSecurities:false, holdingStatus:'not_applicable',
+      transactions:[{ date:"2026-05-08", code:"S", ad:"D", security:"Common Stock", before:null, qty:-1274, price:290, postQty:38713, ownership:"direct", footnotes:["F1"], note:"매도" }],
+      holdings:[],
+      derivatives:[], footnotes:[{ id:"F1", tag:"Rule 10b5-1", text:"This transaction was made pursuant to a Rule 10b5-1 trading plan adopted by the reporting person on February 6, 2026." }] },
+
+    { id:"us-aapl-borders-c", country:'US', docType:'Form 4', isAmendment:false, reportType:"change",
+      docLabel:"SEC Form 4 — Statement of Changes in Beneficial Ownership", market:'Nasdaq', company:'Apple Inc.', companyEn:'Apple Inc.', code:'AAPL', cik:'0000320193',
+      reporter:"Borders Ben", ownerType:'개인 · Individual', relation:"Officer", roles:["Officer"], officerTitle:"Principal Accounting Officer",
+      txnSummary:"권리행사·세금원천징수·매도 (M/F/S)", mainSecurity:'Common Stock',
+      filingDate:"2026-06-17", periodOfReport:"2026-06-15", originalSubmission:null, eventDate:null, reportBaseDate:null, accessionNumber:"0001140361-26-025620",
+      ownerFlags:{ isDirector:false, isOfficer:true, isTenPercent:false, isOther:false },
+      tradingPlan:{ is10b5:true, adoptionDate:"February 6, 2026" },
+      curQty:38713, deltaQty:0, curRatio:null, prevRatio:null, noSecurities:false, holdingStatus:'not_applicable',
+      transactions:[{ date:"2026-06-15", code:"M", ad:"A", security:"Common Stock", before:null, qty:240, price:0, postQty:38953, ownership:"direct", footnotes:["F1"], note:"권리행사" }, { date:"2026-06-15", code:"F", ad:"D", security:"Common Stock", before:null, qty:-124, price:296.42, postQty:38829, ownership:"direct", footnotes:["F2"], note:"세금원천징수" }, { date:"2026-06-16", code:"S", ad:"D", security:"Common Stock", before:null, qty:-116, price:295.14, postQty:38713, ownership:"direct", footnotes:["F3"], note:"매도" }],
+      holdings:[],
+      derivatives:[], footnotes:[{ id:"F1", tag:"RSU", text:"Each restricted stock unit (\"RSU\") represents the right to receive, at settlement, one share of common stock. This transaction represents the settlement of RSUs in shares of common stock on their scheduled vesting date." }, { id:"F2", tag:"Tax withholding", text:"Shares withheld by Apple to satisfy tax withholding requirements on vesting of RSUs." }, { id:"F3", tag:"Rule 10b5-1", text:"This transaction was made pursuant to a Rule 10b5-1 trading plan adopted by the reporting person on February 6, 2026." }] },
+
+    { id:"us-aapl-newstead-f4b", country:'US', docType:'Form 4', isAmendment:false, reportType:"change",
+      docLabel:"SEC Form 4 — Statement of Changes in Beneficial Ownership", market:'Nasdaq', company:'Apple Inc.', companyEn:'Apple Inc.', code:'AAPL', cik:'0000320193',
+      reporter:"Newstead Jennifer", ownerType:'개인 · Individual', relation:"Officer", roles:["Officer"], officerTitle:"SVP, GC and Secretary",
+      txnSummary:"권리행사·세금원천징수 (M/F)", mainSecurity:'Common Stock',
+      filingDate:"2026-06-17", periodOfReport:"2026-06-15", originalSubmission:null, eventDate:null, reportBaseDate:null, accessionNumber:"0001140361-26-025622",
+      ownerFlags:{ isDirector:false, isOfficer:true, isTenPercent:false, isOther:false },
+      tradingPlan:{ is10b5:false },
+      curQty:41546, deltaQty:13866, curRatio:null, prevRatio:null, noSecurities:false, holdingStatus:'not_applicable',
+      transactions:[{ date:"2026-06-15", code:"M", ad:"A", security:"Common Stock", before:null, qty:30104, price:0, postQty:57784, ownership:"direct", footnotes:["F1"], note:"권리행사" }, { date:"2026-06-15", code:"F", ad:"D", security:"Common Stock", before:null, qty:-16238, price:296.42, postQty:41546, ownership:"direct", footnotes:["F2"], note:"세금원천징수" }],
+      holdings:[],
+      derivatives:[], footnotes:[{ id:"F1", tag:"RSU", text:"Each restricted stock unit (\"RSU\") represents the right to receive, at settlement, one share of common stock. This transaction represents the settlement of RSUs in shares of common stock on their scheduled vesting date." }, { id:"F2", tag:"Tax withholding", text:"Shares withheld by Apple to satisfy tax withholding requirements on vesting of RSUs. No shares were sold." }] },
+
+    // ===== KR · D002 신규 반영 (d00232~d00240 · divergence 실표본) =====
+    { id:'kr-shinyoung-choi', country:'KR', docType:'D002', isAmendment:false, reportType:'신규',
+      docLabel:'임원·주요주주 특정증권등 소유상황보고서', formSubtypeCode:'00634', corpCode:'005800',
+      market:'KOSPI', company:'(주)신영와코루', companyEn:'Shinyoung Wacoal', code:'005800',
+      reporter:'최광열', ownerType:'개인 · Individual', relation:'상무이사 · 등기임원', roles:['상무이사','등기임원'],
+      txnSummary:'신규보고 (+150)', mainSecurity:'보통주',
+      filingDate:'2026-06-17', periodOfReport:'2026-06-17', originalSubmission:null, eventDate:'2026-06-10', reportBaseDate:'2026-06-17', receiptNumber:null,
+      tradingPlan:{ is10b5:false, krPlanDate:null },
+      holding:null, holdingStatus:'no_previous_report', curQty:150, deltaQty:150, curRatio:0.0, prevRatio:null, noSecurities:false, issuedShares:9000000,
+      transactions:[ { date:'2026-06-17', code:'신규보고', ad:'A', security:'보통주', before:null, qty:150, price:13420, postQty:150, ownership:'direct', footnotes:[], note:'신규 선임에 따른 최초 보고' } ],
+      holdings:[ { security:'보통주', securityCategory:'주권', shares:150, ownership:'direct', nature:null, footnotes:[] } ],
+      derivatives:[], footnotes:[] },
+
+    { id:'kr-cnr-kim', country:'KR', docType:'D002', isAmendment:false, reportType:'변동',
+      docLabel:'임원·주요주주 특정증권등 소유상황보고서', formSubtypeCode:'00634', corpCode:'359090',
+      market:'KOSDAQ', company:'주식회사 씨엔알리서치', companyEn:'CNR Research', code:'359090',
+      reporter:'김윤호', ownerType:'개인 · Individual', relation:'상무 · 비등기임원', roles:['상무','비등기임원'],
+      txnSummary:'주식병합 (−31,070)', mainSecurity:'보통주',
+      filingDate:'2026-06-17', periodOfReport:'2026-06-17', originalSubmission:null, eventDate:'2026-06-09', reportBaseDate:'2026-06-17', receiptNumber:null,
+      tradingPlan:{ is10b5:false, krPlanDate:null },
+      holding:{ prevQty:38837, curQty:7767, prevRatio:0.07, curRatio:0.07 }, curQty:7767, deltaQty:-31070, curRatio:0.07, prevRatio:0.07, noSecurities:false, issuedShares:11494143,
+      transactions:[ { date:'2026-06-09', code:'주식병합', ad:'D', security:'보통주', before:38837, qty:-31070, price:null, priceNote:'액면병합', postQty:7767, ownership:'direct', footnotes:[], note:'주식병합에 따른 주식수 변동' } ],
+      holdings:[ { security:'보통주', securityCategory:'주권', shares:7767, ownership:'direct', nature:null, footnotes:[] } ],
+      derivatives:[], footnotes:[] },
+
+    { id:'kr-jace-jang', country:'KR', docType:'D002', isAmendment:false, reportType:'신규',
+      docLabel:'임원·주요주주 특정증권등 소유상황보고서', formSubtypeCode:'00634', corpCode:'090470',
+      market:'KOSDAQ', company:'(주)제이스로보틱스', companyEn:'JACE Robotics', code:'090470',
+      reporter:'장웅상', ownerType:'개인 · Individual', relation:'독립이사 · 등기임원', roles:['독립이사','등기임원'],
+      txnSummary:'신규선임 (+6,000)', mainSecurity:'보통주',
+      filingDate:'2026-06-16', periodOfReport:'2026-06-16', originalSubmission:null, eventDate:'2026-03-26', reportBaseDate:'2026-06-16', receiptNumber:null,
+      tradingPlan:{ is10b5:false, krPlanDate:null },
+      holding:null, holdingStatus:'no_previous_report', curQty:6000, deltaQty:6000, curRatio:0.03, prevRatio:null, noSecurities:false, issuedShares:17476594,
+      transactions:[ { date:'2026-03-26', code:'신규선임', ad:'A', security:'보통주', before:null, qty:6000, price:6054, priceNote:'취득 평균단가', postQty:6000, ownership:'direct', footnotes:[], note:'신규 선임에 따른 최초 보고' } ],
+      holdings:[ { security:'보통주', securityCategory:'주권', shares:6000, ownership:'direct', nature:null, footnotes:[] } ],
+      derivatives:[], footnotes:[] },
+
+    { id:'kr-jace-jung', country:'KR', docType:'D002', isAmendment:false, reportType:'변동',
+      docLabel:'임원·주요주주 특정증권등 소유상황보고서', formSubtypeCode:'00634', corpCode:'090470',
+      market:'KOSDAQ', company:'(주)제이스로보틱스', companyEn:'JACE Robotics', code:'090470',
+      reporter:'정영흠', ownerType:'개인 · Individual', relation:'이사 · 비등기임원', roles:['이사','비등기임원'],
+      txnSummary:'자사주상여금 (+1,776)', mainSecurity:'보통주',
+      filingDate:'2026-06-16', periodOfReport:'2026-06-16', originalSubmission:null, eventDate:'2026-06-10', reportBaseDate:'2026-06-16', receiptNumber:null,
+      tradingPlan:{ is10b5:false, krPlanDate:null },
+      holding:{ prevQty:170000, curQty:171776, prevRatio:0.97, curRatio:0.98 }, curQty:171776, deltaQty:1776, curRatio:0.98, prevRatio:0.97, noSecurities:false, issuedShares:17476594,
+      transactions:[ { date:'2026-06-10', code:'기타', ad:'A', security:'보통주', before:170000, qty:1776, price:4945, postQty:171776, ownership:'direct', footnotes:[], note:'자사주 상여금 · 임직원 격려 및 보상' } ],
+      holdings:[ { security:'보통주', securityCategory:'주권', shares:171776, ownership:'direct', nature:null, footnotes:[] } ],
+      derivatives:[], footnotes:[] },
+
+    { id:'kr-samyoung-park', country:'KR', docType:'D002', isAmendment:false, reportType:'변동',
+      docLabel:'임원·주요주주 특정증권등 소유상황보고서', formSubtypeCode:'00634', corpCode:'361670',
+      market:'KOSDAQ', company:'(주)삼영에스앤씨', companyEn:'Samyoung S&C', code:'361670',
+      reporter:'박상익', ownerType:'개인 · Individual', relation:'대표이사 · 등기임원', roles:['대표이사','등기임원'],
+      txnSummary:'장내매수 6건 (+2,300)', mainSecurity:'보통주',
+      filingDate:'2026-06-16', periodOfReport:'2026-06-16', originalSubmission:null, eventDate:'2026-06-12', reportBaseDate:'2026-06-16', receiptNumber:null,
+      tradingPlan:{ is10b5:false, krPlanDate:null },
+      holding:{ prevQty:111000, curQty:113300, prevRatio:1.96, curRatio:2.00 }, curQty:113300, deltaQty:2300, curRatio:2.00, prevRatio:1.96, noSecurities:false, issuedShares:5667658,
+      transactions:[
+        { date:'2026-05-29', code:'매수', ad:'A', security:'보통주', before:111000, qty:400, price:3147, postQty:111400, ownership:'direct', footnotes:[], note:'장내매수' },
+        { date:'2026-06-08', code:'매수', ad:'A', security:'보통주', before:111400, qty:500, price:2589, postQty:111900, ownership:'direct', footnotes:[], note:'장내매수' },
+        { date:'2026-06-09', code:'매수', ad:'A', security:'보통주', before:111900, qty:50, price:2538, postQty:111950, ownership:'direct', footnotes:[], note:'장내매수' },
+        { date:'2026-06-12', code:'매수', ad:'A', security:'보통주', before:111950, qty:1050, price:2391, postQty:113000, ownership:'direct', footnotes:[], note:'장내매수' },
+        { date:'2026-06-15', code:'매수', ad:'A', security:'보통주', before:113000, qty:100, price:2440, postQty:113100, ownership:'direct', footnotes:[], note:'장내매수' },
+        { date:'2026-06-16', code:'매수', ad:'A', security:'보통주', before:113100, qty:200, price:2460, postQty:113300, ownership:'direct', footnotes:[], note:'장내매수' } ],
+      holdings:[ { security:'보통주', securityCategory:'주권', shares:113300, ownership:'direct', nature:null, footnotes:[] } ],
+      derivatives:[], footnotes:[] },
+
+    { id:'kr-samyoung-ko', country:'KR', docType:'D002', isAmendment:false, reportType:'변동',
+      docLabel:'임원·주요주주 특정증권등 소유상황보고서', formSubtypeCode:'00634', corpCode:'361670',
+      market:'KOSDAQ', company:'(주)삼영에스앤씨', companyEn:'Samyoung S&C', code:'361670',
+      reporter:'고승남', ownerType:'개인 · Individual', relation:'전무이사 · 비등기임원', roles:['전무이사','비등기임원'],
+      txnSummary:'장내매수 4건 (+1,950)', mainSecurity:'보통주',
+      filingDate:'2026-06-16', periodOfReport:'2026-06-16', originalSubmission:null, eventDate:'2026-06-09', reportBaseDate:'2026-06-16', receiptNumber:null,
+      tradingPlan:{ is10b5:false, krPlanDate:null },
+      holding:{ prevQty:11563, curQty:13513, prevRatio:0.20, curRatio:0.24 }, curQty:13513, deltaQty:1950, curRatio:0.24, prevRatio:0.20, noSecurities:false, issuedShares:5667658,
+      transactions:[
+        { date:'2026-05-29', code:'매수', ad:'A', security:'보통주', before:11563, qty:600, price:3000, postQty:12163, ownership:'direct', footnotes:[], note:'장내매수' },
+        { date:'2026-06-08', code:'매수', ad:'A', security:'보통주', before:12163, qty:350, price:2589, postQty:12513, ownership:'direct', footnotes:[], note:'장내매수' },
+        { date:'2026-06-09', code:'매수', ad:'A', security:'보통주', before:12513, qty:500, price:2495, postQty:13013, ownership:'direct', footnotes:[], note:'장내매수' },
+        { date:'2026-06-12', code:'매수', ad:'A', security:'보통주', before:13013, qty:500, price:2400, postQty:13513, ownership:'direct', footnotes:[], note:'장내매수' } ],
+      holdings:[ { security:'보통주', securityCategory:'주권', shares:13513, ownership:'direct', nature:null, footnotes:[] } ],
+      derivatives:[], footnotes:[] },
+
+    { id:'kr-daedong-imju', country:'KR', docType:'D002', isAmendment:false, reportType:'변동',
+      docLabel:'임원·주요주주 특정증권등 소유상황보고서', formSubtypeCode:'00634', corpCode:'048470',
+      market:'KOSDAQ', company:'(주)대동스틸', companyEn:'Daedong Steel', code:'048470',
+      reporter:'임주희', ownerType:'개인 · Individual', relation:'대표이사 · 등기임원', roles:['대표이사','등기임원'],
+      txnSummary:'장내매수 (+5,850)', mainSecurity:'보통주',
+      filingDate:'2026-06-16', periodOfReport:'2026-06-15', originalSubmission:null, eventDate:'2026-06-16', reportBaseDate:'2026-06-16', receiptNumber:null,
+      tradingPlan:{ is10b5:false, krPlanDate:null },
+      holding:{ prevQty:594250, curQty:600100, prevRatio:6.15, curRatio:6.21 }, curQty:600100, deltaQty:5850, curRatio:6.21, prevRatio:6.15, noSecurities:false, issuedShares:9650000,
+      transactions:[ { date:'2026-06-15', code:'매수', ad:'A', security:'보통주', before:594250, qty:5850, price:3026, postQty:600100, ownership:'direct', footnotes:['F1','F2'], note:'장내매수' } ],
+      holdings:[ { security:'보통주', securityCategory:'주권', shares:600100, ownership:'direct', nature:null, footnotes:[] } ],
+      derivatives:[], footnotes:[
+        { id:'F1', tag:'발행주식총수 변동', text:'2026년 1월 15일 자사주 소각 결정 공시에 따라 발행주식총수가 10,000,000주에서 350,000주 소각 완료 후 9,650,000주로 변경되었습니다.' },
+        { id:'F2', tag:'상속 진행', text:'2026년 5월 31일 기존 최대주주 임형기 대표이사 별세로 작성기준일 현재 상속지분에 대한 상속절차가 완료되지 않았으며, 완료 후 재공시 예정입니다.' } ] },
+
+    { id:'kr-daedong-imji', country:'KR', docType:'D002', isAmendment:false, reportType:'변동',
+      docLabel:'임원·주요주주 특정증권등 소유상황보고서', formSubtypeCode:'00634', corpCode:'048470',
+      market:'KOSDAQ', company:'(주)대동스틸', companyEn:'Daedong Steel', code:'048470',
+      reporter:'임지현', ownerType:'개인 · Individual', relation:'대표이사 · 등기임원', roles:['대표이사','등기임원'],
+      txnSummary:'장내매수 2건 (+5,598)', mainSecurity:'보통주',
+      filingDate:'2026-06-16', periodOfReport:'2026-06-15', originalSubmission:null, eventDate:'2026-06-16', reportBaseDate:'2026-06-16', receiptNumber:null,
+      tradingPlan:{ is10b5:false, krPlanDate:null },
+      holding:{ prevQty:495528, curQty:501126, prevRatio:5.13, curRatio:5.19 }, curQty:501126, deltaQty:5598, curRatio:5.19, prevRatio:5.13, noSecurities:false, issuedShares:9650000,
+      transactions:[
+        { date:'2026-06-14', code:'매수', ad:'A', security:'보통주', before:495528, qty:2078, price:3031, postQty:497606, ownership:'direct', footnotes:['F1','F2'], note:'장내매수' },
+        { date:'2026-06-15', code:'매수', ad:'A', security:'보통주', before:497606, qty:3520, price:3094, postQty:501126, ownership:'direct', footnotes:[], note:'장내매수' } ],
+      holdings:[ { security:'보통주', securityCategory:'주권', shares:501126, ownership:'direct', nature:null, footnotes:[] } ],
+      derivatives:[], footnotes:[
+        { id:'F1', tag:'발행주식총수 변동', text:'2026년 1월 15일 자사주 소각 결정 공시에 따라 발행주식총수가 10,000,000주에서 350,000주 소각 완료 후 9,650,000주로 변경되었습니다.' },
+        { id:'F2', tag:'상속 진행', text:'2026년 5월 31일 기존 최대주주 임형기 대표이사 별세로 작성기준일 현재 상속지분에 대한 상속절차가 완료되지 않았으며, 완료 후 재공시 예정입니다.' } ] },
+
+    // ===== KR · D002 dual basis divergence 실표본 =====
+    { id:'kr-asiana-kal', country:'KR', docType:'D002', isAmendment:false, reportType:'변동',
+      docLabel:'임원·주요주주 특정증권등 소유상황보고서', formSubtypeCode:'00634', corpCode:'020560',
+      market:'KOSPI', company:'아시아나항공(주)', companyEn:'Asiana Airlines', code:'020560',
+      reporter:'(주)대한항공', ownerType:'법인 · Company', relation:'10% 이상 주주', roles:['10% 이상 주주','국내법인'],
+      txnSummary:'특정증권등 +7,136,887 (주권 변동 없음)', mainSecurity:'보통주 · 전환사채권',
+      filingDate:'2025-11-13', periodOfReport:'2025-11-13', originalSubmission:null, eventDate:'2025-11-13', reportBaseDate:'2025-11-13', receiptNumber:null,
+      tradingPlan:{ is10b5:false, krPlanDate:null },
+      holding:{ prevQty:131578947, curQty:131578947, prevRatio:63.88, curRatio:63.88 },
+      holdingAlt:{ prevQty:175035706, curQty:182172593, prevRatio:70.17, curRatio:71.00 },
+      curQty:131578947, deltaQty:0, curRatio:63.88, prevRatio:63.88, noSecurities:false, issuedShares:205990711,
+      divergenceNote:'주권 기준 보유는 131,578,947주(63.88%)로 변동이 없으나, 전환사채권 취득으로 특정증권등 전체는 +7,136,887주 증가(70.17%→71.00%)했습니다. 특정증권등 기준과 주권 기준을 분리해 확인합니다.',
+      transactions:[
+        { date:'2025-11-13', code:'기타', ad:'D', security:'전환사채권', before:43456759, qty:-27132133, price:11057, postQty:16324626, ownership:'direct', footnotes:['F1'], note:'제104회 영구전환사채 상환' },
+        { date:'2025-11-13', code:'행사가액조정', ad:'A', security:'전환사채권', before:16324626, qty:408975, price:10458, postQty:16733601, ownership:'direct', footnotes:[], note:'제105회 영구전환사채 전환가액 조정' },
+        { date:'2025-11-13', code:'CB인수', ad:'A', security:'전환사채권', before:16733601, qty:33860045, price:8860, postQty:50593646, ownership:'direct', footnotes:[], note:'제107회 영구전환사채 취득' } ],
+      holdings:[
+        { security:'보통주', securityCategory:'주권', shares:131578947, ownership:'direct', nature:null, footnotes:[] },
+        { security:'전환사채권', securityCategory:'전환사채권', shares:50593646, ownership:'direct', nature:null, footnotes:[] } ],
+      derivatives:[], footnotes:[ { id:'F1', tag:'전환사채 상환', text:'(주)대한항공이 2023년 11월 13일 인수한 아시아나항공(주) 제104회 무기명식 무보증 사모 영구전환사채 전액을 상환함에 따른 변동 보고입니다.' } ] },
+
+    { id:'kr-billions-humasis', country:'KR', docType:'D002', isAmendment:false, reportType:'변동',
+      docLabel:'임원·주요주주 특정증권등 소유상황보고서', formSubtypeCode:'00634', corpCode:'044480',
+      market:'KOSDAQ', company:'주식회사 빌리언스', companyEn:'Billions', code:'044480',
+      reporter:'휴마시스 주식회사', ownerType:'법인 · Company', relation:'10% 이상 주주', roles:['10% 이상 주주','국내법인'],
+      txnSummary:'주식병합·전환사채 변동 등 6건', mainSecurity:'보통주 · 전환사채권',
+      filingDate:'2026-04-23', periodOfReport:'2026-04-23', originalSubmission:null, eventDate:'2026-04-16', reportBaseDate:'2026-04-23', receiptNumber:null,
+      tradingPlan:{ is10b5:false, krPlanDate:null },
+      holding:{ prevQty:27363617, curQty:13315860, prevRatio:33.92, curRatio:40.05 },
+      holdingAlt:{ prevQty:34648893, curQty:13315860, prevRatio:39.40, curRatio:40.05 },
+      curQty:13315860, deltaQty:-14047757, curRatio:40.05, prevRatio:33.92, noSecurities:false, issuedShares:33250916,
+      divergenceNote:'주권 기준은 −14,047,757주(33.92%→40.05%), 특정증권등 전체는 −21,333,033주(39.40%→40.05%)로 감소폭이 다릅니다. 주식병합으로 발행주식총수가 줄어 수량은 감소했으나 지분율은 상승했습니다. 특정증권등 기준과 주권 기준을 분리해 확인합니다.',
+      transactions:[
+        { date:'2026-04-16', code:'주식병합', ad:'D', security:'보통주', before:27363617, qty:-21890894, price:null, priceNote:'액면병합', postQty:5472723, ownership:'direct', footnotes:[], note:'주식액면병합에 따른 주식수 변동' },
+        { date:'2026-04-16', code:'행사가액조정', ad:'D', security:'전환사채권', before:7285276, qty:-5828221, price:1630, postQty:1457055, ownership:'direct', footnotes:[], note:'주식액면병합으로 인한 제6회차 전환가액 변동' },
+        { date:'2026-04-17', code:'행사가액조정', ad:'A', security:'전환사채권', before:1457055, qty:121018, price:1505, postQty:1578073, ownership:'direct', footnotes:[], note:'제7회차 전환사채 발행에 따른 제6회차 전환가액 변동' },
+        { date:'2026-04-21', code:'유상신주취득', ad:'A', security:'보통주', before:5472723, qty:7843137, price:1275, postQty:13315860, ownership:'direct', footnotes:[], note:'유상증자에 따른 신주 취득' },
+        { date:'2026-04-21', code:'행사가액조정', ad:'A', security:'전환사채권', before:1578073, qty:284672, price:1275, postQty:1862745, ownership:'direct', footnotes:[], note:'유상증자로 인한 제6회차 전환가액 변동' },
+        { date:'2026-04-21', code:'매도', ad:'D', security:'전환사채권', before:1862745, qty:-1862745, price:1275, postQty:0, ownership:'direct', footnotes:[], note:'제6회차 전환사채 양도' } ],
+      holdings:[ { security:'보통주', securityCategory:'주권', shares:13315860, ownership:'direct', nature:null, footnotes:[] } ],
+      derivatives:[], footnotes:[] },
+
     // ===== KR · 벡트 D002 (실데이터 · rcp 20260326000272) =====
     { id:'kr-vect', country:'KR', docType:'D002', isAmendment:false, reportType:'변동',
       docLabel:'임원·주요주주 특정증권등 소유상황보고서', formSubtypeCode:'00634', corpCode:'01453944',
@@ -2202,7 +2610,10 @@ class Component extends DCLogic {
 
   select(id){ this.setState({ selectedId:id, dropdownOpen:false, filter:'all', sortKey:'date', sortDir:'desc', expandedRow:-1, holdingView:'cards', holdingFilter:'all', holdingsExpanded:false, txnExpanded:false }); }
   toggleDrop(){ this.setState(s=>({ dropdownOpen:!s.dropdownOpen })); }
-  closeDrop(){ this.setState({ dropdownOpen:false }); }
+  closeDrop(){ this.setState({ dropdownOpen:false, filingSelOpen:false }); }
+  toggleFilingSel(){ this.setState(s=>({ filingSelOpen:!s.filingSelOpen })); }
+  selectFiling(id){ this.select(id); this.setState({ filingSelOpen:false }); }
+  filingSelKey(e){ if(e.key==='Escape'){ this.setState({ filingSelOpen:false }); } else if((e.key==='ArrowDown'||e.key==='Enter') && !this.state.filingSelOpen){ e.preventDefault(); this.setState({ filingSelOpen:true }); } }
   setSort(k){ this.setState(s=> s.sortKey===k ? { sortDir: s.sortDir==='asc'?'desc':'asc' } : { sortKey:k, sortDir:'desc' }); }
   setFilter(f){ this.setState({ filter:f, expandedRow:-1 }); }
   setView(v){ this.setState({ holdingView:v }); }
@@ -2236,6 +2647,8 @@ class Component extends DCLogic {
   allRows(){
     const rows=[];
     this.data.forEach(d=>{
+      // ingest guard: 원문 결손(issuer 없음) 또는 needs_source 계열 문서는 active list/group/detail에서 제외(원문 확인 필요 상태는 내부 QA에서만).
+      if(!d.company || /needs_source|partial_cover|needs_parser/.test(d.sourceStatus||'')) return;
       const base={ filingId:d.id, country:d.country, ticker:d.code, groupKey:(d.cik||d.corpCode||d.company), issuer:d.company, market:d.market, insider:d.reporter, owner:d.reporter, relation:d.relation, formType:d.docType, isAmd:d.isAmendment, reportType:d.reportType, filingDate:d.filingDate, is10b5f:!!(d.tradingPlan&&d.tradingPlan.is10b5), hasDeriv:(d.derivatives||[]).length>0, hasSU:(d.holdings||[]).some(h=>h.holdingType==='stock_unit'), isPlan:!!d.isPlan };
       // 거래계획보고서: 예정 거래는 일반 거래 row로 펼치지 않고 filing-level planned row로 표시
       if(d.isPlan){
@@ -2291,11 +2704,15 @@ class Component extends DCLogic {
     const vBase = { fontSize:'14px', fontWeight:600, color:'#F4F7FB', marginTop:'4px' };
     const vMuted = { fontSize:'14px', fontWeight:600, color:'#6F7A8E', marginTop:'4px' };
     const mv = v => v==null ? { value:dash, valStyle:vMuted } : { value:v, valStyle:vBase };
+    // 날짜 표시 안전장치(ingest guard): 날짜 패턴이 아닌 값(확인/서명 문구, parser error, undefined/NaN 등)은 화면에 "미기재"로만 표시.
+    // 표시 전용 가드일 뿐 데이터/계산 로직은 변경하지 않는다.
+    const dateOk = v => typeof v==='string' && /^(\d{4}-\d{2}-\d{2}|\d{4}\.\d{2}\.\d{2}|\d{4}\/\d{2}\/\d{2}|\d{4}년\s?\d{1,2}월\s?\d{1,2}일)$/.test(v.trim());
+    const dmv = v => v==null ? { value:dash, valStyle:vMuted } : (dateOk(v) ? { value:v, valStyle:vBase } : { value:'미기재', valStyle:vMuted });
     // key meta (right summary block) + secondary meta (bottom row)
     const keyMeta = [
-      { label:'공시일 · Filed', ...mv(f.filingDate) },
-      { label:'보고기준일 · Period', ...mv(f.periodOfReport) },
-      { label:'보고의무발생일', ...mv(isKR ? f.eventDate : (f.containsHistorical&&f.txnDateRange ? (f.txnDateRange.from+' ~ '+f.txnDateRange.to) : null)) },
+      { label:'공시일 · Filed', ...dmv(f.filingDate) },
+      { label:'보고기준일 · Period', ...dmv(f.periodOfReport) },
+      { label:'보고의무발생일', ...(isKR ? dmv(f.eventDate) : mv(f.containsHistorical&&f.txnDateRange ? (f.txnDateRange.from+' ~ '+f.txnDateRange.to) : null)) },
       { label: isKR ? '접수번호 · Receipt' : 'Accession No.', ...mv(isKR ? f.receiptNumber : f.accessionNumber) },
     ];
     let metaFields = [];
@@ -2386,7 +2803,8 @@ class Component extends DCLogic {
         dQtyStyle:{ fontWeight:700, fontVariantNumeric:'tabular-nums', color: adQ===0?NEU:(adQ>0?POS:NEG) },
         dRatioStyle:{ fontWeight:700, fontVariantNumeric:'tabular-nums', color: adR===0?NEU:(adR>0?POS:NEG) },
         divergent: (Math.sign(adQ)!==Math.sign(f.holding.curQty-f.holding.prevQty) && adQ!==0),
-        divergeText:'특정증권등 전체와 주권 기준의 증감 방향이 다릅니다. 전환사채권 등 주식외 특정증권등의 변동으로 두 기준이 반대로 움직였습니다.' };
+        // flat·폭 차이까지 포괄하는 일반 문구(파서 divergence_note가 있으면 섹션2 ⓘ에서 우선 노출). 거래계획 의미 표현 금지.
+        divergeText: f.divergenceNote || '특정증권등 기준과 주권 기준의 변동 방향 또는 폭이 다릅니다.' };
     }
     let holdingEmptyTitle='', holdingEmptyBody='';
     if(!hc){
@@ -2488,10 +2906,24 @@ class Component extends DCLogic {
         exerciseDate:d.exerciseDate||dash, expirationDate:d.expirationDate||dash, note:d.note||null };
     });
     const hasDeriv=(f.derivatives||[]).length>0;
+    // D002 권리성 증권(전환사채권·신주인수권부사채권·신주인수권·교환사채권·이익참가부사채권·증권예탁증권 등)이 보유/거래에 있으면
+    // 섹션 5 empty 카피를 "보유 내역에서 확인"으로 조건부 보정(섹션 4/3 표시 유지, 섹션 5로 중복 렌더하지 않음).
+    const rightsRe = /전환사채|신주인수권|교환사채|이익참가부사채|증권예탁증권|워런트/;
+    const hasRightsSec = isKR && ((f.holdings||[]).some(h=>rightsRe.test((h.securityCategory||'')+' '+(h.security||''))) || (f.transactions||[]).some(t=>rightsRe.test(t.security||'')));
+    const derivEmptyTitle = hasRightsSec ? '권리성 증권은 보유 내역에서 확인' : '권리성·파생성 증권 내역 없음';
+    const derivEmptyBody = hasRightsSec ? '이 공시의 권리성 증권은 「보유 내역」 또는 「거래·변동 내역」에 포함되어 표시됩니다.' : '이 공시에는 신주인수권·전환사채·옵션·RSU 등 파생/권리성 증권 내역이 없습니다.';
     const dVal = { fontSize:'13.5px', fontWeight:600, color:'#F4F7FB', marginTop:'3px' };
 
     // ===== SECTION 7 · footnotes + remarks/exhibits =====
-    const footnotes = (f.footnotes||[]);
+    // ingest guard: 소유비율 산식 파편·DART 표준 boilerplate·확인/서명 문구는 주석 렌더에서 2차 필터(실제 비고만 유지).
+    const noiseNote = t => { const s=(t==null?'':String(t)).trim();
+      if(!s) return true;
+      if(/^[\]\)\s]*[×xX*]\s*100$/.test(s)) return true;                              // "] × 100" 산식 파편
+      if(/^\(?\s*[A-Z][\sA-Z\+\/I,·]*\)?\s*[×xX*]\s*100$/.test(s)) return true;        // "(A / J) × 100" 등
+      if(/^교환대상이 주식인.*소유비율을 산정/.test(s)) return true;                    // DART 표준 산식 안내
+      if(/허위기재 또는 기재누락/.test(s)) return true;                                // 확인/서명 문구
+      return false; };
+    const footnotes = (f.footnotes||[]).filter(x=> !noiseNote(x && x.text));
     const hasFootnotes = footnotes.length>0;
     const remarks = f.remarks || null;
     const exhibits = (f.exhibits||[]).map(e=>({ type:e.type, description:e.description }));
@@ -2677,7 +3109,10 @@ class Component extends DCLogic {
         _imp: gs.some(x=>(x.flags||[]).some(f=>f.label==='Late'||f.label==='Amendment')) };
     });
     // issuer group 정렬: 최신 공시일 DESC > 거래있음 > 중요상태 > 원본순
-    groupSections.sort((a,b)=> (a._latest<b._latest?1:a._latest>b._latest?-1:0) || ((b._hasTxn?1:0)-(a._hasTxn?1:0)) || ((b._imp?1:0)-(a._imp?1:0)) );
+    // showcase order (QA 대표 케이스 우선) — 최신순 기본 화면에만 적용, 그 외 정렬·데이터는 불변
+    const _scMap={'0000320193':1,'020560':2,'044480':3,'084650':4,'361670':5,'048470':6,'0001045810':7};
+    const _sc = ls.listSort==='date' ? (k=>_scMap[k]||999) : (()=>999);
+    groupSections.sort((a,b)=> (_sc(a.key)-_sc(b.key)) || (a._latest<b._latest?1:a._latest>b._latest?-1:0) || ((b._hasTxn?1:0)-(a._hasTxn?1:0)) || ((b._imp?1:0)-(a._imp?1:0)) );
     const lv=ls.listView;
     const vBtn=(on)=>({ border:'none', borderRadius:'7px', padding:'6px 13px', fontSize:'12.5px', fontWeight:600, cursor:'pointer', whiteSpace:'nowrap', background:on?'#222B3F':'transparent', color:on?'#F4F7FB':'#AAB3C5', boxShadow:on?'inset 0 0 0 1px rgba(124,140,255,0.35)':'none' });
     const gbBtn=(on)=>({ border:'none', borderRadius:'7px', padding:'5px 11px', fontSize:'12px', fontWeight:600, cursor:'pointer', whiteSpace:'nowrap', background:on?'#222B3F':'rgba(255,255,255,0.03)', color:on?'#F4F7FB':'#AAB3C5', boxShadow:on?'inset 0 0 0 1px rgba(124,140,255,0.35)':'inset 0 0 0 1px rgba(255,255,255,0.06)' });
@@ -2717,6 +3152,35 @@ class Component extends DCLogic {
     const kVal={ fontSize:'14.5px', fontWeight:600, color:'#F4F7FB', marginTop:'12px' };
     const segOn={ border:'none', borderRadius:'7px', padding:'7px 14px', fontSize:'13px', fontWeight:600, cursor:'pointer', background:'#222B3F', color:'#F4F7FB', boxShadow:'inset 0 0 0 1px rgba(124,140,255,0.35)' };
     const segOff={ border:'none', borderRadius:'8px', padding:'7px 14px', fontSize:'13px', fontWeight:600, cursor:'pointer', background:'transparent', color:'#AAB3C5' };
+
+    // ===== FILING SELECTOR — 같은 issuer의 active filing 목록(US는 현재 Form family 한정, KR은 전체 D002) =====
+    const _famOf = d => { const t=(d.docType||''); if(/Form 3/.test(t))return '3'; if(/Form 4/.test(t))return '4'; if(/Form 5/.test(t))return '5'; return 'KR'; };
+    const _issuerKey = f.cik||f.corpCode||f.company;
+    let _sibs = this.data.filter(d=> (d.cik||d.corpCode||d.company)===_issuerKey && !d.isPlan && d.company);
+    if(f.country==='US'){ const cf=_famOf(f); _sibs = _sibs.filter(d=>_famOf(d)===cf); }
+    _sibs.sort((a,b)=> a.filingDate<b.filingDate?1:(a.filingDate>b.filingDate?-1:(((a.reporter||'')<(b.reporter||'')?-1:1))));
+    const _ob=(t,c,bg)=>({ label:t, style:{ display:'inline-flex', alignItems:'center', padding:'1px 6px', borderRadius:'4px', fontSize:'10px', fontWeight:700, color:c, background:bg } });
+    const _optBadges = d => { const a=[];
+      if(d.isAmendment) a.push(_ob('Amendment','#E0A75E','rgba(224,167,94,0.15)'));
+      if(d.noSecurities) a.push(_ob('No securities','#9FA9BC','rgba(138,148,166,0.16)'));
+      else if(!((d.transactions||[]).filter(t=>!t.isSummaryRow).length) && (d.holdings||[]).length) a.push(_ob('Holding-only','#9FA9BC','rgba(138,148,166,0.16)'));
+      if(d.tradingPlan&&d.tradingPlan.is10b5) a.push(_ob('10b5-1','#B7A6FF','rgba(167,139,250,0.15)'));
+      if((d.derivatives||[]).length) a.push(_ob('Derivative','#B7A6FF','rgba(167,139,250,0.12)'));
+      if(d.country==='KR') a.push(_ob('D002','#9DA8FF','rgba(124,140,255,0.13)'));
+      return a.slice(0,3); };
+    const _selOptions = _sibs.map(d=>{ const sel=d.id===f.id; const bs=_optBadges(d); return {
+      id:d.id, reporter:d.reporter||dash, formLabel:d.docType+(d.isAmendment?'/A':''), date:d.filingDate, summary:d.txnSummary||'',
+      isCurrent:sel, badges:bs, hasBadges:bs.length>0,
+      style:{ width:'100%', textAlign:'left', display:'block', background: sel?'rgba(124,140,255,0.10)':'transparent', border:'none', borderRadius:'8px', padding:'9px 11px', cursor:'pointer', fontFamily:'inherit' },
+      checkStyle:{ color:ACC, fontSize:'12px', fontWeight:700, opacity:sel?1:0 },
+      onSelect:()=>this.selectFiling(d.id) }; });
+    const filingSel = { show:_sibs.length>=1, count:_sibs.length, single:_sibs.length<2, open:this.state.filingSelOpen,
+      krHelper:(_sibs.length>=1)&&isKR, usHelper:(_sibs.length>=1)&&!isKR,
+      railStyle:{ display:'flex', alignItems:'flex-end', gap:isKR?'0':'28px', flexWrap:'wrap', marginBottom:'30px', justifyContent:isKR?'center':'flex-start' },
+      tablistStyle:{ display:'flex', gap:'12px', alignItems:'center', flexWrap:'wrap', flex:'0 0 auto', padding:'5px', background:'linear-gradient(180deg, #0C1120, #080C16)', border:'1px solid rgba(255,255,255,0.08)', borderRadius:'12px' },
+      selColStyle: isKR ? { flex:'0 1 560px', width:'min(100%, 560px)', maxWidth:'560px', minWidth:'240px' } : { flex:'0 1 560px', maxWidth:'560px', minWidth:'240px', marginLeft:'auto' },
+      currentLabel:(f.reporter||dash)+' · '+f.docType+(f.isAmendment?'/A':'')+' · '+f.filingDate+(f.txnSummary?(' · '+f.txnSummary):''),
+      options:_selOptions, onToggle:()=>this.toggleFilingSel(), onKey:(e)=>this.filingSelKey(e) };
 
     // Form별 최신 공시 (US issuer 한정) — Form 3/3A·4/4A·5/5A 각 family 최신 1건
     let formLatest=[];
@@ -2760,7 +3224,7 @@ class Component extends DCLogic {
       rootStyle, kLabel, kVal, dVal, secNumStyle, countryChipStyle, docBadgeStyle,
       country:f.country, company:f.company, companyEn:f.companyEn, code:f.code, market:f.market,
       metaLineDetail: f.country+' · '+f.code+' · '+f.market, keyMeta,
-      formLatest, hasFormLatest: formLatest.length>0 && f.country==='US',
+      filingSel, showControlRail: (formLatest.length>0 && f.country==='US') || filingSel.show, formLatest, hasFormLatest: formLatest.length>0 && f.country==='US',
       docType:f.docType, docLabel:f.docLabel, isAmendment:f.isAmendment, reportType:f.reportType,
       isPlan:!!f.isPlan,
       planNote:'예정 거래이며 실제 체결 수량과 단가는 달라질 수 있습니다.',
@@ -2811,7 +3275,7 @@ class Component extends DCLogic {
       holdFilterAllStyle: holdF==='all'?segOn:segOff, holdFilterDirStyle: holdF==='direct'?segOn:segOff, holdFilterIndStyle: holdF==='indirect'?segOn:segOff,
       onHoldAll:()=>this.setHoldingFilter('all'), onHoldDirect:()=>this.setHoldingFilter('direct'), onHoldIndirect:()=>this.setHoldingFilter('indirect'),
       holdingsShowMore, holdingsMoreCount, holdingsFilterEmpty, onToggleHoldings:()=>this.toggleHoldings(),
-      derivCards, hasDeriv, noDeriv:!hasDeriv,
+      derivCards, hasDeriv, noDeriv:!hasDeriv, derivEmptyTitle, derivEmptyBody,
       footnotes, hasFootnotes, noFootnotes:!hasFootnotes,
       remarks, exhibits, hasRemarks,
       // ---- view routing ----
