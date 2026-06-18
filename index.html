@@ -27,13 +27,13 @@
   .ix-crumb:hover { text-decoration: underline; }
   .ix-card { transition: border-color .12s, background .12s; }
   .ix-card:hover { border-color: rgba(124,140,255,0.30); background: #0E1422; }
-  .ix-event { transition: background .12s; }
+  .ix-event { transition: background .12s; padding-top: 4px; padding-bottom: 4px; }
   .ix-event:hover { background: rgba(124,140,255,0.05); }
   .ix-grid { display: grid; grid-template-columns: minmax(200px,1.35fr) minmax(220px,1.5fr) minmax(140px,0.85fr) minmax(180px,1fr) minmax(96px,auto); align-items: center; column-gap: 22px; row-gap: 4px; padding: 13px 18px; border-bottom: 1px solid rgba(255,255,255,0.05); }
   .ix-grid > div { min-width: 0; }
   .ix-actcol { justify-self: end; white-space: nowrap; }
   .ix-gridhead { padding-top: 10px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.07); background: rgba(255,255,255,0.015); }
-  .ix-gridhead > div { font-size: 10.5px; font-weight: 700; letter-spacing: .04em; color: #5E6B86; text-transform: uppercase; }
+  .ix-gridhead > div { font-size: 11.5px; font-weight: 700; letter-spacing: .04em; color: #5E6B86; text-transform: uppercase; }
   @media (max-width: 1024px) { .ix-grid { grid-template-columns: 1fr; row-gap: 8px; } .ix-grid > div, .ix-actcol { text-align: left !important; justify-self: start !important; } .ix-gridhead { display: none; } }
   .ix-ghost:hover { border-color: rgba(124,140,255,0.45); color: #DDE2FF; }
   .ix-rowlink { transition: opacity .12s; }
@@ -85,38 +85,37 @@
 
   <!-- ============ LIST / SEARCH VIEW ============ -->
   <sc-if value="{{ isList }}" hint-placeholder-val="{{ true }}">
-    <div style="max-width:1320px; margin:0 auto; padding:24px 28px 72px;">
-      <div style="margin-bottom:22px;">
+    <div style="max-width:1320px; margin:0 auto; padding:100px 28px 72px;">
+      <div style="margin-bottom:60px; text-align:center;">
         <div style="font-size:11px; font-weight:700; letter-spacing:.14em; color:#7C8CFF;">INSIDER ACTIVITY</div>
-        <h1 style="margin:9px 0 6px; font-size:28px; font-weight:800; color:#F4F7FB; letter-spacing:-.02em;">내부자 · 주요주주 거래 목록</h1>
-        <div style="font-size:13.5px; color:#7E8AA0;">KR DART D002 · US SEC Form 3·4·5 통합</div>
+        <h1 style="margin:11px 0 0; font-size:28px; font-weight:800; color:#F4F7FB; letter-spacing:-.02em;">내부자 · 주요주주 거래 목록</h1>
       </div>
-      <div style="display:flex; align-items:center; gap:11px; background:linear-gradient(180deg, #0E1421, #0A0F1A); border:1px solid rgba(255,255,255,0.10); border-radius:14px; padding:14px 18px; margin-bottom:14px; box-shadow:0 6px 24px rgba(0,0,0,.32);">
-        <span style="color:#7C8CFF; font-size:17px;">⌕</span>
-        <input onInput="{{ onSearch }}" placeholder="회사명, 티커, 내부자·보고자 검색" style="flex:1; background:transparent; border:none; outline:none; color:#F4F7FB; font-size:15px; font-family:inherit;" />
+      <div style="display:flex; align-items:center; gap:11px; width:min(100%, 800px); margin-inline:auto; background:linear-gradient(180deg, #0E1421, #0A0F1A); border:1px solid rgba(255,255,255,0.10); border-radius:14px; padding:19px 22px; margin-bottom:16px; box-shadow:0 6px 24px rgba(0,0,0,.32); position:relative;">
+        <input onInput="{{ onSearch }}" placeholder="회사명, 티커, 내부자·보고자 검색" style="flex:1; background:transparent; border:none; outline:none; color:#F4F7FB; font-size:15px; font-family:inherit; padding-right:40px;" />
+        <span style="position:absolute; right:22px; color:#7C8CFF; font-size:24px; line-height:1; pointer-events:none;">⌕</span>
       </div>
-      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap; padding:9px 12px; background:rgba(255,255,255,0.015); border:1px solid rgba(255,255,255,0.05); border-radius:11px; margin-bottom:16px;">
-          <div style="display:flex; align-items:center; gap:6px;">
-            <span style="font-size:11px; font-weight:700; color:#6F7A8E;">국가</span>
-            <div style="display:inline-flex; background:rgba(255,255,255,0.02); border-radius:7px; padding:2px; border:1px solid rgba(255,255,255,0.06);">
+      <div style="display:flex; align-items:center; justify-content:center; gap:14px; flex-wrap:wrap; margin-bottom:60px;">
+          <div style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
+            <span style="font-size:13px; font-weight:700; color:#6F7A8E; white-space:nowrap;">국가</span>
+            <div style="display:inline-flex; background:rgba(255,255,255,0.02); border-radius:7px; padding:2px; border:1px solid rgba(255,255,255,0.06); white-space:nowrap;">
               <button onClick="{{ onFcAll }}" style="{{ fcAll }}">All</button>
               <button onClick="{{ onFcKR }}" style="{{ fcKR }}">KR</button>
               <button onClick="{{ onFcUS }}" style="{{ fcUS }}">US</button>
             </div>
           </div>
-          <div style="display:flex; align-items:center; gap:6px;">
-            <span style="font-size:11px; font-weight:700; color:#6F7A8E;">변동유형</span>
-            <div style="display:inline-flex; background:rgba(255,255,255,0.02); border-radius:7px; padding:2px; border:1px solid rgba(255,255,255,0.06);">
+          <div style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
+            <span style="font-size:13px; font-weight:700; color:#6F7A8E; white-space:nowrap;">변동유형</span>
+            <div style="display:inline-flex; background:rgba(255,255,255,0.02); border-radius:7px; padding:2px; border:1px solid rgba(255,255,255,0.06); white-space:nowrap;">
               <button onClick="{{ onFdAll }}" style="{{ fdAll }}">전체</button>
               <button onClick="{{ onFdAcq }}" style="{{ fdAcq }}">취득</button>
               <button onClick="{{ onFdDis }}" style="{{ fdDis }}">처분</button>
               <button onClick="{{ onFdHold }}" style="{{ fdHold }}">보유만</button>
             </div>
           </div>
-          <div style="display:flex; align-items:center; gap:6px;">
-            <span style="font-size:11px; font-weight:700; color:#6F7A8E;">공시유형</span>
+          <div style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
+            <span style="font-size:13px; font-weight:700; color:#6F7A8E; white-space:nowrap;">공시유형</span>
             <div style="position:relative;">
-              <button onClick="{{ onToggleForm }}" onKeyDown="{{ onFormKey }}" aria-haspopup="listbox" aria-expanded="{{ formOpen }}" aria-controls="ix-menu-form" aria-activedescendant="{{ formActiveDesc }}" style="display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,0.02); color:#F4F7FB; border:1px solid rgba(255,255,255,0.08); border-radius:6px; padding:5px 10px; font-size:12px; font-family:inherit; cursor:pointer;">{{ formLabel }} <span style="color:#7E8AA0; font-size:9px;">▾</span></button>
+              <button onClick="{{ onToggleForm }}" onKeyDown="{{ onFormKey }}" aria-haspopup="listbox" aria-expanded="{{ formOpen }}" aria-controls="ix-menu-form" aria-activedescendant="{{ formActiveDesc }}" style="display:inline-flex; align-items:center; gap:8px; white-space:nowrap; background:rgba(255,255,255,0.02); color:#F4F7FB; border:1px solid rgba(255,255,255,0.08); border-radius:6px; padding:6px 11px; font-size:13px; font-family:inherit; cursor:pointer;">{{ formLabel }} <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7E8AA0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><polyline points="6 9 12 15 18 9"></polyline></svg></button>
               <sc-if value="{{ formOpen }}" hint-placeholder-val="{{ false }}">
                 <div onClick="{{ onCloseDrop }}" style="position:fixed; inset:0; z-index:60;"></div>
                 <div id="ix-menu-form" role="listbox" style="position:absolute; top:calc(100% + 5px); left:0; min-width:130px; max-height:240px; overflow-y:auto; background:linear-gradient(180deg, #0C1120, #080C16); border:1px solid rgba(124,140,255,0.18); border-radius:12px; box-shadow:0 16px 36px rgba(0,0,0,.42); padding:6px; z-index:61;">
@@ -133,7 +132,7 @@
       <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:18px;">
         <div style="font-size:12.5px; color:#7E8AA0;">{{ metaLine }}</div>
         <div style="position:relative;">
-          <button onClick="{{ onToggleSort }}" onKeyDown="{{ onSortKey }}" aria-haspopup="listbox" aria-expanded="{{ sortOpen }}" aria-controls="ix-menu-sort" aria-activedescendant="{{ sortActiveDesc }}" style="display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,0.02); color:#F4F7FB; border:1px solid rgba(255,255,255,0.08); border-radius:6px; padding:5px 10px; font-size:12px; font-family:inherit; cursor:pointer;">{{ sortLabel }} <span style="color:#7E8AA0; font-size:9px;">▾</span></button>
+          <button onClick="{{ onToggleSort }}" onKeyDown="{{ onSortKey }}" aria-haspopup="listbox" aria-expanded="{{ sortOpen }}" aria-controls="ix-menu-sort" aria-activedescendant="{{ sortActiveDesc }}" style="display:inline-flex; align-items:center; gap:8px; white-space:nowrap; background:transparent; color:#F4F7FB; border:none; border-radius:6px; padding:5px 4px; font-size:13px; font-family:inherit; cursor:pointer;">{{ sortLabel }} <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7E8AA0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></button>
           <sc-if value="{{ sortOpen }}" hint-placeholder-val="{{ false }}">
             <div onClick="{{ onCloseDrop }}" style="position:fixed; inset:0; z-index:60;"></div>
             <div id="ix-menu-sort" role="listbox" style="position:absolute; top:calc(100% + 5px); right:0; min-width:130px; max-height:240px; overflow-y:auto; background:linear-gradient(180deg, #0C1120, #080C16); border:1px solid rgba(124,140,255,0.18); border-radius:12px; box-shadow:0 16px 36px rgba(0,0,0,.42); padding:6px; z-index:61;">
@@ -160,7 +159,7 @@
                 <div style="font-size:12px; color:#7E8AA0; margin-top:7px;">{{ sec.statLine }}</div>
               </div>
               <div style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
-                <button onClick="{{ sec.onLatestDetail }}" class="ix-detail" style="white-space:nowrap; padding:7px 13px; border-radius:8px; border:1px solid rgba(124,140,255,0.32); background:rgba(124,140,255,0.10); color:#B7C0FF; font-size:12px; font-weight:600; cursor:pointer;">최신 공시 보기 ›</button>
+                <button onClick="{{ sec.onLatestDetail }}" class="ix-detail" style="white-space:nowrap; padding:9px 15px; border-radius:8px; border:1px solid rgba(124,140,255,0.32); background:rgba(124,140,255,0.10); color:#B7C0FF; font-size:13px; font-weight:600; cursor:pointer;">최신 공시 보기 ›</button>
               </div>
             </div>
             <!-- events: fixed 5-column grid -->
@@ -177,8 +176,8 @@
                 <div class="ix-event ix-grid">
                   <!-- col1 보고자 / 거래일 -->
                   <div style="min-width:0;">
-                    <div><span onClick="{{ g.onInsider }}" class="ix-tlink" style="color:#9DA8FF; font-weight:600; font-size:13px; cursor:pointer;">{{ g.owner }}</span><span style="font-size:12px; color:#6F7A8E;"> · {{ g.relation }}</span></div>
-                    <div style="font-size:11.5px; color:#6F7A8E; margin-top:3px;">{{ g.dateLabel }} · {{ g.formLabel }} · {{ g.count }}건</div>
+                    <div><span onClick="{{ g.onInsider }}" class="ix-tlink" style="color:#9DA8FF; font-weight:600; font-size:14px; cursor:pointer;">{{ g.owner }}</span><span style="font-size:13px; color:#6F7A8E;"> · {{ g.relation }}</span></div>
+                    <div style="font-size:12px; color:#6F7A8E; margin-top:3px;">{{ g.dateLabel }} · {{ g.formLabel }} · {{ g.count }}건</div>
                   </div>
                   <!-- col2 거래·공시 유형 -->
                   <div style="min-width:0;">
@@ -478,7 +477,7 @@
     <div style="display:flex; align-items:center; gap:10px; margin-bottom:24px;">
       <span style="{{ secNumStyle }}">1</span>
       <div style="display:flex; align-items:baseline; gap:9px; flex-wrap:wrap;">
-        <div style="font-size:17px; font-weight:700; color:#F4F7FB;">보고자 · 내부자 정보</div>
+        <div style="font-size:19px; font-weight:700; color:#F4F7FB;">보고자 · 내부자 정보</div>
         <div style="font-size:12.5px; color:#6F7A8E;">Reporting owner · 관계 · 핵심 지표</div>
       </div>
     </div>
@@ -538,7 +537,7 @@
       <div style="display:flex; align-items:center; gap:10px;">
         <span style="{{ secNumStyle }}">2</span>
         <div style="display:flex; align-items:baseline; gap:9px; flex-wrap:wrap;">
-          <div style="font-size:17px; font-weight:700; color:#F4F7FB;">보유 변화 요약</div>
+          <div style="font-size:19px; font-weight:700; color:#F4F7FB;">보유 변화 요약</div>
           <div style="font-size:12.5px; color:#6F7A8E;">{{ hcSubtitle }}</div>
         </div>
       </div>
@@ -582,7 +581,7 @@
               <span style="{{ kLabel }}">보유비율 · Ownership %</span>
               <div style="flex:1; display:flex; align-items:center; justify-content:center; gap:20px; margin-top:14px;">
                 <div style="text-align:center;">
-                  <div style="{{ hc.ratioPrevRing }}"><div style="width:64px; height:64px; border-radius:50%; background:#0E1320; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#AAB3C5; font-variant-numeric:tabular-nums;">{{ hc.prevRatio }}</div></div>
+                  <div style="{{ hc.ratioPrevRing }}"><div style="width:68px; height:68px; border-radius:50%; background:#0E1320; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#AAB3C5; font-variant-numeric:tabular-nums;">{{ hc.prevRatio }}</div></div>
                   <div style="font-size:11px; color:#6F7A8E; font-weight:600; margin-top:9px;">{{ hcPrevRatioLabel }}</div>
                 </div>
                 <div style="display:flex; flex-direction:column; align-items:center; gap:4px; padding-bottom:26px;">
@@ -590,7 +589,7 @@
                   <span style="color:#6F7A8E; font-size:17px;">→</span>
                 </div>
                 <div style="text-align:center;">
-                  <div style="{{ hc.ratioCurRingBig }}"><div style="width:86px; height:86px; border-radius:50%; background:#0E1320; display:flex; align-items:center; justify-content:center; font-size:17px; font-weight:700; color:#F4F7FB; font-variant-numeric:tabular-nums;">{{ hc.curRatio }}</div></div>
+                  <div style="{{ hc.ratioCurRingBig }}"><div style="width:92px; height:92px; border-radius:50%; background:#0E1320; display:flex; align-items:center; justify-content:center; font-size:17px; font-weight:700; color:#F4F7FB; font-variant-numeric:tabular-nums;">{{ hc.curRatio }}</div></div>
                   <div style="font-size:12px; color:#AAB3C5; font-weight:700; margin-top:9px;">{{ hcCurRatioLabel }}</div>
                 </div>
               </div>
@@ -636,7 +635,7 @@
       <div style="display:flex; align-items:center; gap:10px;">
         <span style="{{ secNumStyle }}">3</span>
         <div style="display:flex; align-items:baseline; gap:9px; flex-wrap:wrap;">
-          <div style="font-size:17px; font-weight:700; color:#F4F7FB;">{{ txnSecTitle }}</div>
+          <div style="font-size:19px; font-weight:700; color:#F4F7FB;">{{ txnSecTitle }}</div>
           <div style="font-size:12.5px; color:#6F7A8E;">Transactions · 총 {{ txnCount }}건 · 행 클릭 시 주석 펼침</div>
         </div>
       </div>
@@ -757,7 +756,7 @@
       <div style="display:flex; align-items:center; gap:10px;">
         <span style="{{ secNumStyle }}">4</span>
         <div style="display:flex; align-items:baseline; gap:9px; flex-wrap:wrap;">
-          <div style="font-size:17px; font-weight:700; color:#F4F7FB;">보유 내역</div>
+          <div style="font-size:19px; font-weight:700; color:#F4F7FB;">보유 내역</div>
           <div style="font-size:12.5px; color:#6F7A8E;">{{ holdingsSub }}</div>
         </div>
       </div>
@@ -828,7 +827,7 @@
     <div style="display:flex; align-items:center; gap:10px; margin-bottom:24px;">
       <span style="{{ secNumStyle }}">5</span>
       <div style="display:flex; align-items:baseline; gap:9px; flex-wrap:wrap;">
-        <div style="font-size:17px; font-weight:700; color:#F4F7FB;">권리성 · 파생성 증권</div>
+        <div style="font-size:19px; font-weight:700; color:#F4F7FB;">권리성 · 파생성 증권</div>
         <div style="font-size:12.5px; color:#6F7A8E;">Derivative / Rights · 신주인수권 · 전환사채 · RSU · Option</div>
       </div>
     </div>
@@ -874,7 +873,7 @@
     <div style="display:flex; align-items:center; gap:10px; margin-bottom:24px;">
       <span style="{{ secNumStyle }}">6</span>
       <div style="display:flex; align-items:baseline; gap:9px; flex-wrap:wrap;">
-        <div style="font-size:17px; font-weight:700; color:#F4F7FB; white-space:nowrap;">주석 · 비고 · Footnotes</div>
+        <div style="font-size:19px; font-weight:700; color:#F4F7FB; white-space:nowrap;">주석 · 비고 · Footnotes</div>
         <div style="font-size:12.5px; color:#6F7A8E;">Footnotes · 원문 주석 · 정정 사유 · 비고</div>
       </div>
     </div>
@@ -886,7 +885,7 @@
               <span style="font-family:'SFMono-Regular',ui-monospace,Menlo,monospace; font-size:11px; font-weight:700; color:#9DA8FF; flex-shrink:0; padding:2px 8px; height:fit-content; background:rgba(124,140,255,0.12); border:1px solid rgba(124,140,255,0.20); border-radius:6px;">{{ fn.id }}</span>
               <div style="min-width:0;">
                 <sc-if value="{{ fn.tag }}" hint-placeholder-val="{{ false }}"><div style="font-size:10.5px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:#6F7A8E; margin-bottom:3px;">{{ fn.tag }}</div></sc-if>
-                <span style="font-size:13px; color:#C4CDDD; line-height:1.65;">{{ fn.text }}</span>
+                <span style="font-size:14px; color:#C4CDDD; line-height:1.65;">{{ fn.text }}</span>
               </div>
             </div>
           </sc-for>
@@ -2368,9 +2367,9 @@ class Component extends DCLogic {
         qtyCurY: (()=>{ const mx=Math.max(h.prevQty,h.curQty), mn=Math.min(h.prevQty,h.curQty), sp=(mx-mn)||1; return (70-((h.curQty-mn)/sp)*44).toFixed(1); })(),
         slopeColor: cQ, slopeNodeCur:{ fill:cQ }, dQtyBadge:{ fontSize:'12px', fontWeight:700, color:cQ, fontVariantNumeric:'tabular-nums', background: dQ===0?'rgba(138,148,166,.12)':(dQ>0?'rgba(255,90,106,.12)':'rgba(77,141,255,.12)'), padding:'2px 8px', borderRadius:'6px', whiteSpace:'nowrap' },
         // radial rings (ratio)
-        ratioPrevRing:{ width:'88px', height:'88px', borderRadius:'50%', background:'conic-gradient(#59647C 0deg, #3A4256 '+(h.prevRatio/maxR*180).toFixed(0)+'deg, #252D42 '+(h.prevRatio/maxR*360).toFixed(0)+'deg, rgba(80,92,122,0.20) 0)', boxShadow:'inset 0 1px 0 rgba(255,255,255,0.08), 0 6px 16px rgba(0,0,0,0.20)', display:'flex', alignItems:'center', justifyContent:'center' },
-        ratioCurRing:{ width:'88px', height:'88px', borderRadius:'50%', background:'conic-gradient('+(cR===POS?'#FF9AA4':(cR===NEG?'#9BBCFF':'#B9C2FF'))+' 0deg, '+(cR===POS?'#FF5A6A':(cR===NEG?'#5F95FF':'#8E9DFF'))+' '+(h.curRatio/maxR*180).toFixed(0)+'deg, '+(cR===POS?'#A83248':(cR===NEG?'#2E5FA8':'#4A55A0'))+' '+(h.curRatio/maxR*360).toFixed(0)+'deg, #1B2233 0)', boxShadow:'inset 0 1px 0 rgba(255,255,255,0.12), inset 0 -10px 18px rgba(0,0,0,0.22), 0 8px 22px rgba(0,0,0,0.24)', display:'flex', alignItems:'center', justifyContent:'center' },
-        ratioCurRingBig:{ width:'114px', height:'114px', borderRadius:'50%', background:'conic-gradient('+(cR===POS?'#FF9AA4':(cR===NEG?'#9BBCFF':'#B9C2FF'))+' 0deg, '+(cR===POS?'#FF5A6A':(cR===NEG?'#5F95FF':'#8E9DFF'))+' '+(h.curRatio/maxR*180).toFixed(0)+'deg, '+(cR===POS?'#A83248':(cR===NEG?'#2E5FA8':'#4A55A0'))+' '+(h.curRatio/maxR*360).toFixed(0)+'deg, #1B2233 0)', boxShadow:'inset 0 1px 0 rgba(255,255,255,0.12), inset 0 -10px 18px rgba(0,0,0,0.22), 0 8px 22px rgba(0,0,0,0.24)', display:'flex', alignItems:'center', justifyContent:'center' },
+        ratioPrevRing:{ width:'94px', height:'94px', borderRadius:'50%', background:'conic-gradient(#59647C 0deg, #3A4256 '+(h.prevRatio/maxR*180).toFixed(0)+'deg, #252D42 '+(h.prevRatio/maxR*360).toFixed(0)+'deg, rgba(80,92,122,0.20) 0)', boxShadow:'inset 0 1px 0 rgba(255,255,255,0.08), 0 6px 16px rgba(0,0,0,0.20)', display:'flex', alignItems:'center', justifyContent:'center' },
+        ratioCurRing:{ width:'94px', height:'94px', borderRadius:'50%', background:'conic-gradient('+(cR===POS?'#FF9AA4':(cR===NEG?'#9BBCFF':'#B9C2FF'))+' 0deg, '+(cR===POS?'#FF5A6A':(cR===NEG?'#5F95FF':'#8E9DFF'))+' '+(h.curRatio/maxR*180).toFixed(0)+'deg, '+(cR===POS?'#A83248':(cR===NEG?'#2E5FA8':'#4A55A0'))+' '+(h.curRatio/maxR*360).toFixed(0)+'deg, #1B2233 0)', boxShadow:'inset 0 1px 0 rgba(255,255,255,0.12), inset 0 -10px 18px rgba(0,0,0,0.22), 0 8px 22px rgba(0,0,0,0.24)', display:'flex', alignItems:'center', justifyContent:'center' },
+        ratioCurRingBig:{ width:'122px', height:'122px', borderRadius:'50%', background:'conic-gradient('+(cR===POS?'#FF9AA4':(cR===NEG?'#9BBCFF':'#B9C2FF'))+' 0deg, '+(cR===POS?'#FF5A6A':(cR===NEG?'#5F95FF':'#8E9DFF'))+' '+(h.curRatio/maxR*180).toFixed(0)+'deg, '+(cR===POS?'#A83248':(cR===NEG?'#2E5FA8':'#4A55A0'))+' '+(h.curRatio/maxR*360).toFixed(0)+'deg, #1B2233 0)', boxShadow:'inset 0 1px 0 rgba(255,255,255,0.12), inset 0 -10px 18px rgba(0,0,0,0.22), 0 8px 22px rgba(0,0,0,0.24)', display:'flex', alignItems:'center', justifyContent:'center' },
         dRatioBadge:{ fontSize:'14px', fontWeight:700, color:cR, fontVariantNumeric:'tabular-nums' },
         dRatioPill:{ fontSize:'12px', fontWeight:700, color:cR, background: dR===0?'rgba(138,148,166,.12)':(dR>0?'rgba(255,90,106,.12)':'rgba(77,141,255,.12)'), padding:'2px 8px', borderRadius:'6px', whiteSpace:'nowrap', fontVariantNumeric:'tabular-nums' },
         // quantity comparison columns (heights proportional, min floor 30%)
@@ -2707,10 +2706,10 @@ class Component extends DCLogic {
       countryChip:{ ...lbadge, padding:'3px 9px', borderRadius:'6px', fontSize:'12px', color: tickF.country==='KR'?'#9DA8FF':'#4FD1C5', background: tickF.country==='KR'?'rgba(124,140,255,0.12)':'rgba(79,209,197,0.12)' } } : null;
 
     // table styles
-    const thBase={ padding:'12px 16px', fontSize:'12px', fontWeight:600, color:'#AAB3C5', whiteSpace:'nowrap' };
+    const thBase={ padding:'14px 16px', fontSize:'13px', fontWeight:600, color:'#AAB3C5', whiteSpace:'nowrap' };
     const thLeft={ ...thBase, textAlign:'left' }, thRight={ ...thBase, textAlign:'right' }, thCenter={ ...thBase, textAlign:'center' };
     const density=this.props.density||'comfortable';
-    const tdBase={ padding:(density==='compact'?'9px':'13px')+' 16px', fontSize:'13.5px', color:'#F4F7FB', verticalAlign:'middle' };
+    const tdBase={ padding:(density==='compact'?'11px':'17px')+' 16px', fontSize:'14px', color:'#F4F7FB', verticalAlign:'middle', lineHeight:'1.45' };
     const tdL={ ...tdBase, textAlign:'left', whiteSpace:'nowrap' };
     const tdR={ ...tdBase, textAlign:'right', whiteSpace:'nowrap', fontVariantNumeric:'tabular-nums' };
     const tdC={ ...tdBase, textAlign:'center' };
