@@ -4,15 +4,16 @@ KR DART **D002**(임원·주요주주 특정증권등 소유상황보고서) + U
 
 > 범위: KR D002 + US Form 3/4/5. **KR 거래계획보고서(planned transaction)는 out-of-scope.**
 
-## 구성
+## 구성 (배포 ZIP)
 
 | 파일 | 설명 |
 |---|---|
-| `내부자거래 공통 UI.dc.html` | 메인 UI (4-View: List/Search · Ticker History · Owner History · Filing Detail) |
-| `Handoff-필드매핑.dc.html` | 개발자 핸드오프 (공통 스키마 `insider-ownership-common-v1` · UI 규칙 · 추출 프롬프트 · QA) |
+| `index.html` | 메인 UI · **배포 entry** (4-View: List/Search · Ticker History · Owner History · Filing Detail) |
+| `handoff.dc.html` | 개발자 핸드오프 (공통 스키마 `insider-ownership-common-v1` · UI 규칙 · 추출 프롬프트 · QA · 배포 패키징) |
 | `support.js` | 런타임 (Design Component) |
+| `vercel.json` | 정적 라우팅 (`/` → `/index.html`) |
 
-## 실행
+## 실행 (로컬)
 
 정적 파일이므로 별도 빌드가 필요 없습니다.
 
@@ -23,7 +24,18 @@ npx serve .
 python3 -m http.server
 ```
 
-브라우저에서 `내부자거래 공통 UI.dc.html`을 엽니다. 두 화면은 상단 탭으로 연결됩니다.
+브라우저에서 `index.html`을 엽니다. 두 화면은 상단 탭으로 연결됩니다.
+
+## Vercel 배포
+
+- **Framework Preset**: Other
+- **Build Command**: 비움
+- **Install Command**: 비움
+- **Output Directory**: 비움
+- ZIP 업로드 시 **`index.html`이 ZIP 루트에 바로** 있어야 합니다.
+- `release/`(또는 `dist/`) **폴더째 압축하면 `404: NOT_FOUND`**가 발생할 수 있습니다 — 루트(`/`)에서 `index.html`을 찾지 못함.
+- 폴더 구조 그대로 배포하려면 **Output Directory를 해당 폴더명(`release`)으로 지정**해야 합니다.
+- 루트의 `vercel.json`이 `/` 요청을 `/index.html`로 rewrite합니다. `handoff.dc.html`은 SPA fallback이 아니라 **실제 파일 경로**로 그대로 접근됩니다.
 
 ## 4-View 흐름
 

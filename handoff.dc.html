@@ -31,14 +31,14 @@
   <!-- ============ GLOBAL TOP NAV ============ -->
   <div style="position:sticky; top:0; z-index:70; background:rgba(238,241,246,.84); backdrop-filter:saturate(180%) blur(12px); -webkit-backdrop-filter:saturate(180%) blur(12px); border-bottom:1px solid #E0E5EC;">
     <div style="max-width:920px; margin:0 auto; padding:0 20px; height:56px; display:flex; align-items:center; justify-content:space-between; gap:16px;">
-      <a href="내부자거래 공통 UI.dc.html" style="display:flex; align-items:center; gap:10px; text-decoration:none; min-width:0;">
+      <a href="index.html" style="display:flex; align-items:center; gap:10px; text-decoration:none; min-width:0;">
         <span style="display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:8px; background:#2563EB; color:#fff; font-size:12px; font-weight:800; letter-spacing:.02em; flex-shrink:0;">IX</span>
         <span style="font-size:14px; font-weight:700; color:#111827; white-space:nowrap;">내부자거래 공통 UI</span>
         <span style="font-size:11px; color:#9AA3B2; font-weight:600; white-space:nowrap;">insider-ownership-common-v1</span>
       </a>
       <div style="display:inline-flex; background:#fff; border:1px solid #E0E5EC; border-radius:10px; padding:3px; flex-shrink:0;">
-        <a href="내부자거래 공통 UI.dc.html" style="display:inline-flex; align-items:center; gap:6px; padding:7px 15px; border-radius:8px; font-size:13px; font-weight:600; text-decoration:none; white-space:nowrap; background:transparent; color:#6B7280;">공통 UI 화면</a>
-        <a href="Handoff-필드매핑.dc.html" style="display:inline-flex; align-items:center; gap:6px; padding:7px 15px; border-radius:8px; font-size:13px; font-weight:600; text-decoration:none; white-space:nowrap; background:#2563EB; color:#fff; box-shadow:0 1px 2px rgba(37,99,235,.25);">개발자 핸드오프</a>
+        <a href="index.html" style="display:inline-flex; align-items:center; gap:6px; padding:7px 15px; border-radius:8px; font-size:13px; font-weight:600; text-decoration:none; white-space:nowrap; background:transparent; color:#6B7280;">공통 UI 화면</a>
+        <a href="handoff.dc.html" style="display:inline-flex; align-items:center; gap:6px; padding:7px 15px; border-radius:8px; font-size:13px; font-weight:600; text-decoration:none; white-space:nowrap; background:#2563EB; color:#fff; box-shadow:0 1px 2px rgba(37,99,235,.25);">개발자 핸드오프</a>
       </div>
     </div>
   </div>
@@ -53,7 +53,7 @@
         <h1 style="margin:8px 0 6px; font-size:25px; font-weight:700; color:#111827; letter-spacing:-.01em;">내부자거래 공통 UI · 설계 핸드오프</h1>
         <div style="font-size:13.5px; color:#6B7280;">DART D002 · SEC Form 3·4·5 — 공통 스키마 · UI 규칙 · 정규화 프롬프트</div>
       </div>
-      <div style="text-align:right; font-size:12px; color:#9AA3B2; line-height:1.7;">v10.10 · 2026-06<br>schema: <b style="color:#2563EB;">insider-ownership-common-v1</b><br>관련 화면: <a href="내부자거래 공통 UI.dc.html" style="color:#2563EB; font-weight:600; text-decoration:none;">내부자거래 공통 UI →</a></div>
+      <div style="text-align:right; font-size:12px; color:#9AA3B2; line-height:1.7;">v10.10 · 2026-06<br>schema: <b style="color:#2563EB;">insider-ownership-common-v1</b><br>관련 화면: <a href="index.html" style="color:#2563EB; font-weight:600; text-decoration:none;">내부자거래 공통 UI →</a></div>
     </div>
 
     <!-- 핵심 원칙 -->
@@ -810,10 +810,31 @@ Return the JSON now.</pre>
       </table>
     </div>
 
+    <!-- Deployment / Packaging -->
+    <h2 style="margin:42px 0 6px; font-size:18px; font-weight:700; color:#111827;">Deployment / Packaging (배포 패키징)</h2>
+    <p style="margin:0 0 14px; font-size:13px; color:#6B7280;">정적 파일 배포 기준(v10.14). 빌드 산출물은 <code>dist/</code>에 있으며 별도 번들링 없이 그대로 배포한다.</p>
+    <div style="border:1px solid #E6EAF0; border-radius:12px; overflow:hidden; margin-bottom:10px;">
+      <table>
+        <thead><tr><th>항목</th><th>기준</th></tr></thead>
+        <tbody>
+          <tr><td><b>배포 entry</b></td><td><code>dist/index.html</code> — 다크 메인 UI(데이터 인라인) · <code>./support.js</code> 상대경로 로드</td></tr>
+          <tr><td><b>ZIP 루트</b></td><td><code>index.html</code>이 ZIP 최상위에 바로 위치. <b><code>dist/</code> 폴더째 압축 금지</b> — <code>dist/</code> <b>내용물</b>을 ZIP 루트로 압축</td></tr>
+          <tr><td><b>handoff 화면</b></td><td>배포본 파일명은 <code>handoff.dc.html</code> (루트 원본 <code>Handoff-필드매핑.dc.html</code>의 스냅샷)</td></tr>
+          <tr><td><b>내부 href</b></td><td>dist 내부 링크는 <code>index.html</code> / <code>handoff.dc.html</code> 기준으로 맞춘다 — 원본 파일명 <code>내부자거래 공통 UI.dc.html</code>·<code>Handoff-필드매핑.dc.html</code>로 향하면 404</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <ul style="font-size:13px; color:#475467; line-height:1.8;">
+      <li><b>배포 ZIP 포함</b>: <code>index.html</code> · <code>handoff.dc.html</code> · <code>support.js</code> · (선택) <code>README.md</code>.</li>
+      <li><b>배포 ZIP 제외</b>: <code>app.dc.html</code>(= <code>index.html</code> 중복 엔트리 → 제거됨) · <code>uploads/</code> 전체 · <code>qa/</code> 전체 · parser raw output(<code>*.txt</code>·<code>contents.json</code>·<code>d002_parser_outputs/</code>·<code>아카이브/</code>) · 원천 PDF · 작업용 스크린샷 · <code>.thumbnail</code> · <code>.gitignore</code> · 루트 원본 <code>내부자거래 공통 UI.dc.html</code>·<code>내부자거래 공통 UI (라이트).dc.html</code>·<code>Handoff-필드매핑.dc.html</code>.</li>
+      <li><b>외부 CDN 의존성(미해결 리스크)</b>: 런타임에 <code>unpkg.com</code>의 React 18.3.1·ReactDOM·Babel standalone(<code>support.js</code>) + <code>cdn.jsdelivr.net</code>의 Pretendard 폰트를 가져온다. <b>폐쇄망·프록시 환경에서 차단되면 407 또는 흰 화면</b>(React/Babel 미로딩 시 부팅 불가). 외부망 허용 환경에서는 정상.</li>
+      <li><b>폐쇄망/사내 배포</b>가 필요하면 <b>다음 라운드</b>에서 React·ReactDOM·Babel·Pretendard를 <code>dist/vendor/</code>로 로컬화하고 상대경로로 참조한다(이번 라운드 범위 아님).</li>
+    </ul>
+
     <!-- footer -->
     <div style="margin-top:40px; padding-top:18px; border-top:1px solid #E6EAF0; display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px;">
       <div style="font-size:12px; color:#9AA3B2;">insider-ownership-common-v1 · 화면 변경 시 ①스키마 ②매핑 ③Empty ④프롬프트 동기화 필수</div>
-      <a href="내부자거래 공통 UI.dc.html" style="font-size:13px; font-weight:600; color:#2563EB; text-decoration:none;">← 공통 UI 화면으로</a>
+      <a href="index.html" style="font-size:13px; font-weight:600; color:#2563EB; text-decoration:none;">← 공통 UI 화면으로</a>
     </div>
 
   </div>
